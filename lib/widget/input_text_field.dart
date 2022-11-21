@@ -67,27 +67,47 @@ TextFormField textFormField({
     readOnly: readOnly ?? false,
     decoration: InputDecoration(
       prefixIcon: prefixIcon,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       // border: const UnderlineInputBorder(),
       // enabledBorder: const UnderlineInputBorder(),
-      disabledBorder: const UnderlineInputBorder(),
-      // enabledBorder: OutlineInputBorder(
-      //   borderRadius: BorderRadius.circular(8.0),
-      //   borderSide: enabledBorder ?? BorderSide.none,
-      // ),
-      // focusedBorder: OutlineInputBorder(
-      //   borderRadius: BorderRadius.circular(8.0),
-      //   borderSide: focusBorder ?? BorderSide.none,
-      // ),
-      // errorBorder: OutlineInputBorder(
-      //   borderRadius: BorderRadius.circular(8.0),
-      //   borderSide: const BorderSide(
-      //     color: error,
-      //   ),
-      // ),
+      // disabledBorder: const UnderlineInputBorder(),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: enabledBorder ??
+            const BorderSide(
+              color: blackColor,
+            ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: enabledBorder ??
+            const BorderSide(
+              color: blackColor,
+            ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: enabledBorder ??
+            const BorderSide(
+              color: blackColor,
+            ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: focusBorder ??
+            const BorderSide(
+              color: blackColor,
+            ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(
+          color: error,
+        ),
+      ),
 
       errorMaxLines: 5,
-      fillColor: filledColor ?? background,
+      fillColor: filledColor ?? offWhite,
       filled: true,
       hintStyle: hintStyle,
       hintText: hintText,
@@ -96,7 +116,7 @@ TextFormField textFormField({
       labelText: labelText,
       labelStyle: lightText18,
       helperText: helperText,
-      floatingLabelBehavior: FloatingLabelBehavior.always,
+      // floatingLabelBehavior: FloatingLabelBehavior.always,
     ),
   );
 }

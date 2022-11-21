@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
+  qr_code_scanner: ^1.0.1
   timelines: ^0.1.0
 
 dev_dependencies:

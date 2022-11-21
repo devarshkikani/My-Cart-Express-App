@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
-import 'package:my_cart_express/screens/Home/main_home_screen.dart';
+import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
@@ -45,6 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   height25,
                   EmailWidget(
                     labelText: 'Email Address',
+                    hintText: 'Enter email here',
                     textInputAction: TextInputAction.next,
                     controller: emailId,
                   ),

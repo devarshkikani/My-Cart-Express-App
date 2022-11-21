@@ -62,52 +62,54 @@ class WelcomeScreen extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-      child: Column(
-        children: [
-          Text(
-            'Welcome to Mycart express 👋',
-            style: regularText20,
-          ),
-          height20,
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-              ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(
+              'Welcome to Mycart express 👋',
+              style: regularText20,
             ),
-            onPressed: () {
-              Get.to(() => const SignInScreen());
-            },
-            child: const Text(
-              'LOG IN WITH EMAIL',
-              style: TextStyle(
-                letterSpacing: 0.5,
-              ),
-            ),
-          ),
-          height20,
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Don't have an account? ",
-                  style: lightText14,
+            height20,
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
-                TextSpan(
-                  text: 'Register',
-                  style: regularText14.copyWith(
-                    color: primary,
+              ),
+              onPressed: () {
+                Get.to(() => const SignInScreen());
+              },
+              child: const Text(
+                'LOG IN WITH EMAIL',
+                style: TextStyle(
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+            height20,
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Don't have an account? ",
+                    style: lightText14,
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Get.to(() => const SignupScreen());
-                    },
-                ),
-              ],
+                  TextSpan(
+                    text: 'Register',
+                    style: regularText14.copyWith(
+                      color: primary,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Get.to(() => const SignupScreen());
+                      },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

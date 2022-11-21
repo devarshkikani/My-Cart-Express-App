@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
-import 'package:my_cart_express/screens/Home/main_home_screen.dart';
+import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
@@ -49,6 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 height10,
                 TextFormFieldWidget(
                   labelText: 'First Name',
+                  hintText: 'Enter first name here',
                   controller: firstName,
                   textInputAction: TextInputAction.next,
                   validator: (value) =>
@@ -57,6 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 height20,
                 TextFormFieldWidget(
                   labelText: 'Last Name',
+                  hintText: 'Enter last name here',
                   controller: lastName,
                   textInputAction: TextInputAction.next,
                   validator: (value) =>
@@ -64,7 +66,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 height20,
                 EmailWidget(
-                  labelText: 'Email Id',
+                  labelText: 'Email Address',
+                  hintText: 'Enter email here',
                   textInputAction: TextInputAction.next,
                   controller: emailId,
                 ),
@@ -72,6 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 PasswordWidget(
                   labelText: 'Password',
                   passType: 'Password',
+                  hintText: 'Enter password here',
                   controller: password,
                   textInputAction: TextInputAction.next,
                   showsuffixIcon: true,
@@ -80,6 +84,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 PasswordWidget(
                   labelText: 'Confirm Password',
                   passType: 'Confirm Password',
+                  hintText: 'Enter confirm password here',
                   textInputAction: TextInputAction.next,
                   controller: confirmPassword,
                   showsuffixIcon: true,
