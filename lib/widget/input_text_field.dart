@@ -96,7 +96,7 @@ TextFormField textFormField({
         borderRadius: BorderRadius.circular(8.0),
         borderSide: focusBorder ??
             const BorderSide(
-              color: blackColor,
+              color: primary,
             ),
       ),
       errorBorder: OutlineInputBorder(

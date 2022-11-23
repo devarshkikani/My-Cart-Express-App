@@ -116,7 +116,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: primary.withOpacity(0.2),
                   borderRadius: const BorderRadius.only(
