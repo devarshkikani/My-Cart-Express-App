@@ -4,6 +4,7 @@ import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
+import 'package:my_cart_express/screens/more_screen/account_settings/account_settings_screen.dart';
 import 'package:my_cart_express/screens/more_screen/auth_pickup_screen.dart';
 import 'package:my_cart_express/screens/more_screen/available_packages.dart';
 import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
@@ -191,7 +192,9 @@ class _MoreScreenState extends State<MoreScreen> {
           style: lightText16,
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(() => const AccountSettingsScreen());
+          },
           child: const Text(
             'Edit Profile',
           ),
