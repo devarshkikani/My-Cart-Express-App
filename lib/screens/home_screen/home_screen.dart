@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
 import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
@@ -40,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.mail_outline_rounded,
                     ),
                   ),
-                  width10,
+                  width15,
                   GestureDetector(
                     onTap: () {
                       Get.to(() => const NotificationScreen());
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.notifications_active_outlined,
                     ),
                   ),
-                  width10,
+                  width15,
                 ],
               ),
               Expanded(
@@ -122,9 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {},
             child: Column(
               children: [
-                const Icon(
-                  Icons.file_upload_outlined,
-                  size: 40,
+                Image.asset(
+                  shareIcon,
+                  height: 40,
+                  width: 40,
                 ),
                 Text(
                   'Share this app',
@@ -294,11 +296,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onPressed: () {},
-                        child: const Text(
-                          'Invoice Needed',
-                          style: TextStyle(
-                            letterSpacing: 0.5,
-                          ),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Invoice Needed',
+                              style: TextStyle(
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            width10,
+                            Image.asset(
+                              addIcon,
+                              color: whiteColor,
+                              height: 14,
+                              width: 14,
+                            ),
+                          ],
                         ),
                       ),
                     ],

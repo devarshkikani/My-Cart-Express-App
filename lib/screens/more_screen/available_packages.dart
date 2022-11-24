@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/shipping_screen/packages_details_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
@@ -173,12 +174,22 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                 padding: const EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    const Expanded(
-                      child: Icon(
-                        Icons.shopping_bag_rounded,
-                        size: 40,
+                    width20,
+                    Center(
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: amazonColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.asset(
+                          unitedStateLogo,
+                        ),
                       ),
                     ),
+                    width20,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

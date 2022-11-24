@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/screens/delivery_screen/delivery_screen.dart';
 import 'package:my_cart_express/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/screens/more_screen/more_screen.dart';
@@ -29,7 +30,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: Container(
-        height: 60,
+        height: 80,
+        padding: const EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
           color: greyColor.withOpacity(0.2),
           borderRadius: const BorderRadius.only(
@@ -37,85 +39,71 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             topRight: Radius.circular(20),
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              enableFeedback: false,
-              splashColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                selectedIndex = 0;
-                setState(() {});
-              },
-              icon: Icon(
-                Icons.widgets_rounded,
-                color: selectedIndex == 0 ? primary : Colors.grey,
-                size: 25,
+        child: SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  selectedIndex = 0;
+                  setState(() {});
+                },
+                child: Image.asset(
+                  homeIcon,
+                  color: selectedIndex == 0 ? null : Colors.grey,
+                  height: 24,
+                  width: 24,
+                ),
               ),
-            ),
-            IconButton(
-              enableFeedback: false,
-              splashColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                selectedIndex = 1;
-                setState(() {});
-              },
-              icon: Icon(
-                Icons.qr_code_scanner_outlined,
-                color: selectedIndex == 1 ? primary : Colors.grey,
-                size: 25,
+              GestureDetector(
+                onTap: () {
+                  selectedIndex = 1;
+                  setState(() {});
+                },
+                child: Image.asset(
+                  scannerIcon,
+                  color: selectedIndex == 1 ? null : Colors.grey,
+                  height: 24,
+                  width: 24,
+                ),
               ),
-            ),
-            IconButton(
-              enableFeedback: false,
-              splashColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                selectedIndex = 2;
-                setState(() {});
-              },
-              icon: Icon(
-                Icons.local_shipping_rounded,
-                color: selectedIndex == 2 ? primary : Colors.grey,
-                size: 25,
+              GestureDetector(
+                onTap: () {
+                  selectedIndex = 2;
+                  setState(() {});
+                },
+                child: Image.asset(
+                  shippingIcon,
+                  color: selectedIndex == 2 ? null : Colors.grey,
+                  height: 24,
+                  width: 24,
+                ),
               ),
-            ),
-            IconButton(
-              enableFeedback: false,
-              splashColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                selectedIndex = 3;
-                setState(() {});
-              },
-              icon: Icon(
-                Icons.delivery_dining_rounded,
-                color: selectedIndex == 3 ? primary : Colors.grey,
-                size: 25,
+              GestureDetector(
+                onTap: () {
+                  selectedIndex = 3;
+                  setState(() {});
+                },
+                child: Image.asset(
+                  deliveryIcon,
+                  color: selectedIndex == 3 ? null : Colors.grey,
+                  height: 24,
+                  width: 24,
+                ),
               ),
-            ),
-            IconButton(
-              enableFeedback: false,
-              splashColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                selectedIndex = 4;
-                setState(() {});
-              },
-              icon: Icon(
-                Icons.more_horiz_rounded,
-                color: selectedIndex == 4 ? primary : Colors.grey,
-                size: 25,
+              GestureDetector(
+                onTap: () {
+                  selectedIndex = 4;
+                  setState(() {});
+                },
+                child: Icon(
+                  Icons.more_horiz_rounded,
+                  color: selectedIndex == 4 ? primary : Colors.grey,
+                  size: 30,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/shipping_screen/packages_details_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
@@ -23,44 +24,42 @@ class _ShippingScreenState extends State<ShippingScreen> {
       body: Container(
         width: Get.height,
         color: primary,
-        child: SafeArea(
-          child: Column(
-            children: [
-              AppBar(
-                leading: widget.isFromeHome
-                    ? IconButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        icon: Icon(
-                          Platform.isAndroid
-                              ? Icons.arrow_back_rounded
-                              : Icons.arrow_back_ios_rounded,
-                          color: whiteColor,
-                        ),
-                      )
-                    : const SizedBox(),
-                centerTitle: true,
-                elevation: 0.0,
-                title: const Text(
-                  'MyCartExpress',
-                ),
+        child: Column(
+          children: [
+            AppBar(
+              leading: widget.isFromeHome
+                  ? IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: Icon(
+                        Platform.isAndroid
+                            ? Icons.arrow_back_rounded
+                            : Icons.arrow_back_ios_rounded,
+                        color: whiteColor,
+                      ),
+                    )
+                  : const SizedBox(),
+              centerTitle: true,
+              elevation: 0.0,
+              title: const Text(
+                'MyCartExpress',
               ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: const BoxDecoration(
-                    color: offWhite,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: const BoxDecoration(
+                  color: offWhite,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
                   ),
-                  child: bodyView(),
                 ),
+                child: bodyView(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -112,6 +111,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
   Widget shippingList() {
     return ListView.separated(
       itemCount: 10,
+      padding: EdgeInsets.zero,
       separatorBuilder: (BuildContext context, int index) => height20,
       itemBuilder: (BuildContext context, int index) => InkWell(
         onTap: () {
@@ -134,9 +134,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
             children: [
               Container(
                 padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.5),
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  color: greyColor,
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
@@ -176,12 +176,22 @@ class _ShippingScreenState extends State<ShippingScreen> {
                 padding: const EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    const Expanded(
-                      child: Icon(
-                        Icons.shopping_bag_rounded,
-                        size: 40,
+                    width20,
+                    Center(
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: amazonColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.asset(
+                          amazonLogo,
+                        ),
                       ),
                     ),
+                    width20,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,9 +236,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
               ),
               Container(
                 padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.5),
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  color: greyColor,
+                  borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   ),

@@ -84,7 +84,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       Icons.mail_outline_rounded,
                     ),
                   ),
-                  width10,
+                  width15,
                   GestureDetector(
                     onTap: () {
                       Get.to(() => const NotificationScreen());
@@ -93,7 +93,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       Icons.notifications_active_outlined,
                     ),
                   ),
-                  width10,
+                  width15,
                 ],
               ),
               Expanded(
@@ -229,13 +229,35 @@ class _MoreScreenState extends State<MoreScreen> {
                 ),
               ],
             ),
-            child: Text(
-              categoryList[index],
-              textAlign: TextAlign.center,
+            child: Column(
+              children: [
+                Image.asset(
+                  imageList[index],
+                  height: 40,
+                  width: 40,
+                ),
+                const Spacer(),
+                Text(
+                  categoryList[index],
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
         );
       },
     );
   }
+
+  List imageList = [
+    shippingIcon,
+    calcultorIcon,
+    transactionIcon,
+    faqsIcon,
+    supportMailIcon,
+    feedbackIcon,
+    myRewardIcon,
+    pickupIcon,
+    uploadFileIcon
+  ];
 }
