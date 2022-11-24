@@ -33,9 +33,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       date.text = picked.day.toString();
       month.text = picked.month.toString();
       year.text = picked.year.toString();
-      // setState(() {
-      // selectedDate = picked;
-      // });
     }
   }
 
@@ -304,7 +301,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           height20,
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: secondary,
+              backgroundColor: primary,
               padding: const EdgeInsets.symmetric(horizontal: 40),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -320,6 +317,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
+          height20,
         ],
       ),
     );

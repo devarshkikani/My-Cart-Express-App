@@ -130,7 +130,7 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
               ),
               icon: const Icon(
                 Icons.keyboard_arrow_down_rounded,
-                color: secondary,
+                color: primary,
               ),
               items: <String>[
                 "Driver's License",
@@ -165,7 +165,7 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
           height20,
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: secondary,
+              backgroundColor: primary,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -181,6 +181,7 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
               ),
             ),
           ),
+          height20,
         ],
       ),
     );

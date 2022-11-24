@@ -158,7 +158,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
           height20,
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: secondary,
+              backgroundColor: primary,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -174,6 +174,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
               ),
             ),
           ),
+          height20,
         ],
       ),
     );

@@ -202,7 +202,7 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(secondary),
+                      backgroundColor: MaterialStateProperty.all(primary),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       minimumSize: MaterialStateProperty.all(
                         const Size(0, 0),
