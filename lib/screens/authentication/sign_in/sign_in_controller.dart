@@ -25,10 +25,14 @@ class SignInController extends GetxController {
       },
     );
     if (response != null) {
-      UserModel model = UserModel.fromJson(response);
+      UserModel model = UserModel.fromJson(response['data']);
+      box.write(StorageKey.apiToken, response['token']);
+      box.write(StorageKey.currentUser, model.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
-      Get.offAll(() => const MainHomeScreen());
+      Get.offAll(
+        () => MainHomeScreen(),
+      );
     }
   }
 }

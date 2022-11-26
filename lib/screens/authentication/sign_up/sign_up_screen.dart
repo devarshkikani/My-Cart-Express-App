@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/screens/authentication/sign_up/sign_up_controller.dart';
 import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
@@ -9,14 +10,9 @@ import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SignUpScreen extends GetView<SignUpController> {
+  SignUpScreen({super.key});
 
-  @override
-  State<SignupScreen> createState() => _SignupScreenState();
-}
-
-class _SignupScreenState extends State<SignupScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController firstName = TextEditingController();
@@ -131,7 +127,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       Get.offAll(
-                        () => const MainHomeScreen(),
+                        () => MainHomeScreen(),
                       );
                     }
                   },

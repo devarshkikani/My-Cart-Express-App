@@ -98,7 +98,7 @@ class NetworkDio {
             responseBody = response.data;
           }
           if (responseBody['status'] == 200) {
-            return responseBody['data'];
+            return responseBody;
           } else {
             showError(
               title: 'Error',

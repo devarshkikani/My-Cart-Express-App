@@ -61,7 +61,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Get.offAll(() => const MainHomeScreen());
+                        Get.offAll(
+                          () => MainHomeScreen(),
+                        );
                       }
                     },
                     child: const Text(

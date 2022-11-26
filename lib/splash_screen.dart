@@ -21,7 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       if (box.read(StorageKey.isLogedIn) == true) {
-        Get.offAll(() => const MainHomeScreen());
+        Get.offAll(
+          () => MainHomeScreen(),
+        );
       } else {
         Get.offAll(() => const WelcomeScreen());
       }
