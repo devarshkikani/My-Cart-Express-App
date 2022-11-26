@@ -178,6 +178,7 @@ class PasswordWidget extends StatefulWidget {
     this.textInputAction,
     this.showsuffixIcon,
     this.borderSide,
+    this.onFieldSubmitted,
   });
 
   final Key? fieldKey;
@@ -189,6 +190,7 @@ class PasswordWidget extends StatefulWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final BorderSide? borderSide;
+  final Function(String? value)? onFieldSubmitted;
   bool? showsuffixIcon = true;
 
   @override
@@ -212,6 +214,7 @@ class PasswordWidgetState extends State<PasswordWidget> {
       textInputAction: widget.textInputAction,
       cursorColor: primary,
       obscureText: _obscureText,
+      onFieldSubmitted: widget.onFieldSubmitted,
       validator: widget.validator ??
           (value) => Validators.validatePassword(
                 value!.trim(),

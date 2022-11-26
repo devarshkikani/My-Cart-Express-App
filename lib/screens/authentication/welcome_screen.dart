@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_cart_express/screens/authentication/sign_in_screen.dart';
+import 'package:my_cart_express/screens/authentication/sign_in/sign_in_bindings.dart';
+import 'package:my_cart_express/screens/authentication/sign_in/sign_in_screen.dart';
 import 'package:my_cart_express/screens/authentication/sign_up_screen.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
@@ -78,7 +79,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Get.to(() => const SignInScreen());
+                Get.to(() => SignInScreen(), binding: SignInBindings());
               },
               child: const Text(
                 'LOG IN WITH EMAIL',

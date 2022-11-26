@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:my_cart_express/constant/storage_key.dart';
 import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/constant/default_images.dart';
+import 'package:my_cart_express/screens/home/main_home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,11 +14,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  GetStorage box = GetStorage();
+
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Get.offAll(() => const WelcomeScreen());
+      if (box.read(StorageKey.isLogedIn) == true) {
+        Get.offAll(() => const MainHomeScreen());
+      } else {
+        Get.offAll(() => const WelcomeScreen());
+      }
     });
   }
 
