@@ -134,6 +134,70 @@ class NetworkDio {
     }
   }
 
+  static Future<Map<String, dynamic>?> getDioHttpMethod({
+    BuildContext? context,
+    required String url,
+  }) async {
+    var internet = await check();
+    if (internet) {
+      if (context != null) processIndicator.show(context);
+      try {
+        if (kDebugMode) {
+          print('+++URL : $url');
+        }
+        var response = await _dio.get(
+          url,
+          options: cacheOptions,
+        );
+        if (kDebugMode) {
+          print('+++Response: ' + '$response');
+        }
+        Map<String, dynamic> responseBody = {};
+        if (context != null) processIndicator.hide(context);
+
+        if (response.statusCode == 200) {
+          try {
+            responseBody = json.decode(response.data);
+          } catch (e) {
+            responseBody = response.data;
+          }
+          if (responseBody['status'] == 200) {
+            return responseBody;
+          } else {
+            showError(
+              title: 'Error',
+              errorMessage: responseBody['message'],
+            );
+            return null;
+          }
+        } else {
+          showError(
+            title: 'Error',
+            errorMessage: response.statusMessage.toString(),
+          );
+          return null;
+        }
+      } on DioError catch (e) {
+        if (kDebugMode) {
+          print('DioError +++ $e');
+        }
+        if (context != null) processIndicator.hide(context);
+        showError(title: 'Error', errorMessage: e.toString());
+        return null;
+      } catch (e) {
+        if (kDebugMode) {
+          print('Catch +++ $e');
+        }
+        if (context != null) processIndicator.hide(context);
+        showError(title: 'Error', errorMessage: e.toString());
+        return null;
+      }
+    } else {
+      if (context != null) InternetError.addOverlayEntry(context);
+      return null;
+    }
+  }
+
   static void showSuccess({
     required String title,
     required String sucessMessage,

@@ -43,7 +43,7 @@ class UserModel {
         firstname: json["firstname"],
         lastname: json["lastname"],
         branchId: json["branch_id"],
-        profileImage: json["profile_image"],
+        profileImage: json["profile_image"] ?? '',
         isCustomer: json["is_customer"],
         priceGroupId: json["price_group_id"],
         isAdmin: json["is_admin"],

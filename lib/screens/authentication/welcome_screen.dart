@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/screens/authentication/sign_in/sign_in_bindings.dart';
 import 'package:my_cart_express/screens/authentication/sign_in/sign_in_screen.dart';
-import 'package:my_cart_express/screens/authentication/sign_up/sign_up_bindings.dart';
 import 'package:my_cart_express/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
@@ -106,7 +105,6 @@ class WelcomeScreen extends StatelessWidget {
                       ..onTap = () {
                         Get.to(
                           () => SignUpScreen(),
-                          binding: SignUpBinding(),
                         );
                       },
                   ),

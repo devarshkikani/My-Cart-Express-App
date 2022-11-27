@@ -8,15 +8,15 @@ import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
 
 class SignInController extends GetxController {
+  GetStorage box = GetStorage();
   Future<void> signInOnTap({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
-    GetStorage box = GetStorage();
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.login,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.signIn,
       data: {
         'email': email,
         'password': password,
