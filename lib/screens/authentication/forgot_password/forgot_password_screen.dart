@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
-import 'package:my_cart_express/screens/authentication/sign_in/sign_in_controller.dart';
-import 'package:my_cart_express/screens/authentication/forgot_password/forgot_password_screen.dart';
+import 'package:my_cart_express/screens/authentication/forgot_password/forgot_paasword_scren_controller.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
 
-class SignInScreen extends GetView<SignInController> {
-  SignInScreen({super.key});
-
+class ForgotPasswordScreen extends GetView {
+  ForgotPasswordScreen({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final TextEditingController emailId = TextEditingController();
-
-  final TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
-      appBar: appbarWidget(title: 'Sign In'),
-      body: GetBuilder<SignInController>(
-        init: SignInController(),
+      appBar: appbarWidget(title: 'Forgot Password'),
+      body: GetBuilder<ForgotPasswordScreenController>(
+        init: ForgotPasswordScreenController(),
         builder: (controller) => Center(
           child: SingleChildScrollView(
             child: Form(
@@ -35,29 +30,24 @@ class SignInScreen extends GetView<SignInController> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text(
-                      'Welcome Back!',
+                      'Forgot Your Password?',
                       style: regularText20,
                     ),
-                    height30,
+                    height10,
+                    Text(
+                      "Wee get it. stuff happens. Just enter your email address below and we'll send you a Verification code to reset password!",
+                      style: lightText14,
+                    ),
+                    height25,
                     EmailWidget(
-                      labelText: 'Email Id',
+                      labelText: 'Email Address',
                       hintText: 'Enter email here',
                       textInputAction: TextInputAction.next,
                       controller: emailId,
-                    ),
-                    height20,
-                    PasswordWidget(
-                      labelText: 'Password',
-                      passType: 'Password',
-                      hintText: 'Enter password here',
-                      controller: password,
-                      textInputAction: TextInputAction.next,
-                      showsuffixIcon: true,
-                      onFieldSubmitted: (v) {
+                      onFieldSubmitted: (_) {
                         if (_formKey.currentState!.validate()) {
-                          controller.signInOnTap(
+                          controller.resetPasswordOntap(
                             email: emailId.text,
-                            password: password.text,
                             context: context,
                           );
                         }
@@ -75,15 +65,14 @@ class SignInScreen extends GetView<SignInController> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          controller.signInOnTap(
+                          controller.resetPasswordOntap(
                             email: emailId.text,
-                            password: password.text,
                             context: context,
                           );
                         }
                       },
                       child: const Text(
-                        'SIGN IN',
+                        'RESET PASSWORD',
                         style: TextStyle(
                           letterSpacing: 1,
                         ),
@@ -91,12 +80,10 @@ class SignInScreen extends GetView<SignInController> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Get.to(
-                          () => ForgotPasswordScreen(),
-                        );
+                        Get.back();
                       },
                       child: Text(
-                        'Forgot password?',
+                        'Existing User Login Here',
                         style: lightText14,
                       ),
                     ),

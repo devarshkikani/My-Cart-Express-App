@@ -122,19 +122,21 @@ TextFormField textFormField({
 }
 
 class EmailWidget extends StatelessWidget {
-  const EmailWidget(
-      {super.key,
-      this.fieldKey,
-      this.hintText,
-      this.labelText,
-      this.style,
-      this.controller,
-      this.textInputAction,
-      this.keyboardType,
-      this.enabled,
-      this.focusNode,
-      this.validator,
-      this.borderSide});
+  const EmailWidget({
+    super.key,
+    this.fieldKey,
+    this.hintText,
+    this.labelText,
+    this.style,
+    this.controller,
+    this.textInputAction,
+    this.keyboardType,
+    this.enabled,
+    this.focusNode,
+    this.validator,
+    this.onFieldSubmitted,
+    this.borderSide,
+  });
   final Key? fieldKey;
   final String? hintText;
   final String? labelText;
@@ -146,6 +148,7 @@ class EmailWidget extends StatelessWidget {
   final FormFieldValidator<String?>? validator;
   final BorderSide? borderSide;
   final TextInputType? keyboardType;
+  final Function(String? value)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +160,7 @@ class EmailWidget extends StatelessWidget {
       cursorColor: primary,
       labelText: labelText,
       textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
       keyboardType: TextInputType.emailAddress,
       validator:
           validator ?? (value) => Validators.validateEmail(value!.trim()),
