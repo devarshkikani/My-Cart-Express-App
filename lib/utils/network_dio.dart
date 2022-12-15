@@ -18,18 +18,18 @@ class NetworkDio {
   static late Dio _dio;
   static GetStorage box = GetStorage();
   static Circle processIndicator = Circle();
-  static late DioCacheManager _dioCacheManager;
+  // static late DioCacheManager _dioCacheManager;
   static final Options cacheOptions =
       buildCacheOptions(const Duration(seconds: 1), forceRefresh: true);
 
   static Future<void> setDynamicHeader() async {
     BaseOptions options =
         BaseOptions(receiveTimeout: 50000, connectTimeout: 50000);
-    _dioCacheManager = DioCacheManager(CacheConfig());
+    // _dioCacheManager = DioCacheManager(CacheConfig());
     final token = await _getHeaders();
     options.headers.addAll(token);
     _dio = Dio(options);
-    _dio.interceptors.add(_dioCacheManager.interceptor);
+    // _dio.interceptors.add(_dioCacheManager.interceptor);
 
     Connectivity()
         .onConnectivityChanged
@@ -52,6 +52,7 @@ class NetworkDio {
     } else {
       return {
         'X-AUTH-KEY': ApiEndPoints.authKey,
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
     }
