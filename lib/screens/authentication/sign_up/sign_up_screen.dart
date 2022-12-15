@@ -96,7 +96,7 @@ class SignUpScreen extends GetView {
                     controller: branchName,
                     readOnly: true,
                     onTap: () {
-                      selectBranch(context);
+                      selectBranch(context, controller);
                     },
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -111,9 +111,7 @@ class SignUpScreen extends GetView {
                     controller: type,
                     readOnly: true,
                     onTap: () {
-                      selectType(
-                        context,
-                      );
+                      selectType(context, controller);
                     },
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -208,6 +206,7 @@ class SignUpScreen extends GetView {
 
   void selectBranch(
     BuildContext context,
+    SignUpController controller,
   ) {
     showModalBottomSheet(
       context: context,
@@ -276,7 +275,7 @@ class SignUpScreen extends GetView {
     );
   }
 
-  void selectType(BuildContext context) {
+  void selectType(BuildContext context, controller) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
