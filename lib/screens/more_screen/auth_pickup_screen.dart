@@ -50,15 +50,17 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
   }
 
   Widget bodyView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Authorise Pick Up',
-          style: regularText18,
-        ),
-        formView(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Authorise Pick Up',
+            style: regularText18,
+          ),
+          formView(),
+        ],
+      ),
     );
   }
 
