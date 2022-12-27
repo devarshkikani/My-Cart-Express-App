@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/storage_key.dart';
@@ -26,8 +27,8 @@ class SignUpController extends GetxController {
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.branches,
     );
     if (response != null) {
-      for (var i = 0; i < response['list'].length; i++) {
-        branchesList.add(Branches.fromJson(response['list'][i]));
+      for (var i = 0; i < response['data'].length; i++) {
+        branchesList.add(Branches.fromJson(response['data'][i]));
       }
     }
   }
@@ -45,10 +46,8 @@ class SignUpController extends GetxController {
     String? positionInCompany,
     required BuildContext context,
   }) async {
-    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-      context: context,
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.signUp,
-      data: gid == '0'
+    final data = dio.FormData.fromMap(
+      gid == '1'
           ? {
               'firstname': firstName,
               'email': email,
@@ -60,16 +59,24 @@ class SignUpController extends GetxController {
             }
           : {
               'firstname': firstName,
+              'lastname': lastName,
               'email': email,
               'password': password,
-              'lastname': lastName,
               'password_confirm': passwordConfirm,
               'branch_id': branchId,
-              'g_id': gid,
+              'person_dd': '',
               'legal_business_name': legalBusinessName,
               'business_contact_person': businessContactPerson,
               'position_in_company': positionInCompany,
+              'g_id': gid,
+              'ipaddress': '',
+              'device_unique_value': '',
             },
+    );
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      context: context,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.signUp,
+      data: data,
     );
     if (response != null) {
       NetworkDio.showSuccess(

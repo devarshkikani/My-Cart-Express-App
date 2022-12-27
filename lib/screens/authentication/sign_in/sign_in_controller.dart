@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/storage_key.dart';
 import 'package:my_cart_express/models/user_model.dart';
 import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
+import 'package:flutter/cupertino.dart';
 
 class SignInController extends GetxController {
   GetStorage box = GetStorage();
@@ -14,15 +16,14 @@ class SignInController extends GetxController {
     required String password,
     required BuildContext context,
   }) async {
+    final data = dio.FormData.fromMap({
+      'email': email,
+      'password': password,
+    });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.signIn,
-      data: {
-        'email': email,
-        'password': password,
-        'ipaddress': '',
-        'device_unique_value': '',
-      },
+      data: data,
     );
     if (response != null) {
       UserModel model = UserModel.fromJson(response['data']);

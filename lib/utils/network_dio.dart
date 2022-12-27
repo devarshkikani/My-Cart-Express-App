@@ -47,11 +47,11 @@ class NetworkDio {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'X-API-KEY': apiToken,
-        'X-AUTH-KEY': ApiEndPoints.authKey,
+        'Mycart-Auth-Key': ApiEndPoints.authKey,
       };
     } else {
       return {
-        'X-AUTH-KEY': ApiEndPoints.authKey,
+        'Mycart-Auth-Key': ApiEndPoints.authKey,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
@@ -115,11 +115,14 @@ class NetworkDio {
           return null;
         }
       } on DioError catch (e) {
+        var response = e.response;
         if (kDebugMode) {
           print('DioError +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(title: 'Error', errorMessage: e.toString());
+        showError(
+            title: 'Error',
+            errorMessage: response!.data['messages']['message'].toString());
         return null;
       } catch (e) {
         if (kDebugMode) {
