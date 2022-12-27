@@ -129,7 +129,7 @@ class NetworkDio {
           print('Catch +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(title: 'Error', errorMessage: e.toString());
+        showError(title: 'Error', errorMessage: 'Some thing went wrong');
         return null;
       }
     } else {
@@ -183,17 +183,18 @@ class NetworkDio {
         }
       } on DioError catch (e) {
         if (kDebugMode) {
-          print('DioError +++ $e');
+          print('DioError Response +++ ${e.response}');
+          print('DioError +++ ${e.message}');
         }
         if (context != null) processIndicator.hide(context);
-        showError(title: 'Error', errorMessage: e.toString());
+        showError(title: 'Error', errorMessage: 'Some thing went wrong');
         return null;
       } catch (e) {
         if (kDebugMode) {
           print('Catch +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(title: 'Error', errorMessage: e.toString());
+        showError(title: 'Error', errorMessage: 'Some thing went wrong');
         return null;
       }
     } else {
