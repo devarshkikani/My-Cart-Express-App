@@ -9,4 +9,6 @@ class ApiEndPoints {
   static String forgotPassword = 'authentication/forgot_password';
 
   static String branches = 'branches';
+  static String balance = 'wallet/balance';
+  static String customerShippingAddress = 'customer/shipping_address';
 }

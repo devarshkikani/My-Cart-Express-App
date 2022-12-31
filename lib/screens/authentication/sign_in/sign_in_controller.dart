@@ -31,6 +31,7 @@ class SignInController extends GetxController {
       box.write(StorageKey.currentUser, model.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
+      await NetworkDio.setDynamicHeader();
       Get.offAll(
         () => MainHomeScreen(),
       );

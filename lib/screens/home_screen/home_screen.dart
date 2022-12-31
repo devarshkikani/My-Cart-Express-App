@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
@@ -7,6 +8,7 @@ import 'package:my_cart_express/screens/notification_screen/notifications_screen
 import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +18,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  RxInt balance = 0.obs;
+  RxMap customerAddress = {}.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    getBalance();
+  }
+
+  void getBalance() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
+      context: context,
+    );
+    if (response != null) {
+      balance.value = response['data'];
+    }
+    Map<String, dynamic>? addressResponse = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.customerShippingAddress,
+      context: context,
+    );
+    if (addressResponse != null) {
+      customerAddress.value = addressResponse['data'] ?? {};
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,10 +133,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 height5,
-                Text(
-                  '\$0 JMD',
-                  style: regularText18.copyWith(
-                    color: whiteColor,
+                Obx(
+                  () => Text(
+                    '\$${balance.value} JMD',
+                    style: regularText18.copyWith(
+                      color: whiteColor,
+                    ),
                   ),
                 ),
               ],
@@ -175,9 +205,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   height15,
-                  Text(
-                    'Kamar Palmer STF0000022135 NW 79th Ave suite J Doral, FL, 33122',
-                    style: lightText13,
+                  Obx(
+                    () => Text(
+                      customerAddress.isNotEmpty
+                          ? customerAddress['address_1'] +
+                              ' ' +
+                              customerAddress['address_2'] +
+                              ' ' +
+                              customerAddress['locality'] +
+                              ', ' +
+                              customerAddress['province'] +
+                              ', ' +
+                              customerAddress['postcode']
+                          : '',
+                      style: lightText13,
+                    ),
                   ),
                   height10,
                   Text(

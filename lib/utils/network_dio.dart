@@ -46,7 +46,7 @@ class NetworkDio {
       return {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'X-API-KEY': apiToken,
+        'user-access-token': apiToken,
         'Mycart-Auth-Key': ApiEndPoints.authKey,
       };
     } else {
