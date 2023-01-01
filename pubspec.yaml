@@ -38,8 +38,10 @@ dependencies:
   dio_http_cache: ^0.3.0
   flutter:
     sdk: flutter
+  flutter_html: ^2.2.1
   get: ^4.6.5
   get_storage: ^2.0.3
+  intl: ^0.18.0
   qr_code_scanner: ^1.0.1
   timelines: ^0.1.0
 
