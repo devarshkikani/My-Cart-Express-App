@@ -11,4 +11,7 @@ class ApiEndPoints {
   static String branches = 'branches';
   static String balance = 'wallet/balance';
   static String customerShippingAddress = 'customer/shipping_address';
+  static String notificationList = 'notification/list';
+  static String walletTransaction = 'wallet/transaction';
+  static String faqList = 'faq/list';
 }
