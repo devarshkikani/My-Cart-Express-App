@@ -27,3 +27,4 @@ const String celebrationIcon = 'assets/images/celebration_icon.png';
 const String closeIcon = 'assets/images/closeIcon.png';
 const String offline = 'assets/images/offline.jpeg';
 const String noNotification = 'assets/images/no_notification.webp';
+const String noTransactions = 'assets/images/no_transactions.webp';
