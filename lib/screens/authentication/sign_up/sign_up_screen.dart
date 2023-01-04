@@ -172,18 +172,18 @@ class SignUpScreen extends GetView {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         controller.signUpOnTap(
-                          firstName: firstName.text,
-                          lastName: lastName.text,
-                          email: emailId.text,
-                          password: password.text,
-                          passwordConfirm: confirmPassword.text,
+                          firstName: firstName.text.trim(),
+                          lastName: lastName.text.trim(),
+                          email: emailId.text.trim(),
+                          password: password.text.trim(),
+                          passwordConfirm: confirmPassword.text.trim(),
                           branchId: controller.branchId.value,
                           gid: controller.type.value == 'Business Customer'
                               ? '0'
                               : '1',
-                          legalBusinessName: businessName.text,
-                          businessContactPerson: businessContact.text,
-                          positionInCompany: positionCompany.text,
+                          legalBusinessName: businessName.text.trim(),
+                          businessContactPerson: businessContact.text.trim(),
+                          positionInCompany: positionCompany.text.trim(),
                           context: context,
                         );
                       }

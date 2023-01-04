@@ -222,11 +222,11 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
   Future<void> submitButton() async {
     final data = dio.FormData.fromMap({
       'id': 0,
-      'first_name': firstName.text,
-      'last_name': lastName.text,
-      'phone_number': mobileNumber.text,
+      'first_name': firstName.text.trim(),
+      'last_name': lastName.text.trim(),
+      'phone_number': mobileNumber.text.trim(),
       'id_type': idType.value,
-      'id_number': idNumber.text,
+      'id_number': idNumber.text.trim(),
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.pickupAdd,

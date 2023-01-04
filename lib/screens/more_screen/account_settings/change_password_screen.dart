@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
@@ -72,8 +75,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           TextFormFieldWidget(
             hintText: 'Change Password',
             controller: changePassword,
-            validator: (value) => Validators.validateText(
-              value,
+            validator: (value) => Validators.validatePassword(
+              value.toString(),
               'Change password',
             ),
           ),
@@ -85,11 +88,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           height10,
           TextFormFieldWidget(
             hintText: 'Confirm Password',
-            controller: changePassword,
-            validator: (value) => Validators.validateText(
-              value,
-              'Confirm password',
-            ),
+            controller: confirmPassword,
+            validator: (value) =>
+                Validators.validatePassword(
+                  value.toString(),
+                  'Confirm password',
+                ) ??
+                (confirmPassword.text.trim() != changePassword.text.trim()
+                    ? 'Confirm password not match with new password'
+                    : null),
           ),
           height15,
           Text(
@@ -99,7 +106,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           height10,
           TextFormFieldWidget(
             hintText: 'Type Old Password',
-            controller: changePassword,
+            controller: typeOldPassword,
             validator: (value) => Validators.validateText(
               value,
               'Type old password',
@@ -115,8 +122,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
               ),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {}
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  await submitButton();
+                }
               },
               child: const Text(
                 'SAVE PASSWORD',
@@ -169,5 +178,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> submitButton() async {
+    final data = dio.FormData.fromMap({
+      'id': 'w3',
+      'new_password': changePassword.text.trim(),
+      'confirm_password': confirmPassword.text.trim(),
+      'old_password': typeOldPassword.text.trim(),
+    });
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.changePassword,
+      data: data,
+      context: context,
+    );
+    if (response != null) {
+      Get.back();
+      NetworkDio.showSuccess(
+          title: 'Success',
+          sucessMessage: 'You have successfully change your password');
+    }
   }
 }

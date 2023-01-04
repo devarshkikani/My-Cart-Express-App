@@ -56,8 +56,8 @@ class SignInScreen extends GetView<SignInController> {
                       onFieldSubmitted: (v) {
                         if (_formKey.currentState!.validate()) {
                           controller.signInOnTap(
-                            email: emailId.text,
-                            password: password.text,
+                            email: emailId.text.trim(),
+                            password: password.text.trim(),
                             context: context,
                           );
                         }
@@ -76,8 +76,8 @@ class SignInScreen extends GetView<SignInController> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           controller.signInOnTap(
-                            email: emailId.text,
-                            password: password.text,
+                            email: emailId.text.trim(),
+                            password: password.text.trim(),
                             context: context,
                           );
                         }

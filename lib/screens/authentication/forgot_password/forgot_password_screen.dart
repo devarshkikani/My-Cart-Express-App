@@ -47,7 +47,7 @@ class ForgotPasswordScreen extends GetView {
                       onFieldSubmitted: (_) {
                         if (_formKey.currentState!.validate()) {
                           controller.resetPasswordOntap(
-                            email: emailId.text,
+                            email: emailId.text.trim(),
                             context: context,
                           );
                         }
@@ -66,7 +66,7 @@ class ForgotPasswordScreen extends GetView {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           controller.resetPasswordOntap(
-                            email: emailId.text,
+                            email: emailId.text.trim(),
                             context: context,
                           );
                         }
