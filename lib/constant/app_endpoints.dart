@@ -6,7 +6,8 @@ class ApiEndPoints {
 
   static String signIn = 'login';
   static String signUp = 'authentication/registration';
-  static String forgotPassword = 'authentication/forgot_password';
+  static String forgotPassword =
+      'courier_server/api/authentication/forgot_password';
 
   static String branches = 'branches';
   static String balance = 'wallet/balance';
@@ -14,4 +15,6 @@ class ApiEndPoints {
   static String notificationList = 'notification/list';
   static String walletTransaction = 'wallet/transaction';
   static String faqList = 'faq/list';
+  static String pickupAdd = 'authorizepickup/add';
+  static String pickupType = 'authorize_pickup/authorize_pickup_type';
 }

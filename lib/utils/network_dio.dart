@@ -121,8 +121,7 @@ class NetworkDio {
         }
         if (context != null) processIndicator.hide(context);
         showError(
-            title: 'Error',
-            errorMessage: response!.data['messages']['message'].toString());
+            title: 'Error', errorMessage: response!.data['message'].toString());
         return null;
       } catch (e) {
         if (kDebugMode) {

@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
@@ -19,8 +22,32 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
   TextEditingController lastName = TextEditingController();
   TextEditingController mobileNumber = TextEditingController();
   TextEditingController idNumber = TextEditingController();
-  String? idType;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  RxString idType = ''.obs;
+
+  RxList pickUpType = [].obs;
+  RxString pickUpId = ''.obs;
+  RxList<String> pickUpTypeName = <String>[].obs;
+
+  @override
+  void initState() {
+    super.initState();
+    getAuthorizePickupType();
+  }
+
+  void getAuthorizePickupType() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.pickupType,
+      context: context,
+    );
+    if (response != null) {
+      pickUpType.value = response['data'];
+      for (var i = 0; i < pickUpType.length; i++) {
+        pickUpTypeName.add(pickUpType[i]['type_name']);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,37 +147,38 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
                 color: blackColor,
               ),
             ),
-            child: DropdownButton<String>(
-              underline: const SizedBox(),
-              isExpanded: true,
-              value: idType,
-              hint: Text(
-                'Select ID Type',
-                style: lightText16.copyWith(
-                  color: Theme.of(context).hintColor,
-                ),
-              ),
-              icon: const Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: primary,
-              ),
-              items: <String>[
-                "Driver's License",
-                'National Id',
-                'Other',
-                'Passport'
-              ].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
+            child: Obx(
+              () => DropdownButton<String>(
+                underline: const SizedBox(),
+                isExpanded: true,
+                value: idType.value == '' ? null : idType.value,
+                hint: Text(
+                  'Select ID Type',
+                  style: lightText16.copyWith(
+                    color: Theme.of(context).hintColor,
                   ),
-                );
-              }).toList(),
-              onChanged: (_) {
-                idType = _;
-                setState(() {});
-              },
+                ),
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: primary,
+                ),
+                items: pickUpTypeName.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (type) {
+                  idType.value = type.toString();
+                  for (var element in pickUpType) {
+                    if (element['type_name'] == type) {
+                      pickUpId.value = element['authorized_type_list_id'];
+                    }
+                  }
+                },
+              ),
             ),
           ),
           height15,
@@ -173,8 +201,10 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(5)),
               ),
             ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                await submitButton();
+              }
             },
             child: const Text(
               'SUBMIT',
@@ -187,5 +217,24 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> submitButton() async {
+    final data = dio.FormData.fromMap({
+      'id': 0,
+      'first_name': firstName.text,
+      'last_name': lastName.text,
+      'phone_number': mobileNumber.text,
+      'id_type': idType.value,
+      'id_number': idNumber.text,
+    });
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.pickupAdd,
+      data: data,
+      context: context,
+    );
+    if (response != null) {
+      Get.back();
+    }
   }
 }
