@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -10,34 +12,44 @@ import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
 
-class AuthPickupScreen extends StatefulWidget {
-  const AuthPickupScreen({super.key});
+RxList pickUpType = [].obs;
+RxList<String> pickUpTypeName = <String>[].obs;
 
+class AuthPickupDetailsScreen extends StatefulWidget {
+  AuthPickupDetailsScreen({super.key, required this.editedData});
+  Map<String, dynamic>? editedData;
   @override
-  State<AuthPickupScreen> createState() => _AuthPickupScreenState();
+  State<AuthPickupDetailsScreen> createState() =>
+      _AuthPickupDetailsScreenState();
 }
 
-class _AuthPickupScreenState extends State<AuthPickupScreen> {
+class _AuthPickupDetailsScreenState extends State<AuthPickupDetailsScreen> {
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController mobileNumber = TextEditingController();
   TextEditingController idNumber = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   RxString idType = ''.obs;
-
-  RxList pickUpType = [].obs;
   RxString pickUpId = ''.obs;
-  RxList<String> pickUpTypeName = <String>[].obs;
 
   @override
   void initState() {
     super.initState();
-    getAuthorizePickupType();
+    if (widget.editedData != null) {
+      firstName.text = widget.editedData!['name'].toString().split(' ').first;
+      lastName.text = widget.editedData!['name'].toString().split(' ')[1];
+      mobileNumber.text = widget.editedData!['phone_number'];
+      idNumber.text = widget.editedData!['id_number'];
+      idType.value = widget.editedData!['id_type'];
+    }
+    if (pickUpType.isEmpty) {
+      getAuthorizePickupType();
+    }
   }
 
   void getAuthorizePickupType() async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.pickupType,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.authorizePickupType,
       context: context,
     );
     if (response != null) {
@@ -82,7 +94,9 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Authorise Pick Up',
+            widget.editedData != null
+                ? 'Edit Authorize Pick Up'
+                : 'Add Authorize Pick Up',
             style: regularText18,
           ),
           formView(),
@@ -221,7 +235,7 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
 
   Future<void> submitButton() async {
     final data = dio.FormData.fromMap({
-      'id': 0,
+      'id': widget.editedData == null ? 0 : widget.editedData!['id'],
       'first_name': firstName.text.trim(),
       'last_name': lastName.text.trim(),
       'phone_number': mobileNumber.text.trim(),
@@ -229,12 +243,12 @@ class _AuthPickupScreenState extends State<AuthPickupScreen> {
       'id_number': idNumber.text.trim(),
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.pickupAdd,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.authorizePickupAdd,
       data: data,
       context: context,
     );
     if (response != null) {
-      Get.back();
+      Get.back(result: true);
     }
   }
 }

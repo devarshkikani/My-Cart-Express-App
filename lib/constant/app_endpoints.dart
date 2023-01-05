@@ -15,8 +15,12 @@ class ApiEndPoints {
   static String customerShippingAddress = 'customer/shipping_address';
   static String notificationList = 'notification/list';
   static String faqList = 'faq/list';
-  static String pickupAdd = 'authorizepickup/add';
-  static String pickupType = 'authorize_pickup/authorize_pickup_type';
+
   static String walletTransaction = 'wallet/transaction';
   static String walletDetail = 'wallet/detail';
+
+  static String authorizePickupAdd = 'authorizepickup/add';
+  static String authorizePickup = 'authorize_pickup/list';
+  static String authorizePickupDelete = 'authorizepickup/delete';
+  static String authorizePickupType = 'authorize_pickup/authorize_pickup_type';
 }

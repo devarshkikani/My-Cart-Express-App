@@ -60,13 +60,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         ),
         height15,
         Expanded(
-          child: transactionList(),
+          child: feedbackList(),
         ),
       ],
     );
   }
 
-  Widget transactionList() {
+  Widget feedbackList() {
     return ListView.separated(
       itemCount: 10,
       padding: EdgeInsets.zero,

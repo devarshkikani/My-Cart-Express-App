@@ -4,7 +4,7 @@ import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
 import 'package:my_cart_express/screens/more_screen/account_settings/account_settings_screen.dart';
-import 'package:my_cart_express/screens/more_screen/auth_pickup_screen.dart';
+import 'package:my_cart_express/screens/more_screen/auth_pickup/auth_pickup_screen.dart';
 import 'package:my_cart_express/screens/more_screen/available_packages.dart';
 import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
 import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
@@ -61,7 +61,7 @@ class MoreScreen extends GetView<MoreScreenController> {
     } else if (index == 6) {
       Get.to(() => const MyRewardsScreen());
     } else if (index == 7) {
-      Get.to(() => const AuthPickupScreen());
+      Get.to(() => const AuthPickUpScreen());
     } else if (index == 8) {
       Get.to(() => const UploadFileScreen());
     }

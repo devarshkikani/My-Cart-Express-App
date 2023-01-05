@@ -28,3 +28,5 @@ const String closeIcon = 'assets/images/closeIcon.png';
 const String offline = 'assets/images/offline.jpeg';
 const String noNotification = 'assets/images/no_notification.webp';
 const String noTransactions = 'assets/images/no_transactions.webp';
+const String trashIcon = 'assets/images/trash_icon.png';
+const String noAuthorizePickup = 'assets/images/no_authorize_pickup.webp';
