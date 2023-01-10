@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
@@ -19,7 +18,7 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   ScrollController scrollController = ScrollController();
-  RxInt offSet = 10.obs;
+  RxInt limit = 10.obs;
   RxList transactionList = [].obs;
   RxBool isLoading = true.obs;
   @override
@@ -30,18 +29,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   void getTransaction() async {
-    final data = dio.FormData.fromMap({
-      'limit': 0,
-      'offset': offSet,
-    });
-    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.walletDetail,
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url:
+          '${ApiEndPoints.apiEndPoint}${ApiEndPoints.transactionList}?offset=0&limit=$limit',
       context: context,
-      data: data,
     );
     isLoading.value = false;
     if (response != null) {
-      transactionList.value = response['transaction'];
+      transactionList.value = response['list'];
     }
   }
 
@@ -49,7 +44,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     if (scrollController.position.pixels ==
             scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
-      offSet.value = offSet.value + 10;
+      limit.value = limit.value + 10;
       getTransaction();
     }
   }
@@ -166,8 +161,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               child: Text(
                                 DateFormat('dd MMM yyyy HH:mm a').format(
                                     DateTime.parse(transactionList[index]
-                                        ['date_created'])),
-                                // '02 Aug 2022 22:33 PM',
+                                        ['insert_timestamp'])),
                               ),
                             ),
                           ],
@@ -185,7 +179,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             Expanded(
                               flex: 3,
                               child: Text(
-                                transactionList[index]['pos_transaction_id'],
+                                transactionList[index]['id'],
                                 style: lightText13,
                               ),
                             ),
@@ -201,7 +195,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   Text('Type', style: lightText13),
                                   width5,
                                   Text(
-                                    '1 PKG (In Store)',
+                                    '${transactionList[index]['payment_type']} ${transactionList[index]['payment_type_label']}',
                                     style: lightText13.copyWith(
                                       color: primary,
                                     ),

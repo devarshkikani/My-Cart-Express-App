@@ -1,13 +1,15 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/shipping_screen/packages_details_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
+import 'package:my_cart_express/widget/input_text_field.dart';
 
 class ShippingScreen extends StatefulWidget {
   const ShippingScreen({super.key, required this.isFromeHome});
@@ -17,7 +19,35 @@ class ShippingScreen extends StatefulWidget {
 }
 
 class _ShippingScreenState extends State<ShippingScreen> {
-  String shortByString = 'Sort By';
+  RxList shippmentsList = [].obs;
+  RxString searchData = ''.obs;
+
+  @override
+  void initState() {
+    getShippments(null);
+    debounce<String>(searchData, validations,
+        time: const Duration(milliseconds: 700));
+    super.initState();
+  }
+
+  validations(String string) async {
+    await getShippments(string);
+  }
+
+  Future<void> getShippments(String? value) async {
+    final data = dio.FormData.fromMap({
+      'search_text': value,
+      'offset': null,
+    });
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingList,
+        context: context,
+        data: value != null ? data : null);
+    if (response != null) {
+      shippmentsList.value = response['list'];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,27 +105,15 @@ class _ShippingScreenState extends State<ShippingScreen> {
               'Shipments',
               style: regularText14,
             ),
-            Text(
-              shortByString,
-              style: regularText14.copyWith(
-                color: Colors.grey,
-              ),
+            const SizedBox(
+              width: 100,
             ),
-            GestureDetector(
-              onTap: () {
-                showBottomSheet(context);
-              },
-              child: Row(
-                children: [
-                  Text(
-                    'Short by',
-                    style: regularText14,
-                  ),
-                  const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: primary,
-                  ),
-                ],
+            Expanded(
+              child: TextFormFieldWidget(
+                hintText: 'Search',
+                onChanged: (String? value) {
+                  searchData.value = value ?? '';
+                },
               ),
             ),
           ],
@@ -109,226 +127,167 @@ class _ShippingScreenState extends State<ShippingScreen> {
   }
 
   Widget shippingList() {
-    return ListView.separated(
-      itemCount: 10,
-      padding: EdgeInsets.zero,
-      separatorBuilder: (BuildContext context, int index) => height20,
-      itemBuilder: (BuildContext context, int index) => InkWell(
-        onTap: () {
-          Get.to(() => const MyPackagesDetailsScreen());
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.10),
-                offset: const Offset(0.0, 2.0),
-                spreadRadius: 1,
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  color: greyColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'Button',
-                        style: regularText14.copyWith(
-                          color: primary,
+    return Obx(
+      () => shippmentsList.isEmpty
+          ? Image.asset(emptyList)
+          : ListView.separated(
+              itemCount: shippmentsList.length,
+              padding: EdgeInsets.zero,
+              separatorBuilder: (BuildContext context, int index) => height20,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    Get.to(() => MyPackagesDetailsScreen(
+                          packagesDetails: shippmentsList[index],
+                        ));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.10),
+                          offset: const Offset(0.0, 2.0),
+                          spreadRadius: 1,
+                          blurRadius: 5,
                         ),
-                      ),
-                      const VerticalDivider(
-                        color: primary,
-                      ),
-                      Row(
-                        children: const [
-                          Text(
-                            'Value : ',
-                          ),
-                          Text(
-                            '0.0 ',
-                            style: TextStyle(
-                              color: primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                color: greyColor.withOpacity(0.2),
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    width20,
-                    Center(
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: amazonColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Image.asset(
-                          amazonLogo,
-                        ),
-                      ),
+                      ],
                     ),
-                    width20,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'PKG8',
-                            style: regularText14.copyWith(
-                              color: primary,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(
+                            color: greyColor,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
                             ),
                           ),
-                          height10,
-                          Text(
-                            '1234567867646464646546546469',
-                            overflow: TextOverflow.ellipsis,
-                            style: regularText14.copyWith(
-                              color: Colors.grey,
+                          child: IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Button',
+                                  style: regularText14.copyWith(
+                                    color: primary,
+                                  ),
+                                ),
+                                const VerticalDivider(
+                                  color: primary,
+                                ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Value : ',
+                                    ),
+                                    Text(
+                                      shippmentsList[index]['amount'],
+                                      style: const TextStyle(
+                                        color: primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          height10,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                        Container(
+                          color: greyColor.withOpacity(0.2),
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
                             children: [
-                              Text(
-                                '8LB',
-                                overflow: TextOverflow.ellipsis,
-                                style: regularText14.copyWith(
-                                  color: Colors.grey,
+                              width20,
+                              Center(
+                                child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: amazonColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Image.network(
+                                    shippmentsList[index]['package_image'],
+                                  ),
                                 ),
                               ),
-                              const Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.grey,
-                                size: 14,
+                              width20,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      shippmentsList[index]['shipping_mcecode'],
+                                      style: regularText14.copyWith(
+                                        color: primary,
+                                      ),
+                                    ),
+                                    height10,
+                                    Text(
+                                      shippmentsList[index]['tracking'],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: regularText14.copyWith(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    height10,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          shippmentsList[index]['weight_label'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: regularText14.copyWith(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Colors.grey,
+                                          size: 14,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  color: greyColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "TOTAL COST : 5468.00",
-                        style: mediumText14.copyWith(
-                          color: blackColor,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 250,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: CupertinoPicker(
-                  itemExtent: 40,
-                  magnification: 1.33,
-                  squeeze: 1.2,
-                  useMagnifier: true,
-                  looping: true,
-                  onSelectedItemChanged: (int value) {
-                    setState(() {
-                      shortByString = 'Hello';
-                    });
-                  },
-                  children: List.generate(
-                    10,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        'Hello',
-                        style: mediumText18.copyWith(
-                          color: primary,
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(
+                            color: greyColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  "TOTAL COST : ${shippmentsList[index]['amount']}",
+                                  style: mediumText14.copyWith(
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    maximumSize: Size(Get.width, 50),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'SELECT',
-                    style: TextStyle(
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-              ),
-              height10,
-            ],
-          ),
-        );
-      },
+                );
+              },
+            ),
     );
   }
 }

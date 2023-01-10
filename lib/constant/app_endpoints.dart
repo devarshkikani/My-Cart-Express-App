@@ -19,8 +19,9 @@ class ApiEndPoints {
 
   static String faqList = 'faq/list';
 
-  static String walletTransaction = 'wallet/transaction';
-  static String walletDetail = 'wallet/detail';
+  static String shippingList = 'shipping';
+
+  static String transactionList = 'transaction/list';
 
   static String authorizePickupAdd = 'authorizepickup/add';
   static String authorizePickup = 'authorize_pickup/list';

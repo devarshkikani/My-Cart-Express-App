@@ -1,14 +1,16 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:timelines/timelines.dart';
 
 class MyPackagesDetailsScreen extends StatefulWidget {
-  const MyPackagesDetailsScreen({super.key});
+  Map packagesDetails = {}.obs;
+  MyPackagesDetailsScreen({super.key, required this.packagesDetails});
 
   @override
   State<MyPackagesDetailsScreen> createState() =>
@@ -104,14 +106,14 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                       Row(
                         children: [
                           Text(
-                            'Ontime : ',
+                            '${widget.packagesDetails['flight_eta_status']} : ',
                             style: regularText14.copyWith(
                               color: success,
                             ),
                           ),
-                          const Text(
-                            '06 Jun',
-                            style: TextStyle(
+                          Text(
+                            widget.packagesDetails['flight_eta_date'],
+                            style: const TextStyle(
                               color: primary,
                             ),
                           ),
@@ -144,47 +146,50 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                             color: amazonColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Image.asset(
-                            amazonLogo,
+                          child: Image.network(
+                            widget.packagesDetails['package_image'],
                           ),
                         ),
                         width20,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'PKG8',
-                              style: regularText14.copyWith(
-                                color: primary,
-                              ),
-                            ),
-                            height10,
-                            Text(
-                              '1234567867646464646546546469',
-                              overflow: TextOverflow.ellipsis,
-                              style: regularText14.copyWith(
-                                color: Colors.grey,
-                              ),
-                            ),
-                            height10,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '8LB',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: regularText14.copyWith(
-                                    color: Colors.grey,
-                                  ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.packagesDetails['shipping_mcecode'],
+                                style: regularText14.copyWith(
+                                  color: primary,
                                 ),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
+                              ),
+                              height10,
+                              Text(
+                                widget.packagesDetails['tracking'],
+                                overflow: TextOverflow.ellipsis,
+                                style: regularText14.copyWith(
                                   color: Colors.grey,
-                                  size: 14,
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              height10,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    widget.packagesDetails['weight_label'],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: regularText14.copyWith(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: Colors.grey,
+                                    size: 14,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -197,7 +202,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                     ),
                     height5,
                     Text(
-                      "\$5468.00",
+                      "\$${widget.packagesDetails['amount']}",
                       style: mediumText14.copyWith(
                         color: Colors.grey,
                       ),

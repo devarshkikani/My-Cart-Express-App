@@ -315,73 +315,82 @@ class _HomeScreenState extends State<HomeScreen> {
             height15,
             Expanded(
               child: Obx(
-                () => ListView.separated(
-                  itemCount: packagesList.length,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      height10,
-                  itemBuilder: (BuildContext context, int index) => Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: greyColor,
+                () => packagesList.isEmpty
+                    ? Center(
+                        child: Image.asset(
+                          emptyList,
+                          height: 200,
                         ),
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                packagesList[index]['shipping_mcecode'],
-                                style: lightText13.copyWith(
-                                  color: blackColor,
-                                ),
+                      )
+                    : ListView.separated(
+                        itemCount: packagesList.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            height10,
+                        itemBuilder: (BuildContext context, int index) =>
+                            Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: greyColor,
                               ),
-                              height10,
-                              Text(
-                                packagesList[index]['tracking'],
-                                overflow: TextOverflow.ellipsis,
-                                style: lightText13.copyWith(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: orangeColor,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                          ),
-                          onPressed: () {},
+                              borderRadius: BorderRadius.circular(12)),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Invoice Needed',
-                                style: TextStyle(
-                                  letterSpacing: 0.5,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      packagesList[index]['shipping_mcecode'],
+                                      style: lightText13.copyWith(
+                                        color: blackColor,
+                                      ),
+                                    ),
+                                    height10,
+                                    Text(
+                                      packagesList[index]['tracking'],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: lightText13.copyWith(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              width10,
-                              Image.asset(
-                                addIcon,
-                                color: whiteColor,
-                                height: 14,
-                                width: 14,
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: orangeColor,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      'Invoice Needed',
+                                      style: TextStyle(
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    width10,
+                                    Image.asset(
+                                      addIcon,
+                                      color: whiteColor,
+                                      height: 14,
+                                      width: 14,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ),
           ],
