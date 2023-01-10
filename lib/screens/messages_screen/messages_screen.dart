@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MessagesScreen extends StatefulWidget {
   const MessagesScreen({super.key});
@@ -11,53 +17,79 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
+  RxList messagesList = [].obs;
+
+  @override
+  void initState() {
+    getMessgaes();
+    super.initState();
+  }
+
+  Future<void> getMessgaes() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardMessages,
+      context: context,
+    );
+    if (response != null) {
+      messagesList.value = response['message'];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: appbarWidget(title: 'Messages'),
-      body: ListView.separated(
-        itemCount: 5,
-        padding: const EdgeInsets.all(15),
-        separatorBuilder: (BuildContext context, int index) => height10,
-        itemBuilder: (BuildContext context, int inde) => ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              childrenPadding: const EdgeInsets.only(
-                bottom: 10,
-              ),
-              backgroundColor: greyColor.withOpacity(0.2),
-              expandedCrossAxisAlignment: CrossAxisAlignment.start,
-              expandedAlignment: Alignment.topCenter,
-              collapsedBackgroundColor: greyColor.withOpacity(0.2),
-              tilePadding: const EdgeInsets.symmetric(horizontal: 15),
-              trailing: const Text(
-                '02 sep 2022 15:58 PM',
-              ),
-              title: const Text(
-                'no-replay@mycartexpress.com',
-              ),
-              subtitle: const Text(
-                'Email Verification',
-              ),
-              children: <Widget>[
-                const Text(
-                  'Welcome to Mart',
+      body: Obx(
+        () => ListView.separated(
+          itemCount: messagesList.length,
+          separatorBuilder: (BuildContext context, int index) => height10,
+          itemBuilder: (BuildContext context, int index) => ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Theme(
+              data:
+                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                childrenPadding: const EdgeInsets.only(
+                  bottom: 10,
                 ),
-                height15,
-                const Text(
-                  'Thank you for signing up to MyCartExpress services.',
+                backgroundColor: greyColor.withOpacity(0.2),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                expandedAlignment: Alignment.topCenter,
+                collapsedBackgroundColor: greyColor.withOpacity(0.2),
+                tilePadding: const EdgeInsets.symmetric(horizontal: 15),
+                trailing: Text(
+                  DateFormat('dd MMM yyyy HH:mm a').format(
+                      DateTime.parse(messagesList[index]['insert_timestamp'])),
                 ),
-                const Text(
-                  'Welcome to Mart',
+                title: Text(messagesList[index]['email_address']),
+                subtitle: Text(
+                  messagesList[index]['email_subject'],
                 ),
-              ],
+                children: <Widget>[
+                  html(messagesList[index]['email_content']),
+                ],
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget html(String data) {
+    return Html(
+      data: data,
+      onAnchorTap: (url, context, attributes, element) {
+        if (url != null) {
+          launchUrl(Uri.parse(url));
+        }
+      },
+      onLinkTap: (url, context, attributes, element) {
+        if (url != null) {
+          launchUrl(Uri.parse(url));
+        }
+      },
     );
   }
 }

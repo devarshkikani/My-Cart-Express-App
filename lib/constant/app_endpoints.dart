@@ -14,6 +14,7 @@ class ApiEndPoints {
   static String balance = 'wallet/balance';
   static String customerShippingAddress = 'customer/shipping_address';
   static String dashboardPackageList = 'dashboard/package_list';
+  static String dashboardMessages = 'dashboard/messages';
 
   static String notificationList = 'notification/list';
 
