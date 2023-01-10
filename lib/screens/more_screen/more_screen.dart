@@ -10,7 +10,7 @@ import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
 import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
 import 'package:my_cart_express/screens/more_screen/more_screen_controller.dart';
 import 'package:my_cart_express/screens/more_screen/my_rewards_screen.dart';
-import 'package:my_cart_express/screens/more_screen/shipping_calculator_screen.dart';
+import 'package:my_cart_express/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
 import 'package:my_cart_express/screens/more_screen/support_index_screen.dart';
 import 'package:my_cart_express/screens/more_screen/transaction_screen.dart';
 import 'package:my_cart_express/screens/more_screen/upload_screen.dart';
@@ -49,7 +49,9 @@ class MoreScreen extends GetView<MoreScreenController> {
     if (index == 0) {
       Get.to(() => const AvailablePackagesScreen());
     } else if (index == 1) {
-      Get.to(() => const ShippingCalculatorScreen());
+      Get.to(
+        () => const ShippingCalculatorScreen(),
+      );
     } else if (index == 2) {
       Get.to(() => const TransactionScreen());
     } else if (index == 3) {

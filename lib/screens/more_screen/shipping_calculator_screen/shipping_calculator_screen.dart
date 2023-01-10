@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/screens/more_screen/shipping_calculator_screen/calculator_controller.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
@@ -13,16 +14,20 @@ class ShippingCalculatorScreen extends StatefulWidget {
 
   @override
   State<ShippingCalculatorScreen> createState() =>
-      ShippinCcalculatorScreenState();
+      _ShippingCalculatorScreenState();
 }
 
-class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
-  TextEditingController rate = TextEditingController();
-  TextEditingController category = TextEditingController();
-  TextEditingController value = TextEditingController();
-  TextEditingController estimated = TextEditingController();
+class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
+  final ShippingCalculatorController controller =
+      Get.put(ShippingCalculatorController());
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    if (rateGroupList.isEmpty || categoriesList.isEmpty) {
+      controller.getGropDetails(context);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +59,7 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
 
   Widget bodyView(context) {
     return Form(
-      key: _formKey,
+      key: controller.formKey,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,10 +90,12 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                   height10,
                   TextFormFieldWidget(
                     hintText: 'Select Group',
-                    controller: rate,
+                    controller: controller.rate,
                     readOnly: true,
                     onTap: () {
-                      showBottomSheet(context, 1);
+                      selectRateGroup(
+                        context: context,
+                      );
                     },
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -104,11 +111,11 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                   ),
                   height10,
                   TextFormFieldWidget(
-                    hintText: 'Select Group',
-                    controller: category,
+                    hintText: 'Select Category',
+                    controller: controller.category,
                     readOnly: true,
                     onTap: () {
-                      showBottomSheet(context, 2);
+                      selectCategoryGroup(context: context);
                     },
                     suffixIcon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
@@ -125,7 +132,8 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                   height10,
                   TextFormFieldWidget(
                     hintText: 'Total cost at check out',
-                    controller: value,
+                    controller: controller.value,
+                    keyboardType: TextInputType.number,
                     validator: (value) =>
                         Validators.validateText(value, 'Value'),
                   ),
@@ -137,7 +145,8 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                   height10,
                   TextFormFieldWidget(
                     hintText: 'Total cost at check out',
-                    controller: value,
+                    controller: controller.estimated,
+                    keyboardType: TextInputType.number,
                     validator: (value) => Validators.validateText(
                       value,
                       'Estimated weight',
@@ -148,10 +157,11 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          rate.clear();
-                          category.clear();
-                          value.clear();
-                          estimated.clear();
+                          controller.rate.clear();
+                          controller.category.clear();
+                          controller.value.clear();
+                          controller.estimated.clear();
+                          controller.resultData.clear();
                         },
                         child: const Text(
                           'RESET',
@@ -163,7 +173,9 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                           backgroundColor: MaterialStateProperty.all(success),
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {}
+                          if (controller.formKey.currentState!.validate()) {
+                            controller.calculateData(context);
+                          }
                         },
                         child: const Text(
                           'CALCULATE',
@@ -203,10 +215,14 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                 ),
               ),
               const Spacer(),
-              Text(
-                '\$0.0',
-                style: regularText18.copyWith(
-                  color: success,
+              Obx(
+                () => Text(
+                  controller.resultData.isNotEmpty
+                      ? controller.resultData['amount']
+                      : '\$0.0',
+                  style: regularText18.copyWith(
+                    color: success,
+                  ),
                 ),
               ),
             ],
@@ -221,9 +237,13 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Text(
-              '\$0.0',
-              style: regularText14,
+            Obx(
+              () => Text(
+                controller.resultData.isNotEmpty
+                    ? controller.resultData['freight_cost']
+                    : '\$0.0',
+                style: regularText14,
+              ),
             ),
           ],
         ),
@@ -236,9 +256,13 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Text(
-              '\$0.0',
-              style: regularText14,
+            Obx(
+              () => Text(
+                controller.resultData.isNotEmpty
+                    ? controller.resultData['clearance_fee_jmd']
+                    : '\$0.0',
+                style: regularText14,
+              ),
             ),
           ],
         ),
@@ -251,10 +275,12 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Text(
-              '\$0.0',
-              style: regularText14,
-            ),
+            Obx(() => Text(
+                  controller.resultData.isNotEmpty
+                      ? controller.resultData['processing_fee']
+                      : '\$0.0',
+                  style: regularText14,
+                )),
           ],
         ),
         height5,
@@ -266,10 +292,12 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Text(
-              '\$0.0',
-              style: regularText14,
-            ),
+            Obx(() => Text(
+                  controller.resultData.isNotEmpty
+                      ? controller.resultData['tax']
+                      : '\$0.0',
+                  style: regularText14,
+                )),
           ],
         ),
         height15,
@@ -284,7 +312,9 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
     );
   }
 
-  void showBottomSheet(BuildContext context, int index) {
+  void selectRateGroup({
+    required BuildContext context,
+  }) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -304,18 +334,84 @@ class ShippinCcalculatorScreenState extends State<ShippingCalculatorScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    if (index == 1) {
-                      rate.text = 'Hello';
-                    } else if (index == 2) {
-                      category.text = 'Hello';
-                    }
+                    controller.rate.text = rateGroupList[i]['grp_name'];
+                    controller.rateId.value = categoriesList[i]['id'];
                   },
                   children: List.generate(
-                    10,
+                    rateGroupList.length,
                     (index) => Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        'Hello',
+                        rateGroupList[index]['grp_name'],
+                        style: mediumText18.copyWith(
+                          color: primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    maximumSize: Size(Get.width, 50),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'SELECT',
+                    style: TextStyle(
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+              height10,
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void selectCategoryGroup({
+    required BuildContext context,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 250,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 40,
+                  magnification: 1.33,
+                  squeeze: 1.2,
+                  useMagnifier: true,
+                  looping: true,
+                  onSelectedItemChanged: (int i) {
+                    controller.category.text = categoriesList[i]['cat_name'];
+                    controller.catId.value = categoriesList[i]['id'];
+                  },
+                  children: List.generate(
+                    categoriesList.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        categoriesList[index]['cat_name'],
                         style: mediumText18.copyWith(
                           color: primary,
                         ),

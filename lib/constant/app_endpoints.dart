@@ -23,4 +23,7 @@ class ApiEndPoints {
   static String authorizePickup = 'authorize_pickup/list';
   static String authorizePickupDelete = 'authorizepickup/delete';
   static String authorizePickupType = 'authorize_pickup/authorize_pickup_type';
+
+  static String calculateRate = 'shipping_calculator/calculate_rate?';
+  static String calculatorProduct = 'shipping_calculator/product';
 }
