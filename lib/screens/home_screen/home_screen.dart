@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   RxInt balance = 0.obs;
   RxMap customerAddress = {}.obs;
+  RxList packagesList = [].obs;
 
   @override
   void initState() {
@@ -41,6 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (addressResponse != null) {
       customerAddress.value = addressResponse['data'] ?? {};
+    }
+    Map<String, dynamic>? packagesResponse = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
+      context: context,
+    );
+    if (packagesResponse != null) {
+      packagesList.value = packagesResponse['list'] ?? [];
     }
   }
 
@@ -83,7 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    top: 15,
+                    right: 15,
+                  ),
                   decoration: const BoxDecoration(
                     color: offWhite,
                     borderRadius: BorderRadius.only(
@@ -267,7 +279,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget packagesView() {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.only(
+          left: 15,
+          top: 15,
+          right: 15,
+        ),
         decoration: BoxDecoration(
           color: greyColor.withOpacity(0.2),
           borderRadius: BorderRadius.circular(10),
@@ -298,65 +314,72 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             height15,
             Expanded(
-              child: ListView.separated(
-                itemCount: 5,
-                separatorBuilder: (BuildContext context, int index) => height10,
-                itemBuilder: (BuildContext context, int index) => Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: greyColor,
-                      ),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'PKG34111L',
-                            style: lightText13.copyWith(
-                              color: blackColor,
-                            ),
-                          ),
-                          height10,
-                          Text(
-                            'ABCS',
-                            style: lightText13.copyWith(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: orangeColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
+              child: Obx(
+                () => ListView.separated(
+                  itemCount: packagesList.length,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      height10,
+                  itemBuilder: (BuildContext context, int index) => Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: greyColor,
                         ),
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Invoice Needed',
-                              style: TextStyle(
-                                letterSpacing: 0.5,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                packagesList[index]['shipping_mcecode'],
+                                style: lightText13.copyWith(
+                                  color: blackColor,
+                                ),
                               ),
-                            ),
-                            width10,
-                            Image.asset(
-                              addIcon,
-                              color: whiteColor,
-                              height: 14,
-                              width: 14,
-                            ),
-                          ],
+                              height10,
+                              Text(
+                                packagesList[index]['tracking'],
+                                overflow: TextOverflow.ellipsis,
+                                style: lightText13.copyWith(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: orangeColor,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Row(
+                            children: [
+                              const Text(
+                                'Invoice Needed',
+                                style: TextStyle(
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              width10,
+                              Image.asset(
+                                addIcon,
+                                color: whiteColor,
+                                height: 14,
+                                width: 14,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
