@@ -20,6 +20,7 @@ class ApiEndPoints {
   static String faqList = 'faq/list';
 
   static String shippingList = 'shipping';
+  static String availableShipping = 'shipping/available';
 
   static String transactionList = 'transaction/list';
 

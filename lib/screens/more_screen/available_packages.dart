@@ -18,21 +18,26 @@ class AvailablePackagesScreen extends StatefulWidget {
 }
 
 class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
-  RxList shippmentsList = [].obs;
+  RxList availablePackages = [].obs;
+  RxMap availablePackagesData = {}.obs;
 
   @override
   void initState() {
-    getShippments();
+    getAvailablePackages();
     super.initState();
   }
 
-  Future<void> getShippments() async {
+  Future<void> getAvailablePackages() async {
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-        url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingList,
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.availableShipping,
         context: context,
         data: null);
     if (response != null) {
-      shippmentsList.value = response['list'];
+      availablePackages.value = response['list'];
+      availablePackagesData.value = {
+        "counts": response['counts'],
+        "due": response['due'],
+      };
     }
   }
 
@@ -91,19 +96,19 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
           ],
         ),
         height10,
-        Text(
-          'TOTAL PACKAGES AVAILABLE : 4',
-          style: regularText14.copyWith(
-            color: Colors.grey,
-          ),
-        ),
+        Obx(() => Text(
+              'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts']}',
+              style: regularText14.copyWith(
+                color: Colors.grey,
+              ),
+            )),
         height10,
-        Text(
-          'TOTAL DUE : \$3200',
-          style: regularText14.copyWith(
-            color: Colors.grey,
-          ),
-        ),
+        Obx(() => Text(
+              'TOTAL DUE : ${availablePackagesData['due']}',
+              style: regularText14.copyWith(
+                color: Colors.grey,
+              ),
+            )),
         height15,
         Expanded(
           child: shippingList(),
@@ -114,7 +119,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
 
   Widget shippingList() {
     return Obx(
-      () => shippmentsList.isEmpty
+      () => availablePackages.isEmpty
           ? Center(
               child: Image.asset(
                 emptyList,
@@ -122,13 +127,13 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
               ),
             )
           : ListView.separated(
-              itemCount: shippmentsList.length,
+              itemCount: availablePackages.length,
               padding: EdgeInsets.zero,
               separatorBuilder: (BuildContext context, int index) => height20,
               itemBuilder: (BuildContext context, int index) => InkWell(
                 onTap: () {
                   Get.to(() => MyPackagesDetailsScreen(
-                        packagesDetails: shippmentsList[index],
+                        packagesDetails: availablePackages[index],
                       ));
                 },
                 child: Container(
