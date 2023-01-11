@@ -1,12 +1,18 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:get/get.dart';
-import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:my_cart_express/theme/colors.dart';
-import 'package:my_cart_express/theme/text_style.dart';
-import 'package:my_cart_express/widget/app_bar_widget.dart';
-import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
+import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
+import 'package:my_cart_express/widget/app_bar_widget.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
+import 'package:my_cart_express/widget/input_text_field.dart';
 
 class UploadFileScreen extends StatefulWidget {
   const UploadFileScreen({super.key});
@@ -17,7 +23,55 @@ class UploadFileScreen extends StatefulWidget {
 
 class _UploadFileScreenState extends State<UploadFileScreen> {
   TextEditingController type = TextEditingController();
+  File? selectedFile;
+  RxString catId = ''.obs;
+  RxString fileName = ''.obs;
+  RxList categoriesList = [].obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    getShippingCategories();
+  }
+
+  Future<void> getShippingCategories() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
+      context: context,
+    );
+    if (response != null) {
+      categoriesList.value = response['list'];
+    }
+  }
+
+  Future<void> pickFile(FilePickerResult? result) async {
+    if (result != null) {
+      selectedFile = File(result.files.first.path!);
+      fileName.value = result.files.first.name;
+      setState(() {});
+    }
+  }
+
+  Future<void> submitOnTap() async {
+    final data = dio.FormData.fromMap({
+      'file': await dio.MultipartFile.fromFile(
+        selectedFile!.path,
+        filename: fileName.value,
+      ),
+      'file_type_id': catId.value,
+    });
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userUploadFile,
+      data: data,
+      context: context,
+    );
+    if (response != null) {
+      Get.back();
+      NetworkDio.showSuccess(
+          title: 'Success', sucessMessage: 'File uploaded successfully');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,12 +168,14 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                       const Text(
                         'Invoice file',
                       ),
-                      Text(
-                        '(filename.txt)',
-                        style: lightText14.copyWith(
-                          color: primary,
-                        ),
-                      ),
+                      Obx(() => Text(
+                            fileName.value != ''
+                                ? fileName.value
+                                : '(filename.txt)',
+                            style: lightText14.copyWith(
+                              color: primary,
+                            ),
+                          )),
                     ],
                   ),
                 ),
@@ -164,8 +220,10 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(5)),
               ),
             ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                await submitOnTap();
+              }
             },
             child: const Text(
               'SUBMIT',
@@ -199,7 +257,18 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
               children: [
                 height20,
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['jpg', 'tiff', 'png', 'jpeg'],
+                    );
+
+                    await pickFile(
+                      result,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
                     textStyle: const TextStyle(color: blackColor),
@@ -219,7 +288,17 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                 ),
                 height10,
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf', 'doc', 'tiff'],
+                    );
+                    await pickFile(
+                      result,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
                     textStyle: const TextStyle(color: blackColor),
@@ -287,14 +366,15 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    type.text = 'Hello';
+                    type.text = categoriesList[i]['cat_name'];
+                    catId.value = categoriesList[i]['id'];
                   },
                   children: List.generate(
-                    10,
+                    categoriesList.length,
                     (index) => Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        'Hello',
+                        categoriesList[index]['cat_name'],
                         style: mediumText18.copyWith(
                           color: primary,
                         ),

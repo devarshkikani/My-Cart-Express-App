@@ -128,7 +128,7 @@ class NetworkDio {
           print('Catch +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(title: 'Error', errorMessage: 'Some thing went wrong');
+        showError(title: 'Error', errorMessage: e.toString());
         return null;
       }
     } else {

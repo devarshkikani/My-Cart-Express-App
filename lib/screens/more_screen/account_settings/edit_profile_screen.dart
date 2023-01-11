@@ -5,7 +5,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/theme/text_style.dart';
@@ -15,6 +14,7 @@ import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
+import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -487,7 +487,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       'location': locationID.value,
       'birth_date': date,
       'phone': mobileNumber.text,
-      'file': filePath.value,
+      'file': await dio.MultipartFile.fromFile(
+        filePath.value,
+        filename: fileName.value,
+      ),
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.userEditInfo,

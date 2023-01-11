@@ -12,6 +12,7 @@ class ApiEndPoints {
   static String branches = 'branches';
 
   static String userInfo = 'user/info';
+  static String userUploadFile = 'user/upload_file';
   static String userLocation = 'user/location';
   static String userEditInfo = 'user/edit_info';
   static String userRewards = 'user/rewards';
@@ -28,6 +29,7 @@ class ApiEndPoints {
   static String supportList = 'faq/support';
 
   static String shippingList = 'shipping';
+  static String shippingCategories = 'shipping/categories';
   static String shippingOverdue = 'shipping/overdue';
   static String availableShipping = 'shipping/available';
 
