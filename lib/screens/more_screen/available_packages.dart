@@ -19,6 +19,7 @@ class AvailablePackagesScreen extends StatefulWidget {
 
 class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   RxList availablePackages = [].obs;
+  RxBool isLoading = true.obs;
   RxMap availablePackagesData = {}.obs;
 
   @override
@@ -33,6 +34,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         context: context,
         data: null);
     if (response != null) {
+      isLoading.value = false;
       availablePackages.value = response['list'];
       availablePackagesData.value = {
         "counts": response['counts'],
@@ -96,19 +98,23 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
           ],
         ),
         height10,
-        Obx(() => Text(
-              'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts']}',
-              style: regularText14.copyWith(
-                color: Colors.grey,
-              ),
-            )),
+        Obx(() => isLoading.value
+            ? const SizedBox()
+            : Text(
+                'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts']}',
+                style: regularText14.copyWith(
+                  color: Colors.grey,
+                ),
+              )),
         height10,
-        Obx(() => Text(
-              'TOTAL DUE : ${availablePackagesData['due']}',
-              style: regularText14.copyWith(
-                color: Colors.grey,
-              ),
-            )),
+        Obx(() => isLoading.value
+            ? const SizedBox()
+            : Text(
+                'TOTAL DUE : ${availablePackagesData['due']}',
+                style: regularText14.copyWith(
+                  color: Colors.grey,
+                ),
+              )),
         height15,
         Expanded(
           child: shippingList(),
@@ -119,209 +125,221 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
 
   Widget shippingList() {
     return Obx(
-      () => availablePackages.isEmpty
-          ? Center(
-              child: Image.asset(
-                emptyList,
-                height: 200,
-              ),
-            )
-          : ListView.separated(
-              itemCount: availablePackages.length,
-              padding: EdgeInsets.zero,
-              separatorBuilder: (BuildContext context, int index) => height20,
-              itemBuilder: (BuildContext context, int index) => InkWell(
-                onTap: () {
-                  Get.to(() => MyPackagesDetailsScreen(
-                        packagesDetails: availablePackages[index],
-                      ));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(.10),
-                        offset: const Offset(0.0, 2.0),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                      ),
-                    ],
+      () => isLoading.value
+          ? const SizedBox()
+          : availablePackages.isEmpty
+              ? Center(
+                  child: Image.asset(
+                    emptyList,
+                    height: 200,
                   ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: primary.withOpacity(0.2),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
+                )
+              : ListView.separated(
+                  itemCount: availablePackages.length,
+                  padding: EdgeInsets.zero,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      height20,
+                  itemBuilder: (BuildContext context, int index) => InkWell(
+                    onTap: () {
+                      Get.to(() => MyPackagesDetailsScreen(
+                            packagesDetails: availablePackages[index],
+                          ));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(.10),
+                            offset: const Offset(0.0, 2.0),
+                            spreadRadius: 1,
+                            blurRadius: 5,
                           ),
-                        ),
-                        child: IntrinsicHeight(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.check_circle,
-                                      color: primary,
-                                    ),
-                                    width5,
-                                    Text(
-                                      'Available for Pickup',
-                                      style: lightText12.copyWith(
-                                        color: primary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const VerticalDivider(
-                                color: primary,
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'value : ',
-                                      style: lightText12,
-                                    ),
-                                    Text(
-                                      '\$48.0',
-                                      style: regularText14,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        ],
                       ),
-                      Container(
-                        color: greyColor.withOpacity(0.2),
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            width20,
-                            Center(
-                              child: Container(
-                                height: 60,
-                                width: 60,
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: amazonColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Image.asset(
-                                  unitedStateLogo,
-                                ),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: primary.withOpacity(0.2),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
                               ),
                             ),
-                            width20,
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'PKG8',
-                                    style: regularText14.copyWith(
-                                      color: primary,
-                                    ),
-                                  ),
-                                  height10,
-                                  Text(
-                                    '1234567867646464646546546469',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: regularText14.copyWith(),
-                                  ),
-                                  height10,
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '8LB',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: regularText14.copyWith(),
-                                      ),
-                                      const Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        size: 14,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: primary.withOpacity(0.2),
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
+                            child: IntrinsicHeight(
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    "TOTAL COST : 5468.00",
-                                    style: mediumText14.copyWith(
-                                      color: blackColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                color: success,
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'Request Delivery',
-                                          style: regularText14.copyWith(
-                                            color: whiteColor,
-                                            letterSpacing: 0.2,
-                                          ),
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: primary,
                                         ),
                                         width5,
-                                        const Icon(
-                                          Icons.add_circle_outline_rounded,
-                                          color: whiteColor,
+                                        Text(
+                                          availablePackages[index]
+                                              ['package_status'],
+                                          style: lightText12.copyWith(
+                                            color: primary,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const VerticalDivider(
+                                    color: primary,
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'value : ',
+                                          style: lightText12,
+                                        ),
+                                        Text(
+                                          availablePackages[index]
+                                              ['amount'], //'\$48.0',
+                                          style: regularText14,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Container(
+                            color: greyColor.withOpacity(0.2),
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                width20,
+                                Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: Image.network(
+                                        availablePackages[index]['img_url'],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                width20,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        availablePackages[index]
+                                            ['pkg_shipging_code'],
+                                        style: regularText14.copyWith(
+                                          color: primary,
+                                        ),
+                                      ),
+                                      height10,
+                                      Text(
+                                        availablePackages[index]['pkg_id'],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: regularText14.copyWith(),
+                                      ),
+                                      height10,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            availablePackages[index]
+                                                ['weight_label'],
+                                            overflow: TextOverflow.ellipsis,
+                                            style: regularText14.copyWith(),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 14,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: primary.withOpacity(0.2),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "TOTAL COST : ${availablePackages[index]['total_cost']}",
+                                        style: mediumText14.copyWith(
+                                          color: blackColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    color: success,
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              availablePackages[index]
+                                                  ['invoice_btn_text'],
+                                              style: regularText14.copyWith(
+                                                color: whiteColor,
+                                                letterSpacing: 0.2,
+                                              ),
+                                            ),
+                                            width5,
+                                            const Icon(
+                                              Icons.add_circle_outline_rounded,
+                                              color: whiteColor,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
     );
   }
 }

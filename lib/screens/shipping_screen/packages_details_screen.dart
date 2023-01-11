@@ -138,16 +138,15 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                     Row(
                       children: [
                         width10,
-                        Container(
-                          height: 60,
-                          width: 60,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: amazonColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Image.network(
-                            widget.packagesDetails['package_image'],
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            height: 60,
+                            width: 60,
+                            child: Image.network(
+                              widget.packagesDetails['package_image'],
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         width20,
