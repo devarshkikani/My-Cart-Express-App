@@ -1,9 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
 
 class MyRewardsScreen extends StatefulWidget {
@@ -14,6 +16,23 @@ class MyRewardsScreen extends StatefulWidget {
 }
 
 class _MyRewardsScreenState extends State<MyRewardsScreen> {
+  RxString link = ''.obs;
+  @override
+  void initState() {
+    getUserRewards();
+    super.initState();
+  }
+
+  Future<void> getUserRewards() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userRewards,
+      context: context,
+    );
+    if (response != null) {
+      link.value = response['message'];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,18 +108,18 @@ class _MyRewardsScreenState extends State<MyRewardsScreen> {
                     color: Colors.grey,
                   ),
                 ),
-                child: Text(
-                  'https://web.whatsapp.com/',
-                  style: lightText13.copyWith(
-                    color: primary,
-                  ),
-                ),
+                child: Obx(() => Text(
+                      link.value,
+                      style: lightText13.copyWith(
+                        color: primary,
+                      ),
+                    )),
               ),
               height10,
               GestureDetector(
                 onTap: () async {
                   await Clipboard.setData(
-                    const ClipboardData(text: "your text"),
+                    ClipboardData(text: link.value),
                   );
                   Get.snackbar(
                     'Link Copied',

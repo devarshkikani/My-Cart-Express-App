@@ -14,6 +14,7 @@ class ApiEndPoints {
   static String userInfo = 'user/info';
   static String userLocation = 'user/location';
   static String userEditInfo = 'user/edit_info';
+  static String userRewards = 'user/rewards';
 
   static String balance = 'wallet/balance';
   static String howItWorks = 'dashboard/how_it_works';
