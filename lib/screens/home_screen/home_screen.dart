@@ -9,6 +9,7 @@ import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   RxInt balance = 0.obs;
+  RxString howItWorks = ''.obs;
   RxMap customerAddress = {}.obs;
   RxList packagesList = [].obs;
 
@@ -49,6 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (packagesResponse != null) {
       packagesList.value = packagesResponse['list'] ?? [];
+    }
+
+    Map<String, dynamic>? howItWorksResponse =
+        await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
+      context: context,
+    );
+    if (howItWorksResponse != null) {
+      howItWorks.value = howItWorksResponse['img_url'];
     }
   }
 
@@ -207,11 +218,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.grey.shade600,
                         ),
                       ),
-                      Text(
-                        "How it's Work?",
-                        style: lightText14.copyWith(
-                          color: primary,
-                          decoration: TextDecoration.underline,
+                      GestureDetector(
+                        onTap: () {
+                          launchUrl(Uri.parse(howItWorks.value));
+                        },
+                        child: Text(
+                          "How it's Work?",
+                          style: lightText14.copyWith(
+                            color: primary,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ],

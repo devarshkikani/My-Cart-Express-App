@@ -16,6 +16,7 @@ class ApiEndPoints {
   static String userEditInfo = 'user/edit_info';
 
   static String balance = 'wallet/balance';
+  static String howItWorks = 'dashboard/how_it_works';
   static String customerShippingAddress = 'customer/shipping_address';
   static String dashboardPackageList = 'dashboard/package_list';
   static String dashboardMessages = 'dashboard/messages';
@@ -25,6 +26,7 @@ class ApiEndPoints {
   static String faqList = 'faq/list';
 
   static String shippingList = 'shipping';
+  static String shippingOverdue = 'shipping/overdue';
   static String availableShipping = 'shipping/available';
 
   static String transactionList = 'transaction/list';
