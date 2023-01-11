@@ -24,6 +24,7 @@ class ApiEndPoints {
   static String notificationList = 'notification/list';
 
   static String faqList = 'faq/list';
+  static String supportList = 'faq/support';
 
   static String shippingList = 'shipping';
   static String shippingOverdue = 'shipping/overdue';
