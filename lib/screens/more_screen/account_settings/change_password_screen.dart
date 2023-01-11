@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
@@ -19,11 +20,19 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  RxMap userDetails = {}.obs;
+
   TextEditingController changePassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   TextEditingController typeOldPassword = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    userDetails.value = MoreScreenState.userDetails;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,40 +151,48 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget profileView() {
     return Center(
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              dummyProfileImage,
-              height: 100,
-              width: 100,
+      child: Obx(
+        () => Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: userDetails['image'].toString() != ''
+                  ? Image.network(
+                      userDetails['image'].toString(),
+                      height: 100,
+                      width: 100,
+                    )
+                  : Image.asset(
+                      dummyProfileImage,
+                      height: 100,
+                      width: 100,
+                    ),
             ),
-          ),
-          height20,
-          Text(
-            'KAMAR PALMER',
-            style: regularText18.copyWith(
-              color: blackColor,
-              letterSpacing: 0.3,
+            height20,
+            Text(
+              userDetails.isEmpty ? '' : userDetails['name'].toString(),
+              style: regularText18.copyWith(
+                color: blackColor,
+                letterSpacing: 0.3,
+              ),
             ),
-          ),
-          height5,
-          Text(
-            'User Code : STF000002',
-            style: lightText16,
-          ),
-          height5,
-          Text(
-            'Email : mkamar@mycartexpress.com',
-            style: lightText16,
-          ),
-          height5,
-          Text(
-            'Phone : ',
-            style: lightText16,
-          ),
-        ],
+            height5,
+            Text(
+              'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'].toString()}',
+              style: lightText16,
+            ),
+            height5,
+            Text(
+              'Email : ${userDetails.isEmpty ? '' : userDetails['email'].toString()}',
+              style: lightText16,
+            ),
+            height5,
+            Text(
+              'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'].toString()}',
+              style: lightText16,
+            ),
+          ],
+        ),
       ),
     );
   }

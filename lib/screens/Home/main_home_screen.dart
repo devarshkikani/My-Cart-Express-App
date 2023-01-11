@@ -4,7 +4,6 @@ import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/screens/delivery_screen/delivery_screen.dart';
 import 'package:my_cart_express/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/screens/more_screen/more_screen.dart';
-import 'package:my_cart_express/screens/more_screen/more_screen_controller.dart';
 import 'package:my_cart_express/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
@@ -20,10 +19,7 @@ class MainHomeScreen extends GetView {
       isFromeHome: false,
     ),
     const DeliveryScreen(),
-    GetBuilder(
-      init: MoreScreenController(),
-      builder: (moreController) => MoreScreen(),
-    ),
+    const MoreScreen(),
   ];
 
   @override

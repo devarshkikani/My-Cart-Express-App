@@ -1,13 +1,20 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: must_be_immutable
+
 import 'package:get/get.dart';
-import 'package:my_cart_express/constant/default_images.dart';
-import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/theme/text_style.dart';
-import 'package:my_cart_express/widget/app_bar_widget.dart';
-import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
+import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/widget/app_bar_widget.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
+import 'package:my_cart_express/constant/default_images.dart';
+import 'package:my_cart_express/widget/input_text_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -17,6 +24,11 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  RxMap userDetails = {}.obs;
+  RxList locationList = [].obs;
+  RxString locationID = ''.obs;
+  RxString filePath = ''.obs;
+  RxString fileName = ''.obs;
   TextEditingController pickUpLocation = TextEditingController();
   TextEditingController date = TextEditingController();
   TextEditingController month = TextEditingController();
@@ -34,6 +46,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       month.text = picked.month.toString();
       year.text = picked.year.toString();
     }
+  }
+
+  Future<void> getLocation() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userLocation,
+      context: context,
+    );
+    if (response != null) {
+      locationList.value = response['data'];
+    }
+  }
+
+  @override
+  void initState() {
+    userDetails.value = MoreScreenState.userDetails;
+    getLocation();
+    super.initState();
   }
 
   @override
@@ -91,40 +120,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget profileView() {
     return Center(
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              dummyProfileImage,
-              height: 100,
-              width: 100,
+      child: Obx(
+        () => Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: userDetails['image'].toString() != ''
+                  ? Image.network(
+                      userDetails['image'].toString(),
+                      height: 100,
+                      width: 100,
+                    )
+                  : Image.asset(
+                      dummyProfileImage,
+                      height: 100,
+                      width: 100,
+                    ),
             ),
-          ),
-          height20,
-          Text(
-            'KAMAR PALMER',
-            style: regularText18.copyWith(
-              color: blackColor,
-              letterSpacing: 0.3,
+            height20,
+            Text(
+              userDetails.isEmpty ? '' : userDetails['name'].toString(),
+              style: regularText18.copyWith(
+                color: blackColor,
+                letterSpacing: 0.3,
+              ),
             ),
-          ),
-          height5,
-          Text(
-            'User Code : STF000002',
-            style: lightText16,
-          ),
-          height5,
-          Text(
-            'Email : mkamar@mycartexpress.com',
-            style: lightText16,
-          ),
-          height5,
-          Text(
-            'Phone : ',
-            style: lightText16,
-          ),
-        ],
+            height5,
+            Text(
+              'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'].toString()}',
+              style: lightText16,
+            ),
+            height5,
+            Text(
+              'Email : ${userDetails.isEmpty ? '' : userDetails['email'].toString()}',
+              style: lightText16,
+            ),
+            height5,
+            Text(
+              'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'].toString()}',
+              style: lightText16,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -145,7 +182,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             controller: pickUpLocation,
             readOnly: true,
             onTap: () {
-              showBottomSheet(context, 1);
+              showBottomSheet(context);
             },
             suffixIcon: const Icon(
               Icons.keyboard_arrow_down_rounded,
@@ -220,6 +257,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           TextFormFieldWidget(
             hintText: 'Mobile Number',
             controller: mobileNumber,
+            keyboardType: TextInputType.number,
             validator: (value) =>
                 Validators.validateText(value, 'Mobile Number'),
           ),
@@ -257,10 +295,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const Text(
                         'Invoice file',
                       ),
-                      Text(
-                        '(filename.txt)',
-                        style: lightText14.copyWith(
-                          color: primary,
+                      Obx(
+                        () => Text(
+                          fileName.value == ''
+                              ? '(filename.txt)'
+                              : fileName.toString(),
+                          style: lightText14.copyWith(
+                            color: primary,
+                          ),
                         ),
                       ),
                     ],
@@ -308,7 +350,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+              if (_formKey.currentState!.validate()) {
+                saveOnTap();
+              }
             },
             child: const Text(
               'SAVE',
@@ -342,7 +386,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 height20,
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['jpg', 'tiff', 'png', 'jpeg'],
+                    );
+
+                    await pickFile(
+                      result,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
                     textStyle: const TextStyle(color: blackColor),
@@ -362,7 +417,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 height10,
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf', 'doc', 'tiff'],
+                    );
+                    await pickFile(
+                      result,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
                     textStyle: const TextStyle(color: blackColor),
@@ -410,7 +475,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void showBottomSheet(BuildContext context, int index) {
+  Future<void> pickFile(FilePickerResult? result) async {
+    if (result != null) {
+      filePath.value = result.files.first.path!;
+      fileName.value = result.files.first.name;
+    }
+  }
+
+  Future<void> saveOnTap() async {
+    final data = dio.FormData.fromMap({
+      'location': locationID.value,
+      'birth_date': date,
+      'phone': mobileNumber.text,
+      'file': filePath.value,
+    });
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userEditInfo,
+      data: data,
+      context: context,
+    );
+    if (response != null) {
+      if (response['status'] == 200) {
+        await getUserInfo(response['message']);
+      }
+    }
+  }
+
+  Future<void> getUserInfo(String messgae) async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      context: context,
+    );
+
+    if (response != null) {
+      userDetails.value = response['data'];
+      MoreScreenState.userDetails.value = response['data'];
+      Get.back(
+        result: userDetails,
+      );
+      NetworkDio.showSuccess(
+        title: 'Success',
+        sucessMessage: messgae,
+      );
+    }
+  }
+
+  void showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -430,14 +540,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    pickUpLocation.text = 'Hello';
+                    pickUpLocation.text = locationList[i]['parish_name'];
+                    locationID.value = locationList[i]['id'];
                   },
                   children: List.generate(
-                    10,
+                    locationList.length,
                     (index) => Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        'Hello',
+                        locationList[index]['parish_name'],
                         style: mediumText18.copyWith(
                           color: primary,
                         ),

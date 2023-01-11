@@ -11,6 +11,10 @@ class ApiEndPoints {
       'courier_server/api/authentication/forgot_password';
   static String branches = 'branches';
 
+  static String userInfo = 'user/info';
+  static String userLocation = 'user/location';
+  static String userEditInfo = 'user/edit_info';
+
   static String balance = 'wallet/balance';
   static String customerShippingAddress = 'customer/shipping_address';
   static String dashboardPackageList = 'dashboard/package_list';

@@ -1,9 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/more_screen/account_settings/change_password_screen.dart';
 import 'package:my_cart_express/screens/more_screen/account_settings/edit_profile_screen.dart';
+import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
@@ -16,6 +19,14 @@ class AccountSettingsScreen extends StatefulWidget {
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
+  RxMap userDetails = {}.obs;
+
+  @override
+  void initState() {
+    userDetails.value = MoreScreenState.userDetails;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,18 +58,24 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   Widget bodyView() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Account Setting',
-          style: regularText18,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Account Setting',
+            style: regularText18,
+          ),
         ),
         height20,
         profileView(),
         height20,
         GestureDetector(
           onTap: () {
-            Get.to(() => const EditProfileScreen());
+            Get.to(() => const EditProfileScreen())?.then((value) {
+              if (value != null) {
+                userDetails.value = value;
+              }
+            });
           },
           child: Container(
             padding: const EdgeInsets.all(15),
@@ -90,7 +107,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
           ),
         ),
-        height20,
         GestureDetector(
           onTap: () {
             Get.to(() => const ChangePasswordScreen());
@@ -130,20 +146,26 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   Widget profileView() {
-    return Center(
-      child: Column(
+    return Obx(
+      () => Column(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              dummyProfileImage,
-              height: 100,
-              width: 100,
-            ),
+            child: userDetails['image'].toString() != ''
+                ? Image.network(
+                    userDetails['image'].toString(),
+                    height: 100,
+                    width: 100,
+                  )
+                : Image.asset(
+                    dummyProfileImage,
+                    height: 100,
+                    width: 100,
+                  ),
           ),
           height20,
           Text(
-            'KAMAR PALMER',
+            userDetails.isEmpty ? '' : userDetails['name'].toString(),
             style: regularText18.copyWith(
               color: blackColor,
               letterSpacing: 0.3,
@@ -151,17 +173,17 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           ),
           height5,
           Text(
-            'User Code : STF000002',
+            'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'].toString()}',
             style: lightText16,
           ),
           height5,
           Text(
-            'Email : mkamar@mycartexpress.com',
+            'Email : ${userDetails.isEmpty ? '' : userDetails['email'].toString()}',
             style: lightText16,
           ),
           height5,
           Text(
-            'Phone : ',
+            'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'].toString()}',
             style: lightText16,
           ),
         ],

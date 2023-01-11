@@ -1,25 +1,37 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_cart_express/constant/default_images.dart';
-import 'package:my_cart_express/constant/sizedbox.dart';
-import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
-import 'package:my_cart_express/screens/more_screen/account_settings/account_settings_screen.dart';
-import 'package:my_cart_express/screens/more_screen/auth_pickup/auth_pickup_screen.dart';
-import 'package:my_cart_express/screens/more_screen/available_packages.dart';
-import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
-import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
-import 'package:my_cart_express/screens/more_screen/more_screen_controller.dart';
-import 'package:my_cart_express/screens/more_screen/my_rewards_screen.dart';
-import 'package:my_cart_express/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
-import 'package:my_cart_express/screens/more_screen/support_index_screen.dart';
-import 'package:my_cart_express/screens/more_screen/transaction_screen.dart';
-import 'package:my_cart_express/screens/more_screen/upload_screen.dart';
-import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
+import 'package:my_cart_express/constant/default_images.dart';
+import 'package:my_cart_express/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
+import 'package:my_cart_express/screens/more_screen/upload_screen.dart';
+import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
+import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
+import 'package:my_cart_express/screens/more_screen/my_rewards_screen.dart';
+import 'package:my_cart_express/screens/more_screen/transaction_screen.dart';
+import 'package:my_cart_express/screens/more_screen/available_packages.dart';
+import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
+import 'package:my_cart_express/screens/more_screen/support_index_screen.dart';
+import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
+import 'package:my_cart_express/screens/more_screen/auth_pickup/auth_pickup_screen.dart';
+import 'package:my_cart_express/screens/more_screen/account_settings/account_settings_screen.dart';
+import 'package:my_cart_express/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
 
-class MoreScreen extends GetView<MoreScreenController> {
-  MoreScreen({super.key});
+class MoreScreen extends StatefulWidget {
+  const MoreScreen({super.key});
+
+  @override
+  State<MoreScreen> createState() => MoreScreenState();
+}
+
+class MoreScreenState extends State<MoreScreen> {
+  GetStorage box = GetStorage();
+  static RxMap userDetails = {}.obs;
 
   final List categoryList = [
     'Available Packages',
@@ -67,6 +79,31 @@ class MoreScreen extends GetView<MoreScreenController> {
     } else if (index == 8) {
       Get.to(() => const UploadFileScreen());
     }
+  }
+
+  Future<void> getUserDetails() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      context: context,
+    );
+
+    if (response != null) {
+      userDetails.value = response['data'];
+    }
+  }
+
+  Future<void> logOutOnTap(BuildContext context) async {
+    box.erase();
+    MainHomeScreen.selectedIndex.value = 0;
+    Get.offAll(
+      () => const WelcomeScreen(),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserDetails();
   }
 
   @override
@@ -137,8 +174,8 @@ class MoreScreen extends GetView<MoreScreenController> {
             ),
             const Spacer(),
             TextButton(
-              onPressed: () {
-                controller.logOutOnTap(context);
+              onPressed: () async {
+                await logOutOnTap(context);
               },
               style: ButtonStyle(
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -165,48 +202,59 @@ class MoreScreen extends GetView<MoreScreenController> {
   }
 
   Widget profileView() {
-    return Column(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(
-            dummyProfileImage,
-            height: 100,
-            width: 100,
+    return Obx(
+      () => Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: userDetails['image'].toString().isEmpty ||
+                    userDetails['image'] == null
+                ? Image.asset(
+                    dummyProfileImage,
+                    height: 100,
+                    width: 100,
+                  )
+                : Image.network(
+                    userDetails['image'].toString(),
+                    height: 100,
+                    width: 100,
+                  ),
           ),
-        ),
-        height20,
-        Text(
-          'KAMAR PALMER',
-          style: regularText18.copyWith(
-            color: blackColor,
-            letterSpacing: 0.3,
+          height20,
+          Text(
+            userDetails.isEmpty ? '' : userDetails['name'].toString(),
+            style: regularText18.copyWith(
+              color: blackColor,
+              letterSpacing: 0.3,
+            ),
           ),
-        ),
-        height5,
-        Text(
-          'User Code : STF000002',
-          style: lightText16,
-        ),
-        height5,
-        Text(
-          'Email : mkamar@mycartexpress.com',
-          style: lightText16,
-        ),
-        height5,
-        Text(
-          'Phone : ',
-          style: lightText16,
-        ),
-        TextButton(
-          onPressed: () {
-            Get.to(() => const AccountSettingsScreen());
-          },
-          child: const Text(
-            'Edit Profile',
+          height5,
+          Text(
+            'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'].toString()}',
+            style: lightText16,
           ),
-        ),
-      ],
+          height5,
+          Text(
+            'Email : ${userDetails.isEmpty ? '' : userDetails['email'].toString()}',
+            style: lightText16,
+          ),
+          height5,
+          Text(
+            'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'].toString()}',
+            style: lightText16,
+          ),
+          TextButton(
+            onPressed: () {
+              Get.to(
+                () => const AccountSettingsScreen(),
+              );
+            },
+            child: const Text(
+              'Edit Profile',
+            ),
+          ),
+        ],
+      ),
     );
   }
 
