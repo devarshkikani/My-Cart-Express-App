@@ -82,27 +82,9 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              'Overdue Packages',
-              style: regularText18,
-            ),
-            const Spacer(),
-            Text(
-              'All',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-            width15,
-            Text(
-              'Sort by',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-          ],
+        Text(
+          'Overdue Packages',
+          style: regularText18,
         ),
         height10,
         Obx(

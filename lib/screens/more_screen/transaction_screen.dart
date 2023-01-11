@@ -79,28 +79,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Widget bodyView() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              'Transaction',
-              style: regularText18,
-            ),
-            const Spacer(),
-            Text(
-              'All',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-            width15,
-            Text(
-              'Sort by',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-          ],
+        Text(
+          'Transaction',
+          style: regularText18,
         ),
         height10,
         Expanded(

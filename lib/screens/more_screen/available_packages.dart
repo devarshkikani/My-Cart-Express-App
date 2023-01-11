@@ -75,27 +75,9 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              'Available Packages',
-              style: regularText18,
-            ),
-            const Spacer(),
-            Text(
-              'All',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-            width15,
-            Text(
-              'Sort by',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-          ],
+        Text(
+          'Available Packages',
+          style: regularText18,
         ),
         height10,
         Obx(() => isLoading.value
