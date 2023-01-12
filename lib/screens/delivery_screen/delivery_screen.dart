@@ -117,7 +117,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
   Widget duePackagesView() {
     return Obx(
       () => isLoading.value
-          ? const SizedBox()
+          ? Row(
+              children: const <Widget>[
+                SizedBox(),
+              ],
+            )
           : duePackages.isEmpty
               ? Center(
                   child: Text(

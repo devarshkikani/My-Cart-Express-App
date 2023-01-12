@@ -37,13 +37,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime.now(),
+    );
     if (picked != null) {
-      date.text = picked.day.toString();
-      month.text = picked.month.toString();
+      date.text = picked.day.toString().padLeft(2, '0');
+      month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
     }
   }
@@ -485,12 +486,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> saveOnTap() async {
     final data = dio.FormData.fromMap({
       'location': locationID.value,
-      'birth_date': date,
+      'birth_date': '${year.text}-${month.text}-${date.text}',
       'phone': mobileNumber.text,
-      'file': await dio.MultipartFile.fromFile(
-        filePath.value,
-        filename: fileName.value,
-      ),
+      'file': filePath.value != ''
+          ? await dio.MultipartFile.fromFile(
+              filePath.value,
+              filename: fileName.value,
+            )
+          : null,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.userEditInfo,

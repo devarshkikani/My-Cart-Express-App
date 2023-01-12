@@ -69,7 +69,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
     if (response != null) {
       Get.back();
       NetworkDio.showSuccess(
-          title: 'Success', sucessMessage: 'File uploaded successfully');
+          title: 'Success', sucessMessage: response['message']);
     }
   }
 

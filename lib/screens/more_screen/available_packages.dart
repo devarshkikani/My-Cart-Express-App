@@ -108,7 +108,11 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   Widget shippingList() {
     return Obx(
       () => isLoading.value
-          ? const SizedBox()
+          ? Row(
+              children: const <Widget>[
+                SizedBox(),
+              ],
+            )
           : availablePackages.isEmpty
               ? Center(
                   child: Image.asset(
