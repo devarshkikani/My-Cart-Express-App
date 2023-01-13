@@ -26,6 +26,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>>My Cart Express would like to access your photos for messaging other users.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>My Cart Express would like access to your photo gallery</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to scan QR codes</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
