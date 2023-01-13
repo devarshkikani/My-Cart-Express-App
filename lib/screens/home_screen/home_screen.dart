@@ -21,7 +21,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   RxInt balance = 0.obs;
   RxString howItWorks = ''.obs;
-  RxMap customerAddress = {}.obs;
+  RxMap pickuoBranchData = {}.obs;
+  RxMap usaShippingData = {}.obs;
   RxList packagesList = [].obs;
 
   @override
@@ -38,13 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response != null) {
       balance.value = response['data'];
     }
-    Map<String, dynamic>? addressResponse = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.customerShippingAddress,
-      context: context,
-    );
-    if (addressResponse != null) {
-      customerAddress.value = addressResponse['data'] ?? {};
-    }
+
     Map<String, dynamic>? packagesResponse = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
       context: context,
@@ -60,6 +55,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (howItWorksResponse != null) {
       howItWorks.value = howItWorksResponse['img_url'];
+    }
+
+    Map<String, dynamic>? shippingPickupAddress =
+        await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
+      context: context,
+    );
+    if (shippingPickupAddress != null) {
+      usaShippingData.value = shippingPickupAddress['package_shipping_data']
+          ['usa_air_address_details'];
+      pickuoBranchData.value =
+          shippingPickupAddress['package_shipping_data']['branch_data'];
     }
   }
 
@@ -235,24 +242,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   height15,
                   Obx(
                     () => Text(
-                      customerAddress.isNotEmpty
-                          ? customerAddress['address_1'] +
+                      usaShippingData.isNotEmpty
+                          ? usaShippingData['address_1'] +
                               ' ' +
-                              customerAddress['address_2'] +
+                              usaShippingData['address_2'] +
                               ' ' +
-                              customerAddress['locality'] +
+                              usaShippingData['city'] +
                               ', ' +
-                              customerAddress['province'] +
+                              usaShippingData['state'] +
                               ', ' +
-                              customerAddress['postcode']
+                              usaShippingData['postcode']
                           : '',
                       style: lightText13,
                     ),
                   ),
                   height10,
-                  Text(
-                    'USA Tel: +1',
-                    style: lightText13,
+                  Obx(
+                    () => Text(
+                      'USA Tel: +1 ${usaShippingData.isNotEmpty ? usaShippingData['telephone'] : ''}',
+                      style: lightText13,
+                    ),
                   ),
                 ],
               ),
@@ -270,19 +279,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: regularText14,
                   ),
                   height15,
-                  Text(
-                    'Maypen Shopw28 Milennium Mall Sand Bay,',
-                    style: lightText13.copyWith(
-                      color: primary,
-                    ),
-                  ),
+                  Obx(() => Text(
+                        pickuoBranchData.isNotEmpty
+                            ? pickuoBranchData['location'] +
+                                ' ' +
+                                pickuoBranchData['address'] +
+                                ' ' +
+                                pickuoBranchData['city'] +
+                                ', ' +
+                                pickuoBranchData['parishname'] +
+                                ', ' +
+                                pickuoBranchData['code']
+                            : '',
+                        style: lightText13.copyWith(
+                          color: primary,
+                        ),
+                      )),
                   height10,
-                  Text(
-                    'Monday- Friday 9:00AM to 5:00PM || Saturday 10:00AM to 3:00PM || Sunday Closed',
-                    style: lightText13.copyWith(
-                      color: primary,
-                    ),
-                  ),
+                  Obx(() => Text(
+                        pickuoBranchData.isNotEmpty
+                            ? pickuoBranchData['open_hour']
+                            : '',
+                        style: lightText13.copyWith(
+                          color: primary,
+                        ),
+                      )),
                 ],
               ),
             ),
