@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:flutter/material.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
+import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/widget/app_bar_widget.dart';
 
 class FeedbackScreen extends StatefulWidget {
@@ -13,6 +16,40 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
+  ScrollController scrollController = ScrollController();
+  RxInt limit = 10.obs;
+  RxList feedbackList = [].obs;
+  RxBool isLoading = true.obs;
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController()..addListener(_scrollListener);
+    getFeedbackData();
+  }
+
+  Future<void> _scrollListener() async {
+    if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      limit.value = limit.value + 10;
+      getFeedbackData();
+    }
+  }
+
+  void getFeedbackData() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      // ignore: prefer_interpolation_to_compose_strings
+      url: ApiEndPoints.apiEndPoint +
+          ApiEndPoints.feedbackTransactionList +
+          '?offset=0&limit=$limit',
+      context: context,
+    );
+    if (response != null) {
+      feedbackList.value = response['list'];
+    }
+    isLoading.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,137 +97,169 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         ),
         height15,
         Expanded(
-          child: feedbackList(),
+          child: feedbackListView(),
         ),
       ],
     );
   }
 
-  Widget feedbackList() {
-    return ListView.separated(
-      itemCount: 10,
-      padding: EdgeInsets.zero,
-      separatorBuilder: (BuildContext context, int index) => height10,
-      itemBuilder: (BuildContext context, int index) => Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: greyColor.withOpacity(.5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    'Your Agent was :',
-                    style: regularText14,
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    "Damion Campbell",
-                    style: regularText14,
-                  ),
-                ),
-              ],
-            ),
-            height5,
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    'Date/Time',
-                    style: lightText13,
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    "11/09/2022",
-                    style: lightText13,
-                  ),
-                ),
-              ],
-            ),
-            height5,
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    'Transaction',
-                    style: lightText13,
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    "TR783466",
-                    style: lightText13,
-                  ),
-                ),
-              ],
-            ),
-            const Divider(
-              color: blackColor,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    'Last Replay :',
-                    style: lightText13,
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "RC555555",
-                        style: lightText13,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(primary),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          minimumSize: MaterialStateProperty.all(
-                            const Size(0, 0),
-                          ),
-                          padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
+  Widget feedbackListView() {
+    return Obx(
+      () => isLoading.value
+          ? const SizedBox()
+          : feedbackList.isEmpty
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      emptyList,
+                    ),
+                  ],
+                )
+              : ListView.separated(
+                  itemCount: feedbackList.length,
+                  controller: scrollController,
+                  padding: EdgeInsets.zero,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      height10,
+                  itemBuilder: (BuildContext context, int index) => Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: greyColor.withOpacity(.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Your Agent was :',
+                                style: regularText14,
+                              ),
                             ),
-                          ),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                feedbackList[index]['agent'],
+                                style: regularText14,
+                              ),
+                            ),
+                          ],
                         ),
-                        child: Text(
-                          'Leave Feedback',
-                          style: lightText12.copyWith(
-                            letterSpacing: 0.9,
-                            color: whiteColor,
-                          ),
+                        height5,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Date/Time',
+                                style: lightText13,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                feedbackList[index]["insert_timestamp"],
+                                style: lightText13,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        height5,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Transaction',
+                                style: lightText13,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                feedbackList[index]['customer_name']
+                                    .toString()
+                                    .split(' ')
+                                    .first,
+                                style: lightText13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(
+                          color: blackColor,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Last Replay :',
+                                style: lightText13,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 6,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    feedbackList[index]['last_reply']
+                                                .toString() !=
+                                            ""
+                                        ? feedbackList[index]['last_reply']
+                                        : feedbackList[index]['customer_name']
+                                            .toString()
+                                            .split('-')
+                                            .last
+                                            .trim(),
+                                    style: lightText13,
+                                  ),
+                                  if (feedbackList[index]
+                                          ['hide_leave_feedback'] !=
+                                      1)
+                                    ElevatedButton(
+                                      onPressed: () {},
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(primary),
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        minimumSize: MaterialStateProperty.all(
+                                          const Size(0, 0),
+                                        ),
+                                        padding: MaterialStateProperty.all(
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Leave Feedback',
+                                        style: lightText12.copyWith(
+                                          letterSpacing: 0.9,
+                                          color: whiteColor,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
