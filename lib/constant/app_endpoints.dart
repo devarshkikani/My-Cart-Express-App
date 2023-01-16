@@ -7,8 +7,7 @@ class ApiEndPoints {
   static String signIn = 'login';
   static String signUp = 'authentication/registration';
   static String changePassword = 'user/change_password';
-  static String forgotPassword =
-      'courier_server/api/authentication/forgot_password';
+  static String forgotPassword = 'authentication/forgot_password';
   static String branches = 'branches';
 
   static String userInfo = 'user/info';

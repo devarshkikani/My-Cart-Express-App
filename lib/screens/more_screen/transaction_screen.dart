@@ -96,7 +96,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget transactionsListView() {
     return Obx(
       () => isLoading.value
-          ? const SizedBox()
+          ? Row(
+              children: const [
+                SizedBox(),
+              ],
+            )
           : transactionList.isEmpty
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
