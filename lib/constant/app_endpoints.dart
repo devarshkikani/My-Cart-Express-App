@@ -23,6 +23,8 @@ class ApiEndPoints {
   static String dashboardMessages = 'dashboard/messages';
   static String shippingPickupAddress = 'dashboard/shipping_pickup_address';
 
+  static String shippingTracking = 'shipping/tracking/';
+
   static String notificationList = 'notification/list';
 
   static String feedbackTransactionList = 'feedback/transaction';

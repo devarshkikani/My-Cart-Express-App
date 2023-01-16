@@ -3,9 +3,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:timelines/timelines.dart';
 
 class MyPackagesDetailsScreen extends StatefulWidget {
@@ -18,6 +20,26 @@ class MyPackagesDetailsScreen extends StatefulWidget {
 }
 
 class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getTrackingDetails();
+  }
+
+  getTrackingDetails() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint +
+            ApiEndPoints.shippingTracking +
+            widget.packagesDetails['package_id'],
+        context: context);
+    if (response != null) {
+      for (int i = 0; i < response['package_tracking'].length; i++) {
+        timeline.add(response['package_tracking'][i]['package_status']);
+      }
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,7 +252,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                   timeline[index],
                 ),
               ),
-              itemCount: 5,
+              itemCount: timeline.length,
             ),
           ),
         )
@@ -239,10 +261,10 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   }
 
   List timeline = [
-    'Recevied in Florida',
-    'Airline Boked',
-    'Custooms Booked',
-    'Available for Pickup',
-    'Collected',
+    //   'Recevied in Florida',
+    //   'Airline Boked',
+    //   'Custooms Booked',
+    //   'Available for Pickup',
+    //   'Collected',
   ];
 }
