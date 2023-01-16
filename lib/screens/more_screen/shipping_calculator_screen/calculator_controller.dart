@@ -8,11 +8,9 @@ RxList rateGroupList = [].obs;
 RxList categoriesList = [].obs;
 
 class ShippingCalculatorController extends GetxController {
-  TextEditingController rate = TextEditingController();
   TextEditingController category = TextEditingController();
   TextEditingController value = TextEditingController();
   TextEditingController estimated = TextEditingController();
-  RxString rateId = ''.obs;
   RxString catId = ''.obs;
   RxMap resultData = {}.obs;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -23,7 +21,6 @@ class ShippingCalculatorController extends GetxController {
       context: context,
     );
     if (response != null) {
-      rateGroupList.value = response['data']['rate_groups'];
       categoriesList.value = response['data']['categories'];
     }
   }
@@ -31,7 +28,7 @@ class ShippingCalculatorController extends GetxController {
   Future<void> calculateData(context) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
       url:
-          '${ApiEndPoints.apiEndPoint}${ApiEndPoints.calculateRate}rate_group_id=$rateId&category_id=$catId&value_cost=${value.text}&weight=${estimated.text}',
+          '${ApiEndPoints.apiEndPoint}${ApiEndPoints.calculateRate}category_id=$catId&value_cost=${value.text}&weight=${estimated.text}',
       context: context,
     );
     if (response != null) {
