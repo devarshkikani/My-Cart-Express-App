@@ -21,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   RxInt balance = 0.obs;
   RxString howItWorks = ''.obs;
+  RxString fullName = ''.obs;
   RxMap pickuoBranchData = {}.obs;
   RxMap usaShippingData = {}.obs;
   RxList packagesList = [].obs;
@@ -63,6 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
     );
     if (shippingPickupAddress != null) {
+      fullName.value = shippingPickupAddress['package_shipping_data']
+              ['firstname'] +
+          ' ' +
+          shippingPickupAddress['package_shipping_data']['lastname'];
       usaShippingData.value = shippingPickupAddress['package_shipping_data']
           ['usa_air_address_details'];
       pickuoBranchData.value =
@@ -240,6 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   height15,
+                  Obx(
+                    () => Text(
+                      fullName.isNotEmpty ? 'Full name  ${fullName.value}' : '',
+                      style: lightText13,
+                    ),
+                  ),
+                  height10,
                   Obx(
                     () => Text(
                       usaShippingData.isNotEmpty
