@@ -9,7 +9,7 @@ import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
-import 'package:my_cart_express/screens/more_screen/upload_screen.dart';
+// import 'package:my_cart_express/screens/more_screen/upload_screen.dart';
 import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
 import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/screens/more_screen/my_rewards_screen.dart';
@@ -35,14 +35,14 @@ class MoreScreenState extends State<MoreScreen> {
 
   final List categoryList = [
     'Available Packages',
-    'Shopping Calculator',
+    'Shipping Calculator',
     'Transaction',
     "FAQ's",
-    'Support Index',
+    'Support Center',
     'Feedback',
     'My Rewards',
     'Auth Pickup',
-    'Upload File',
+    // 'Upload File',
   ];
 
   final List imageList = [
@@ -54,7 +54,7 @@ class MoreScreenState extends State<MoreScreen> {
     feedbackIcon,
     myRewardIcon,
     pickupIcon,
-    uploadFileIcon
+    // uploadFileIcon
   ];
 
   void categoryOntap(int index) {
@@ -76,8 +76,8 @@ class MoreScreenState extends State<MoreScreen> {
       Get.to(() => const MyRewardsScreen());
     } else if (index == 7) {
       Get.to(() => const AuthPickUpScreen());
-    } else if (index == 8) {
-      Get.to(() => const UploadFileScreen());
+      // } else if (index == 8) {
+      //   Get.to(() => const UploadFileScreen());
     }
   }
 
