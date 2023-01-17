@@ -176,7 +176,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      'Button',
+                                      shippmentsList[index]['status'],
                                       style: regularText14.copyWith(
                                         color: primary,
                                       ),
@@ -190,7 +190,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                           'Value : ',
                                         ),
                                         Text(
-                                          shippmentsList[index]['amount'],
+                                          shippmentsList[index]['value_cost'],
                                           style: const TextStyle(
                                             color: primary,
                                           ),
