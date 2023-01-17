@@ -67,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
       fullName.value = shippingPickupAddress['package_shipping_data']
               ['firstname'] +
           ' ' +
-          shippingPickupAddress['package_shipping_data']['lastname'];
+          shippingPickupAddress['package_shipping_data']['lastname'] +
+          ' ' +
+          shippingPickupAddress['package_shipping_data']['mce_number'];
       usaShippingData.value = shippingPickupAddress['package_shipping_data']
           ['usa_air_address_details'];
       pickuoBranchData.value =
@@ -247,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height15,
                   Obx(
                     () => Text(
-                      fullName.isNotEmpty ? 'Full name  ${fullName.value}' : '',
+                      fullName.isNotEmpty ? fullName.value : '',
                       style: lightText13,
                     ),
                   ),
