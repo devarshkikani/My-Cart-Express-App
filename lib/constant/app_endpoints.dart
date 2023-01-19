@@ -35,6 +35,7 @@ class ApiEndPoints {
   static String shippingCategories = 'shipping/categories';
   static String shippingOverdue = 'shipping/overdue';
   static String availableShipping = 'shipping/available';
+  static String uploadAttachments = 'shipping/upload_attachments';
 
   static String transactionList = 'transaction/list';
 
