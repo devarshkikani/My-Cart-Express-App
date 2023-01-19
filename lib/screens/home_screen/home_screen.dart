@@ -9,7 +9,6 @@ import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -234,7 +233,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          launchUrl(Uri.parse(howItWorks.value));
+                          showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Stack(
+                                    children: [
+                                      Image.network(howItWorks.value),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(ctx);
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: blackColor,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: whiteColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                         },
                         child: Text(
                           "How it's Work?",
