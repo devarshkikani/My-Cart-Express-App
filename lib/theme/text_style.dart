@@ -70,6 +70,12 @@ TextStyle regularText16 = const TextStyle(
   color: Colors.black,
 );
 
+TextStyle regularText12 = const TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);
+
 TextStyle regularText14 = const TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w500,

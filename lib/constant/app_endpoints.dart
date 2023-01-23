@@ -29,7 +29,11 @@ class ApiEndPoints {
   static String feedbackTransactionList = 'feedback/transaction';
 
   static String faqList = 'faq/list';
+
   static String supportList = 'faq/support';
+  static String supportDetails = 'support/details';
+  static String sendReply = 'support/send_reply';
+  static String contactAgent = 'support/contact_agent';
 
   static String shippingList = 'shipping';
   static String shippingCategories = 'shipping/categories';
