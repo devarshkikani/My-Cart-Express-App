@@ -34,6 +34,8 @@ class ApiEndPoints {
   static String supportDetails = 'support/details';
   static String sendReply = 'support/send_reply';
   static String contactAgent = 'support/contact_agent';
+  static String selfCloseTicket = 'support/self_close_ticket';
+  static String needAssistance = 'support/need_assistance';
 
   static String shippingList = 'shipping';
   static String shippingCategories = 'shipping/categories';

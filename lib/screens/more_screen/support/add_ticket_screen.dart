@@ -113,7 +113,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
             Row(
               children: [
                 Text(
-                  'Connect an Agent',
+                  'Contact an Agent',
                   style: regularText18,
                 ),
               ],
@@ -167,7 +167,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Invoice file',
+                          'Choosse file',
                         ),
                         Obx(() => Text(
                               fileName.value != ''

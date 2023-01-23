@@ -146,7 +146,7 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
                   ),
                 ),
                 child: Text(
-                  'Contact Agent',
+                  'Connect with an Agent',
                   style: regularText14.copyWith(
                     letterSpacing: 0.9,
                     color: whiteColor,
@@ -160,7 +160,7 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
         Row(
           children: [
             Text(
-              'Your Tickets',
+              'My Tickets',
               style: lightText14.copyWith(
                 color: Colors.grey,
               ),
@@ -214,170 +214,157 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
                         separatorBuilder: (BuildContext context, int index) =>
                             height10,
                         itemBuilder: (BuildContext context, int index) =>
-                            InkWell(
-                          onTap: data[index]['status'] == 'Open'
-                              ? () {
-                                  Get.to(() => SupportChatScreen(
-                                        data: data[index],
-                                      ));
-                                }
-                              : null,
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: greyColor.withOpacity(.5),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        'Title :',
-                                        style: lightText16,
-                                      ),
+                            Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: greyColor.withOpacity(.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      'Title :',
+                                      style: lightText16,
                                     ),
-                                    Expanded(
-                                      flex: 6,
-                                      child: Text(
-                                        data[index]['title'],
-                                        style: lightText16,
-                                      ),
+                                  ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      data[index]['title'],
+                                      style: lightText16,
                                     ),
-                                  ],
-                                ),
-                                height5,
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        'Date/Time :',
-                                        style: lightText16,
-                                      ),
+                                  ),
+                                ],
+                              ),
+                              height5,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      'Date/Time :',
+                                      style: lightText16,
                                     ),
-                                    Expanded(
-                                      flex: 6,
-                                      child: Text(
-                                        data[index]['date'],
-                                        style: lightText16,
-                                      ),
+                                  ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      data[index]['date'],
+                                      style: lightText16,
                                     ),
-                                  ],
-                                ),
-                                height5,
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 6,
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                  'Ticket ID :',
-                                                  style: lightText16,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                  data[index]['ticket_id'],
-                                                  style: lightText16,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          height5,
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                  'Last Replay :',
-                                                  style: lightText16,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                  isOpen
-                                                      ? data[index]
-                                                          ['last_reply']
-                                                      : '',
-                                                  style: lightText16.copyWith(
-                                                      color: primary),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: isOpen &&
-                                              ((data[index] as Map).containsKey(
-                                                      'button_text') ||
-                                                  data[index]['status'] ==
-                                                      'Open')
-                                          ? ElevatedButton(
-                                              onPressed: data[index]
-                                                          ['status'] ==
-                                                      'Open'
-                                                  ? () {
-                                                      Get.to(() =>
-                                                          SupportChatScreen(
-                                                            data: data[index],
-                                                          ));
-                                                    }
-                                                  : null,
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        primary),
-                                                tapTargetSize:
-                                                    MaterialTapTargetSize
-                                                        .shrinkWrap,
-                                                minimumSize:
-                                                    MaterialStateProperty.all(
-                                                  const Size(0, 0),
-                                                ),
-                                                padding:
-                                                    MaterialStateProperty.all(
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 15,
-                                                    vertical: 8,
-                                                  ),
-                                                ),
-                                              ),
+                                  ),
+                                ],
+                              ),
+                              height5,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
                                               child: Text(
-                                                data[index]['status'] == 'Open'
-                                                    ? "Replay"
-                                                    : data[index]
-                                                        ['button_text'],
-                                                style: regularText14.copyWith(
-                                                  letterSpacing: 0.9,
-                                                  color: whiteColor,
+                                                'Ticket ID :',
+                                                style: lightText16,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                data[index]['ticket_id'],
+                                                style: lightText16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        height5,
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                'Last Reply :',
+                                                style: lightText16,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                isOpen
+                                                    ? data[index]['last_reply']
+                                                    : '',
+                                                style: lightText16.copyWith(
+                                                    color: primary),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: isOpen &&
+                                            ((data[index] as Map).containsKey(
+                                                    'button_text') ||
+                                                data[index]['status'] == 'Open')
+                                        ? ElevatedButton(
+                                            onPressed: data[index]['status'] ==
+                                                    'Open'
+                                                ? () {
+                                                    Get.to(
+                                                        () => SupportChatScreen(
+                                                              data: data[index],
+                                                            ));
+                                                  }
+                                                : null,
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      primary),
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              minimumSize:
+                                                  MaterialStateProperty.all(
+                                                const Size(0, 0),
+                                              ),
+                                              padding:
+                                                  MaterialStateProperty.all(
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 15,
+                                                  vertical: 8,
                                                 ),
                                               ),
-                                            )
-                                          : const SizedBox(),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                            ),
+                                            child: Text(
+                                              data[index]['status'] == 'Open'
+                                                  ? "Reply"
+                                                  : 'Awaiting',
+                                              style: regularText14.copyWith(
+                                                letterSpacing: 0.9,
+                                                color: whiteColor,
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
