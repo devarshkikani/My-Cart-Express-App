@@ -332,7 +332,16 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
                                                   data[index]['status'] ==
                                                       'Open')
                                           ? ElevatedButton(
-                                              onPressed: () {},
+                                              onPressed: data[index]
+                                                          ['status'] ==
+                                                      'Open'
+                                                  ? () {
+                                                      Get.to(() =>
+                                                          SupportChatScreen(
+                                                            data: data[index],
+                                                          ));
+                                                    }
+                                                  : null,
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
