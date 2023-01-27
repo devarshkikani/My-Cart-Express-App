@@ -107,6 +107,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
           ),
         ),
+        height10,
         GestureDetector(
           onTap: () {
             Get.to(() => const ChangePasswordScreen());

@@ -52,4 +52,6 @@ class ApiEndPoints {
 
   static String calculateRate = 'shipping_calculator/calculate_rate?';
   static String calculatorProduct = 'shipping_calculator/product';
+
+  static String accountDelete = 'account/delete';
 }

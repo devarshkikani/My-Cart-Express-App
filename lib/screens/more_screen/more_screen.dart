@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/theme/colors.dart';
@@ -91,11 +92,57 @@ class MoreScreenState extends State<MoreScreen> {
     }
   }
 
-  Future<void> logOutOnTap(BuildContext context) async {
+  Future<void> logOutOnTap() async {
     box.erase();
     MainHomeScreen.selectedIndex.value = 0;
     Get.offAll(
       () => const WelcomeScreen(),
+    );
+  }
+
+  Future<void> deleteOnTap(BuildContext ctttx) async {
+    final data = dio.FormData.fromMap({
+      'email': userDetails['email'],
+    });
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.accountDelete,
+      data: data,
+      context: ctttx,
+    );
+    if (response != null) {
+      box.erase();
+      MainHomeScreen.selectedIndex.value = 0;
+      Get.offAll(
+        () => const WelcomeScreen(),
+      );
+    }
+  }
+
+  showAlertDialog(BuildContext ctx) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext ctttx) {
+        return AlertDialog(
+          title: const Text("Are you sure?"),
+          content: const Text(
+              "Are you sure you want delete the account if you tap on delete your account is permanently delete."),
+          actions: [
+            TextButton(
+              child: const Text("cancel"),
+              onPressed: () {
+                Navigator.pop(ctttx);
+              },
+            ),
+            TextButton(
+              child: const Text("delete"),
+              onPressed: () async {
+                Navigator.pop(ctttx);
+                await deleteOnTap(ctttx);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -172,20 +219,12 @@ class MoreScreenState extends State<MoreScreen> {
               style: regularText18,
             ),
             const Spacer(),
-            TextButton(
-              onPressed: () async {
-                await logOutOnTap(context);
+            GestureDetector(
+              onTap: () {
+                showThreeDotDialog(context);
               },
-              style: ButtonStyle(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                minimumSize: MaterialStateProperty.all(
-                  const Size(0, 0),
-                ),
-                padding: MaterialStateProperty.all(EdgeInsets.zero),
-              ),
-              child: Text(
-                'Logout',
-                style: regularText16,
+              child: const Icon(
+                Icons.more_vert_outlined,
               ),
             ),
             width15,
@@ -297,6 +336,61 @@ class MoreScreenState extends State<MoreScreen> {
                 Text(
                   categoryList[index],
                   textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showThreeDotDialog(BuildContext context) {
+    showModalBottomSheet<int>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext ctx) {
+        return SafeArea(
+          child: Container(
+            height: 100,
+            margin: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      await logOutOnTap();
+                    },
+                    child: Center(
+                      child: Text(
+                        'Logout',
+                        style: regularText16,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      showAlertDialog(context);
+                    },
+                    child: Center(
+                      child: Text(
+                        'Delete',
+                        style: regularText16.copyWith(color: primary),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
