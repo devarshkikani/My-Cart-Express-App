@@ -661,21 +661,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           onPressed: () async {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: [
-                                'jpg',
-                                'tiff',
-                                'png',
-                                'jpeg',
-                                'pdf',
-                                'doc',
-                              ],
-                            );
-                            await pickFile(
-                              result,
-                            );
+                            selectFileType(context);
                           },
                           child: const Text(
                             'Click to select file...',
@@ -723,6 +709,114 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void selectFileType(
+    BuildContext context,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      backgroundColor: offWhite,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 250,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                height20,
+                ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['jpg', 'tiff', 'png', 'jpeg'],
+                    );
+
+                    await pickFile(
+                      result,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: whiteColor,
+                    textStyle: const TextStyle(color: blackColor),
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        color: blackColor,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    "CHOOSE IMAGE FROM GALLERY",
+                    style: TextStyle(
+                      color: blackColor,
+                    ),
+                  ),
+                ),
+                height10,
+                ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf', 'doc', 'tiff'],
+                    );
+                    await pickFile(
+                      result,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: whiteColor,
+                    textStyle: const TextStyle(color: blackColor),
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        color: blackColor,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    "CHOOSE DOCUMENT",
+                    style: TextStyle(
+                      color: blackColor,
+                    ),
+                  ),
+                ),
+                height10,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: blackColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                height20,
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
