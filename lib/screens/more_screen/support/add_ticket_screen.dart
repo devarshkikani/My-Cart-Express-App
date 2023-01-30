@@ -25,6 +25,15 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
   File? selectedFile;
   RxString fileName = ''.obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  RxList subjectList = [].obs;
+  RxList<String> subjects = <String>[].obs;
+  RxString selectedSubject = ''.obs;
+
+  @override
+  void initState() {
+    getSubjects();
+    super.initState();
+  }
 
   Future<void> pickFile(FilePickerResult? result) async {
     if (result != null) {
@@ -34,9 +43,22 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
     }
   }
 
+  Future<void> getSubjects() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.subjects,
+      context: context,
+    );
+    if (response != null) {
+      subjectList.value = response['list'];
+      for (var i = 0; i < subjectList.length; i++) {
+        subjects.add(subjectList[i]['subject']);
+      }
+    }
+  }
+
   Future<void> submitOnTap() async {
     final data = dio.FormData.fromMap({
-      'title': title.text,
+      'title': selectedSubject.value,
       'message': message.text,
       'files': selectedFile != null
           ? await dio.MultipartFile.fromFile(
@@ -45,17 +67,24 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
             )
           : null,
     });
-    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.contactAgent,
-      data: data,
-      context: context,
-    );
-    if (response != null) {
-      Get.back(
-        result: true,
+    if (selectedSubject.value != '') {
+      Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.contactAgent,
+        data: data,
+        context: context,
       );
-      NetworkDio.showSuccess(
-          title: 'Success', sucessMessage: response['message']);
+      if (response != null) {
+        Get.back(
+          result: true,
+        );
+        NetworkDio.showSuccess(
+            title: 'Success', sucessMessage: response['message']);
+      }
+    } else {
+      NetworkDio.showError(
+        title: 'Warning',
+        errorMessage: 'Please enter title first',
+      );
     }
   }
 
@@ -124,12 +153,46 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
               style: regularText14,
             ),
             height10,
-            TextFormFieldWidget(
-              hintText: 'Write title here...',
-              controller: title,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              validator: (value) => Validators.validateText(value, 'Title'),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: blackColor,
+                ),
+              ),
+              child: Obx(
+                () => DropdownButton<String>(
+                  underline: const SizedBox(),
+                  isExpanded: true,
+                  value: selectedSubject.value == ''
+                      ? null
+                      : selectedSubject.value,
+                  hint: Text(
+                    'Select title ',
+                    style: lightText16.copyWith(
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: primary,
+                  ),
+                  items: subjects.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (type) {
+                    selectedSubject.value = type.toString();
+                  },
+                ),
+              ),
             ),
             height20,
             Text(

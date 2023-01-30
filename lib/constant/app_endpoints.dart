@@ -36,6 +36,7 @@ class ApiEndPoints {
   static String contactAgent = 'support/contact_agent';
   static String selfCloseTicket = 'support/self_close_ticket';
   static String needAssistance = 'support/need_assistance';
+  static String subjects = 'support/subjects';
 
   static String shippingList = 'shipping';
   static String shippingCategories = 'shipping/categories';
