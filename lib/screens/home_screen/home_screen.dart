@@ -16,6 +16,7 @@ import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
 import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -240,7 +241,11 @@ class _HomeScreenState extends State<HomeScreen> {
             left: 15.0,
           ),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Share.share(Platform.isIOS
+                  ? 'https://apps.apple.com/us/app/mycart-express/id1624277416'
+                  : 'https://app.mycartexpress.com/');
+            },
             child: Column(
               children: [
                 Image.asset(
