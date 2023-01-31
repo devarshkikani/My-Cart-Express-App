@@ -181,12 +181,13 @@ class NetworkDio {
           return null;
         }
       } on DioError catch (e) {
+        var response = e.response;
         if (kDebugMode) {
-          print('DioError Response +++ ${e.response}');
-          print('DioError +++ ${e.message}');
+          print('DioError +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(title: 'Error', errorMessage: 'Some thing went wrong');
+        showError(
+            title: 'Error', errorMessage: response!.data['message'].toString());
         return null;
       } catch (e) {
         if (kDebugMode) {
