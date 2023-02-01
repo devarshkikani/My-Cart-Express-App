@@ -148,7 +148,10 @@ class _ShippingScreenState extends State<ShippingScreen> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: shippmentsList[index]['status'] ==
+                                  'Available for Pickup'
+                              ? Colors.green.shade200
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -283,7 +286,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      "TOTAL COST : ${shippmentsList[index]['amount']}",
+                                      'TOTAL COST : ${shippmentsList[index]['amount']}',
                                       style: mediumText14.copyWith(
                                         color: blackColor,
                                       ),
