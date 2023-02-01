@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -56,6 +58,7 @@ class SignUpController extends GetxController {
               'password_confirm': passwordConfirm,
               'branch_id': branchId,
               'g_id': gid,
+              'device': Platform.isAndroid ? 1 : 2,
             }
           : {
               'firstname': firstName,
@@ -71,6 +74,7 @@ class SignUpController extends GetxController {
               'g_id': gid,
               'ipaddress': '',
               'device_unique_value': '',
+              'device': Platform.isAndroid ? 1 : 2,
             },
     );
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(

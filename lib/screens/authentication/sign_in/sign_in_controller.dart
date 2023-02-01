@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -19,6 +21,7 @@ class SignInController extends GetxController {
     final data = dio.FormData.fromMap({
       'email': email,
       'password': password,
+      'device': Platform.isAndroid ? 1 : 2,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,

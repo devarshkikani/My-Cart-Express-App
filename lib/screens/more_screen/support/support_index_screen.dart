@@ -117,7 +117,7 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
         Row(
           children: [
             Text(
-              'Support Index',
+              'Support Center',
               style: regularText18,
             ),
             const SizedBox(

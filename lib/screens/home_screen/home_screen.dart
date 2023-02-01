@@ -505,25 +505,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                         BorderRadius.all(Radius.circular(5)),
                                   ),
                                 ),
-                                onPressed: () {
-                                  uploadInvoice(
-                                      packagesList[index]['package_id']);
-                                },
+                                onPressed: packagesList[index]
+                                            ['upload_attachment_flag'] ==
+                                        1
+                                    ? () {
+                                        uploadInvoice(
+                                            packagesList[index]['package_id']);
+                                      }
+                                    : null,
                                 child: Row(
                                   children: [
-                                    const Text(
-                                      'Invoice Needed',
-                                      style: TextStyle(
+                                    Text(
+                                      packagesList[index]['invoice_type_label'],
+                                      style: const TextStyle(
                                         letterSpacing: 0.5,
                                       ),
                                     ),
                                     width10,
-                                    Image.asset(
-                                      addIcon,
-                                      color: whiteColor,
-                                      height: 14,
-                                      width: 14,
-                                    ),
+                                    packagesList[index]
+                                                ['upload_attachment_flag'] ==
+                                            1
+                                        ? Image.asset(
+                                            addIcon,
+                                            color: whiteColor,
+                                            height: 14,
+                                            width: 14,
+                                          )
+                                        : const SizedBox(),
                                   ],
                                 ),
                               ),
