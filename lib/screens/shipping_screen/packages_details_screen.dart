@@ -117,7 +117,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        'Collected',
+                        widget.packagesDetails['package_status'],
                         style: regularText14.copyWith(
                           color: primary,
                         ),
