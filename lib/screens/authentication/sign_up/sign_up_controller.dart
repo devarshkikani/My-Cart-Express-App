@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -14,68 +16,82 @@ import 'package:my_cart_express/utils/network_dio.dart';
 class SignUpController extends GetxController {
   GetStorage box = GetStorage();
   RxList<Branches> branchesList = <Branches>[].obs;
-  List<String> typeList = <String>['Business Customer', 'Person'];
-  RxString type = ''.obs;
+  RxList locationList = [].obs;
+  List<String> aboutMeList = <String>[
+    "I'm Shipping on behalf of a Company",
+    "I'm New to Shipping"
+  ];
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController emailId = TextEditingController();
+  final TextEditingController lastName = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController firstName = TextEditingController();
+  final TextEditingController middleName = TextEditingController();
+  final TextEditingController aboutme = TextEditingController();
+  final TextEditingController branchName = TextEditingController();
+  final TextEditingController phoneNumber = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+  final TextEditingController location = TextEditingController();
+  final TextEditingController businessName = TextEditingController();
+  final TextEditingController businessContact = TextEditingController();
+  final TextEditingController positionCompany = TextEditingController();
   RxString branchId = ''.obs;
+  RxBool termsAndService = false.obs;
+  RxBool privacyPolicy = false.obs;
 
-  @override
-  void onInit() {
-    getBranches();
-    super.onInit();
-  }
+  // @override
+  // void onInit() {
+  //   getBranches();
+  //   super.onInit();
+  // }
 
-  Future<void> getBranches() async {
+  Future<void> getBranches(BuildContext context) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.branches,
+      context: context,
     );
     if (response != null) {
       for (var i = 0; i < response['data'].length; i++) {
         branchesList.add(Branches.fromJson(response['data'][i]));
       }
     }
+    await getLocation(context);
+  }
+
+  Future<void> getLocation(BuildContext context) async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.location,
+      context: context,
+    );
+    if (response != null) {
+      locationList.value = response['data'];
+    }
   }
 
   Future<void> signUpOnTap({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String password,
-    required String passwordConfirm,
-    required String branchId,
-    required String gid,
-    String? legalBusinessName,
-    String? businessContactPerson,
-    String? positionInCompany,
     required BuildContext context,
   }) async {
     final data = dio.FormData.fromMap(
-      gid == '1'
-          ? {
-              'firstname': firstName,
-              'email': email,
-              'password': password,
-              'lastname': lastName,
-              'password_confirm': passwordConfirm,
-              'branch_id': branchId,
-              'g_id': gid,
-              'device': Platform.isAndroid ? 1 : 2,
-            }
-          : {
-              'firstname': firstName,
-              'lastname': lastName,
-              'email': email,
-              'password': password,
-              'password_confirm': passwordConfirm,
-              'branch_id': branchId,
-              'person_dd': '',
-              'legal_business_name': legalBusinessName,
-              'business_contact_person': businessContactPerson,
-              'position_in_company': positionInCompany,
-              'g_id': gid,
-              'ipaddress': '',
-              'device_unique_value': '',
-              'device': Platform.isAndroid ? 1 : 2,
-            },
+      {
+        'about_me': aboutme.text,
+        'firstname': firstName.text,
+        'middlename': middleName.text,
+        'lastname': lastName.text,
+        'email': emailId.text,
+        'phone': phoneNumber.text,
+        'location': location.text,
+        'branch_id': branchId.value,
+        'password': password.text,
+        'password_confirm': password.text,
+        'device': Platform.isAndroid ? 1 : 2,
+        // 'g_id': '1',
+        // 'person_dd': '',
+        // 'ipaddress': '',
+        // 'device_unique_value': '',
+        // 'legal_business_name': businessName.text,
+        // 'business_contact_person': businessContact.text,
+        // 'position_in_company': positionCompany.text,
+      },
     );
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
@@ -92,6 +108,7 @@ class SignUpController extends GetxController {
       box.write(StorageKey.currentUser, model.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
+      await NetworkDio.setDynamicHeader();
       Get.offAll(
         () => MainHomeScreen(),
       );

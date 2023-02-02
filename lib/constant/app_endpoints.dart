@@ -8,7 +8,9 @@ class ApiEndPoints {
   static String signUp = 'authentication/registration';
   static String changePassword = 'user/change_password';
   static String forgotPassword = 'authentication/forgot_password';
+  static String resetPassword = 'authentication/reset_password';
   static String branches = 'branches';
+  static String location = 'locations';
 
   static String userInfo = 'user/info';
   static String userUploadFile = 'user/upload_file';

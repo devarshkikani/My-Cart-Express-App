@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:my_cart_express/screens/authentication/sign_up/sign_up_bindings.dart';
+import 'package:my_cart_express/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/constant/default_images.dart';
-import 'package:my_cart_express/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:my_cart_express/screens/authentication/sign_in/sign_in_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -106,6 +107,7 @@ class WelcomeScreen extends StatelessWidget {
                       ..onTap = () {
                         Get.to(
                           () => SignUpScreen(),
+                          binding: SignupBinding(),
                         );
                       },
                   ),
