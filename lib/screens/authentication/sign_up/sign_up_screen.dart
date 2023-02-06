@@ -52,6 +52,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     labelText: 'Middle initial',
                     hintText: 'Enter middle name here',
                     controller: controller.middleName,
+                    maxLength: 1,
                     textInputAction: TextInputAction.next,
                     validator: (value) =>
                         Validators.validateText(value, 'Middle Name'),
