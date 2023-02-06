@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -142,8 +143,27 @@ class _AuthPickupDetailsScreenState extends State<AuthPickupDetailsScreen> {
           TextFormFieldWidget(
             hintText: 'Mobile Number',
             controller: mobileNumber,
+            prefixIcon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '+1',
+                  style: lightText16,
+                ),
+              ],
+            ),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 24,
+            ),
+            maxLength: 14,
             validator: (value) =>
                 Validators.validateText(value, 'Mobile Number'),
+            inputFormatters: [
+              PhoneInputFormatter(
+                defaultCountryCode: 'US',
+                allowEndlessPhone: true,
+              )
+            ],
           ),
           height15,
           Text(
@@ -238,7 +258,11 @@ class _AuthPickupDetailsScreenState extends State<AuthPickupDetailsScreen> {
       'id': widget.editedData == null ? 0 : widget.editedData!['id'],
       'first_name': firstName.text.trim(),
       'last_name': lastName.text.trim(),
-      'phone_number': mobileNumber.text.trim(),
+      'phone_number': mobileNumber.text
+          .replaceAll('(', '')
+          .replaceAll(')', '')
+          .replaceAll('-', '')
+          .replaceAll(' ', ''),
       'id_type': idType.value,
       'id_number': idNumber.text.trim(),
     });

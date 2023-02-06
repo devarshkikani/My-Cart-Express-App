@@ -73,16 +73,20 @@ class SignUpController extends GetxController {
   }) async {
     final data = dio.FormData.fromMap(
       {
-        'about_me': aboutme.text,
-        'firstname': firstName.text,
-        'middlename': middleName.text,
-        'lastname': lastName.text,
-        'email': emailId.text,
-        'phone': phoneNumber.text,
-        'location': location.text,
+        'about_me': aboutme.text.trim(),
+        'firstname': firstName.text.trim(),
+        'middlename': middleName.text.trim(),
+        'lastname': lastName.text.trim(),
+        'email': emailId.text.trim(),
+        'phone': phoneNumber.text
+            .replaceAll('(', '')
+            .replaceAll(')', '')
+            .replaceAll('-', '')
+            .replaceAll(' ', ''),
+        'location': location.text.trim(),
         'branch_id': branchId.value,
-        'password': password.text,
-        'password_confirm': password.text,
+        'password': password.text.trim(),
+        'password_confirm': password.text.trim(),
         'device': Platform.isAndroid ? 1 : 2,
         // 'g_id': '1',
         // 'person_dd': '',

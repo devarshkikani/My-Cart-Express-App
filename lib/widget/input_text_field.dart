@@ -19,7 +19,7 @@ TextFormField textFormField({
   final bool? obscureText,
   final Color? filledColor,
   final Color? cursorColor,
-  final prefixIcon,
+  final Widget? prefixIcon,
   final Widget? suffixIcon,
   final FocusNode? focusNode,
   final TextStyle? style,
@@ -38,6 +38,8 @@ TextFormField textFormField({
   final BorderSide? focusBorder,
   final BorderSide? enabledBorder,
   final BorderSide? border,
+  final String? prefixText,
+  final BoxConstraints? prefixIconConstraints,
   final EdgeInsetsGeometry? contentPadding,
 }) {
   return TextFormField(
@@ -107,7 +109,7 @@ TextFormField textFormField({
           color: error,
         ),
       ),
-
+      prefixText: prefixText,
       errorMaxLines: 5,
       fillColor: filledColor ?? offWhite,
       filled: true,
@@ -322,6 +324,8 @@ class TextFormFieldWidget extends StatelessWidget {
     this.enabledBorder,
     this.cursorColor,
     this.contentPadding,
+    this.prefixText,
+    this.prefixIconConstraints,
     this.textAlign = TextAlign.left,
   });
 
@@ -351,6 +355,8 @@ class TextFormFieldWidget extends StatelessWidget {
   final BorderSide? focusBorder;
   final BorderSide? border;
   final BorderSide? enabledBorder;
+  final String? prefixText;
+  final BoxConstraints? prefixIconConstraints;
   final EdgeInsetsGeometry? contentPadding;
 
   @override
@@ -370,6 +376,8 @@ class TextFormFieldWidget extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
       prefixIcon: prefixIcon,
+      prefixText: prefixText,
+      prefixIconConstraints: prefixIconConstraints,
       suffixIcon: suffixIcon,
       maxLength: maxLength,
       maxLines: maxLines,

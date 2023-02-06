@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -259,8 +260,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             hintText: 'Mobile Number',
             controller: mobileNumber,
             keyboardType: TextInputType.number,
+            prefixIcon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '+1',
+                  style: lightText16,
+                ),
+              ],
+            ),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 24,
+            ),
+            maxLength: 14,
             validator: (value) =>
                 Validators.validateText(value, 'Mobile Number'),
+            inputFormatters: [
+              PhoneInputFormatter(
+                defaultCountryCode: 'US',
+                allowEndlessPhone: true,
+              )
+            ],
           ),
           height15,
           Row(
@@ -487,7 +507,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final data = dio.FormData.fromMap({
       'location': locationID.value,
       'birth_date': '${year.text}-${month.text}-${date.text}',
-      'phone': mobileNumber.text,
+      'phone': mobileNumber.text
+          .replaceAll('(', '')
+          .replaceAll(')', '')
+          .replaceAll('-', '')
+          .replaceAll(' ', ''),
       'file': filePath.value != ''
           ? await dio.MultipartFile.fromFile(
               filePath.value,

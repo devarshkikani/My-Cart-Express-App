@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/authentication/sign_in/sign_in_screen.dart';
@@ -75,6 +76,19 @@ class SignUpScreen extends GetView<SignUpController> {
                   ),
                   height20,
                   TextFormFieldWidget(
+                    prefixIcon: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '+1',
+                          style: regularText16,
+                        ),
+                      ],
+                    ),
+                    prefixIconConstraints: const BoxConstraints(
+                      minWidth: 24,
+                    ),
+                    maxLength: 14,
                     labelText: 'Phone Number',
                     hintText: 'Enter phone number',
                     keyboardType: TextInputType.phone,
@@ -82,6 +96,12 @@ class SignUpScreen extends GetView<SignUpController> {
                     controller: controller.phoneNumber,
                     validator: (value) =>
                         Validators.validateText(value, 'Phone Number'),
+                    inputFormatters: [
+                      PhoneInputFormatter(
+                        defaultCountryCode: 'US',
+                        allowEndlessPhone: true,
+                      )
+                    ],
                   ),
                   height20,
                   TextFormFieldWidget(
