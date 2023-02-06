@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -355,7 +357,7 @@ class SignUpScreen extends GetView<SignUpController> {
                         controller.locationList[value]['parish_name'];
                   },
                   children: List.generate(
-                    controller.branchesList.length,
+                    controller.locationList.length,
                     (index) => Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
@@ -422,21 +424,24 @@ class SignUpScreen extends GetView<SignUpController> {
                   looping: true,
                   onSelectedItemChanged: (int value) {
                     controller.branchName.text =
-                        controller.branchesList[value].parishname;
+                        '${controller.branchesList[value].parishname} - ${controller.branchesList[value].location}';
                     controller.branchId.value =
                         controller.branchesList[value].branchId;
                   },
                   children: List.generate(
                     controller.branchesList.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        controller.branchesList[index].parishname,
-                        style: mediumText18.copyWith(
-                          color: primary,
+                    (index) {
+                      log(controller.branchesList[index].toJson().toString());
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          '${controller.branchesList[index].parishname} - ${controller.branchesList[index].location}',
+                          style: mediumText18.copyWith(
+                            color: primary,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
