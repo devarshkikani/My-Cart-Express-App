@@ -24,6 +24,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
   TextEditingController message = TextEditingController();
   File? selectedFile;
   RxString fileName = ''.obs;
+  RxString ticketSubjectId = ''.obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   RxList subjectList = [].obs;
   RxList<String> subjects = <String>[].obs;
@@ -60,6 +61,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
     final data = dio.FormData.fromMap({
       'title': selectedSubject.value,
       'message': message.text,
+      'ticket_subject_id': ticketSubjectId.value,
       'files': selectedFile != null
           ? await dio.MultipartFile.fromFile(
               selectedFile!.path,
@@ -190,6 +192,12 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                   }).toList(),
                   onChanged: (type) {
                     selectedSubject.value = type.toString();
+                    for (var i = 0; i < subjectList.length; i++) {
+                      if (type == subjectList[i]['subject']) {
+                        ticketSubjectId.value =
+                            subjectList[i]['ticket_subject_id'];
+                      }
+                    }
                   },
                 ),
               ),
