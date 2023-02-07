@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +133,7 @@ class SignUpScreen extends GetView<SignUpController> {
                   ),
                   height20,
                   TextFormFieldWidget(
-                    labelText: 'Branch Name',
+                    labelText: 'Preferred Branch',
                     controller: controller.branchName,
                     readOnly: true,
                     onTap: () {
@@ -146,7 +144,7 @@ class SignUpScreen extends GetView<SignUpController> {
                       color: primary,
                     ),
                     validator: (value) =>
-                        Validators.validateText(value, 'Branch Name'),
+                        Validators.validateText(value, 'Preferred Branch'),
                   ),
                   height20,
                   PasswordWidget(
@@ -439,27 +437,30 @@ class SignUpScreen extends GetView<SignUpController> {
               Expanded(
                 child: CupertinoPicker(
                   itemExtent: 40,
-                  magnification: 1.33,
+                  magnification: 1.20,
                   squeeze: 1.2,
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int value) {
                     controller.branchName.text =
-                        '${controller.branchesList[value].parishname} - ${controller.branchesList[value].location}';
+                        '${controller.branchesList[value].parishname} - ${controller.branchesList[value].code}';
                     controller.branchId.value =
                         controller.branchesList[value].branchId;
                   },
                   children: List.generate(
                     controller.branchesList.length,
                     (index) {
-                      log(controller.branchesList[index].toJson().toString());
                       return Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          '${controller.branchesList[index].parishname} - ${controller.branchesList[index].location}',
-                          style: mediumText18.copyWith(
-                            color: primary,
-                          ),
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              '${controller.branchesList[index].parishname} - ${controller.branchesList[index].code}',
+                              style: mediumText14.copyWith(
+                                color: primary,
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     },
