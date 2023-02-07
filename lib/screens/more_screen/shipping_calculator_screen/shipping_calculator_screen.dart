@@ -122,7 +122,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                   ),
                   height10,
                   TextFormFieldWidget(
-                    hintText: 'Total cost at check out',
+                    hintText: 'Est. weight from supplier',
                     controller: controller.estimated,
                     keyboardType: TextInputType.number,
                     validator: (value) => Validators.validateText(
@@ -228,7 +228,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
         Row(
           children: [
             Text(
-              ' Local Charges : ',
+              ' Inland Charge : ',
               style: regularText14.copyWith(
                 color: primary,
               ),
