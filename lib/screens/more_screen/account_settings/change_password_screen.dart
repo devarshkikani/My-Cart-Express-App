@@ -66,85 +66,87 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget bodyView() {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Change Passoword',
-            style: regularText18,
-          ),
-          height20,
-          profileView(),
-          height20,
-          Text(
-            'CHANGE PASSWORD',
-            style: regularText14,
-          ),
-          height10,
-          TextFormFieldWidget(
-            hintText: 'Change Password',
-            controller: changePassword,
-            validator: (value) => Validators.validatePassword(
-              value.toString(),
-              'Change password',
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Change Passoword',
+              style: regularText18,
             ),
-          ),
-          height15,
-          Text(
-            'CONFIRM PASSWORD',
-            style: regularText14,
-          ),
-          height10,
-          TextFormFieldWidget(
-            hintText: 'Confirm Password',
-            controller: confirmPassword,
-            validator: (value) =>
-                Validators.validatePassword(
-                  value.toString(),
-                  'Confirm password',
-                ) ??
-                (confirmPassword.text.trim() != changePassword.text.trim()
-                    ? 'Confirm password not match with new password'
-                    : null),
-          ),
-          height15,
-          Text(
-            'TYPE OLD PASSWORD',
-            style: regularText14,
-          ),
-          height10,
-          TextFormFieldWidget(
-            hintText: 'Type Old Password',
-            controller: typeOldPassword,
-            validator: (value) => Validators.validateText(
-              value,
-              'Type old password',
+            height20,
+            profileView(),
+            height20,
+            Text(
+              'CHANGE PASSWORD',
+              style: regularText14,
             ),
-          ),
-          height20,
-          Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primary,
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-              ),
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await submitButton();
-                }
-              },
-              child: const Text(
-                'SAVE PASSWORD',
-                style: TextStyle(
-                  letterSpacing: 0.5,
-                ),
+            height10,
+            TextFormFieldWidget(
+              hintText: 'Change Password',
+              controller: changePassword,
+              validator: (value) => Validators.validatePassword(
+                value.toString(),
+                'Change password',
               ),
             ),
-          ),
-        ],
+            height15,
+            Text(
+              'CONFIRM PASSWORD',
+              style: regularText14,
+            ),
+            height10,
+            TextFormFieldWidget(
+              hintText: 'Confirm Password',
+              controller: confirmPassword,
+              validator: (value) =>
+                  Validators.validatePassword(
+                    value.toString(),
+                    'Confirm password',
+                  ) ??
+                  (confirmPassword.text.trim() != changePassword.text.trim()
+                      ? 'Confirm password not match with new password'
+                      : null),
+            ),
+            height15,
+            Text(
+              'TYPE OLD PASSWORD',
+              style: regularText14,
+            ),
+            height10,
+            TextFormFieldWidget(
+              hintText: 'Type Old Password',
+              controller: typeOldPassword,
+              validator: (value) => Validators.validateText(
+                value,
+                'Type old password',
+              ),
+            ),
+            height20,
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                ),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    await submitButton();
+                  }
+                },
+                child: const Text(
+                  'SAVE PASSWORD',
+                  style: TextStyle(
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

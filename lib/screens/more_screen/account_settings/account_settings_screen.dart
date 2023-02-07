@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/more_screen/account_settings/change_password_screen.dart';
-import 'package:my_cart_express/screens/more_screen/account_settings/edit_profile_screen.dart';
 import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
@@ -69,45 +68,45 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         height20,
         profileView(),
         height20,
-        GestureDetector(
-          onTap: () {
-            Get.to(() => const EditProfileScreen())?.then((value) {
-              if (value != null) {
-                userDetails.value = value;
-              }
-            });
-          },
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: greyColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Image.asset(settingUserIcon),
-                ),
-                width10,
-                const Text(
-                  'Edit Profile',
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 18,
-                ),
-              ],
-            ),
-          ),
-        ),
-        height10,
+        // GestureDetector(
+        //   onTap: () {
+        //     Get.to(() => const EditProfileScreen())?.then((value) {
+        //       if (value != null) {
+        //         userDetails.value = value;
+        //       }
+        //     });
+        //   },
+        //   child: Container(
+        //     padding: const EdgeInsets.all(15),
+        //     decoration: BoxDecoration(
+        //       color: greyColor.withOpacity(0.2),
+        //       borderRadius: BorderRadius.circular(10),
+        //     ),
+        //     child: Row(
+        //       children: [
+        //         Container(
+        //           height: 30,
+        //           width: 30,
+        //           decoration: BoxDecoration(
+        //             color: primary,
+        //             borderRadius: BorderRadius.circular(50),
+        //           ),
+        //           child: Image.asset(settingUserIcon),
+        //         ),
+        //         width10,
+        //         const Text(
+        //           'Edit Profile',
+        //         ),
+        //         const Spacer(),
+        //         const Icon(
+        //           Icons.arrow_forward_ios_rounded,
+        //           size: 18,
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        // height10,
         GestureDetector(
           onTap: () {
             Get.to(() => const ChangePasswordScreen());

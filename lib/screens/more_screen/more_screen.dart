@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
@@ -20,6 +25,7 @@ import 'package:my_cart_express/screens/notification_screen/notifications_screen
 import 'package:my_cart_express/screens/more_screen/auth_pickup/auth_pickup_screen.dart';
 import 'package:my_cart_express/screens/more_screen/account_settings/account_settings_screen.dart';
 import 'package:my_cart_express/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -31,7 +37,8 @@ class MoreScreen extends StatefulWidget {
 class MoreScreenState extends State<MoreScreen> {
   GetStorage box = GetStorage();
   static RxMap userDetails = {}.obs;
-
+  final ImagePicker picker = ImagePicker();
+  String? profilePicture = '';
   final List categoryList = [
     'Shipping Calculator',
     'Transaction',
@@ -106,6 +113,26 @@ class MoreScreenState extends State<MoreScreen> {
       Get.offAll(
         () => const WelcomeScreen(),
       );
+    }
+  }
+
+  Future getImageUrl(File file) async {
+    final data = dio.FormData.fromMap({
+      'file': await dio.MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+      )
+    });
+    final Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      context: context,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.uploadProfilePicture,
+      data: data,
+    );
+    if (response != null) {
+      Get.back();
+      NetworkDio.showSuccess(
+          title: 'Success', sucessMessage: response['message']);
+      getUserDetails();
     }
   }
 
@@ -234,22 +261,64 @@ class MoreScreenState extends State<MoreScreen> {
     return Obx(
       () => Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: userDetails['image'].toString().isEmpty ||
-                    userDetails['image'] == null
-                ? Image.asset(
-                    dummyProfileImage,
-                    height: 100,
-                    width: 100,
-                  )
-                : Image.network(
-                    userDetails['image'].toString(),
-                    height: 100,
-                    width: 100,
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: userDetails['image'].toString().isEmpty ||
+                          userDetails['image'] == null
+                      ? Image.asset(
+                          dummyProfileImage,
+                          height: 100,
+                          width: 100,
+                        )
+                      : Image.network(
+                          userDetails['image'].toString(),
+                          fit: BoxFit.cover,
+                          height: 100,
+                          width: 100,
+                        ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  final PermissionStatus status =
+                      await Permission.camera.request();
+                  if (status.isDenied || status.isPermanentlyDenied) {
+                    await openAppSettings();
+                  } else {
+                    imageSelect();
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: const Icon(
+                    Icons.add_a_photo_outlined,
+                    color: whiteColor,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ],
           ),
-          height20,
+          height10,
+          if (userDetails['image'].toString().isEmpty ||
+              userDetails['image'] == null)
+            Text(
+              'Upload a selfie for collecting\nyour packages',
+              textAlign: TextAlign.center,
+              style: lightText12.copyWith(
+                color: Colors.red,
+              ),
+            ),
+          height10,
           Text(
             userDetails.isEmpty ? '' : userDetails['name'].toString(),
             style: regularText18.copyWith(
@@ -388,6 +457,65 @@ class MoreScreenState extends State<MoreScreen> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> imageSelect() async {
+    final XFile? image = await picker
+        .pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.front,
+    )
+        .catchError((e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    });
+    if (image != null) {
+      final CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        maxWidth: 1080,
+        maxHeight: 1080,
+      );
+      if (croppedImage != null) {
+        await getImageUrl(File(croppedImage.path));
+      }
+    }
+  }
+
+  Widget imagePickerDecoration({
+    required String type,
+    required Function() onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      splashColor: primary,
+      hoverColor: primary,
+      highlightColor: primary,
+      focusColor: primary,
+      child: Container(
+        height: 110,
+        width: 110,
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              type == 'Gallery'
+                  ? Icons.photo_library_outlined
+                  : Icons.add_a_photo_rounded,
+            ),
+            height15,
+            Text(
+              type,
+              style: regularText16,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

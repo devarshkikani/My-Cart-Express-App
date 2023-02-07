@@ -498,8 +498,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: orangeColor,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: packagesList[index]
+                                                  ['upload_attachment_flag'] ==
+                                              1
+                                          ? 20
+                                          : 10),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5)),

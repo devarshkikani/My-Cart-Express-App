@@ -349,7 +349,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                     children: [
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(12),
                           decoration: const BoxDecoration(
                             color: greyColor,
                             borderRadius: BorderRadius.only(
@@ -361,7 +361,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                             children: [
                               Text(
                                 'TOTAL COST : ${shippmentsList[index]['amount']}',
-                                style: mediumText14.copyWith(
+                                style: lightText12.copyWith(
                                   color: blackColor,
                                 ),
                               ),
@@ -380,7 +380,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                 }
                               : null,
                           child: Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: shippmentsList[index]
                                           ['upload_attachment_flag'] ==
@@ -396,8 +396,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                               children: [
                                 Text(
                                   shippmentsList[index]['invoice_type_label'],
-                                  style: const TextStyle(
-                                    letterSpacing: 0.5,
+                                  style: lightText12.copyWith(
                                     color: whiteColor,
                                   ),
                                 ),
