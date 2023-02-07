@@ -238,7 +238,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Choosse file',
+                          'Choose file',
                         ),
                         Obx(() => Text(
                               fileName.value != ''
