@@ -4,7 +4,7 @@ import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/screens/delivery_screen/delivery_screen.dart';
 import 'package:my_cart_express/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/screens/more_screen/more_screen.dart';
-import 'package:my_cart_express/screens/scanner_screen/scanner_screen.dart';
+import 'package:my_cart_express/screens/more_screen/available_packages.dart';
 import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 
@@ -14,10 +14,10 @@ class MainHomeScreen extends GetView {
   static RxInt selectedIndex = 0.obs;
   final pages = [
     const HomeScreen(),
-    const ScannerScreen(),
     const ShippingScreen(
       isFromeHome: false,
     ),
+    const AvailablePackagesScreen(),
     const DeliveryScreen(),
     const MoreScreen(),
   ];
@@ -57,7 +57,7 @@ class MainHomeScreen extends GetView {
                     selectedIndex.value = 1;
                   },
                   child: Image.asset(
-                    scannerIcon,
+                    shippingIcon,
                     color: selectedIndex.value == 1 ? null : Colors.grey,
                     height: 24,
                     width: 24,
@@ -68,7 +68,7 @@ class MainHomeScreen extends GetView {
                     selectedIndex.value = 2;
                   },
                   child: Image.asset(
-                    shippingIcon,
+                    availablePackages,
                     color: selectedIndex.value == 2 ? null : Colors.grey,
                     height: 24,
                     width: 24,

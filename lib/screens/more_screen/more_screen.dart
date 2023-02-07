@@ -14,7 +14,6 @@ import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
 import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/screens/more_screen/my_rewards_screen.dart';
 import 'package:my_cart_express/screens/more_screen/transaction_screen.dart';
-import 'package:my_cart_express/screens/more_screen/available_packages.dart';
 import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
 import 'package:my_cart_express/screens/more_screen/support/support_index_screen.dart';
 import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
@@ -34,7 +33,6 @@ class MoreScreenState extends State<MoreScreen> {
   static RxMap userDetails = {}.obs;
 
   final List categoryList = [
-    'Available Packages',
     'Shipping Calculator',
     'Transaction',
     "FAQ's",
@@ -42,11 +40,9 @@ class MoreScreenState extends State<MoreScreen> {
     'Feedback',
     'My Rewards',
     'Auth Pickup',
-    // 'Upload File',
   ];
 
   final List imageList = [
-    shippingIcon,
     calcultorIcon,
     transactionIcon,
     faqsIcon,
@@ -54,30 +50,25 @@ class MoreScreenState extends State<MoreScreen> {
     feedbackIcon,
     myRewardIcon,
     pickupIcon,
-    // uploadFileIcon
   ];
 
   void categoryOntap(int index) {
     if (index == 0) {
-      Get.to(() => const AvailablePackagesScreen());
-    } else if (index == 1) {
       Get.to(
         () => const ShippingCalculatorScreen(),
       );
-    } else if (index == 2) {
+    } else if (index == 1) {
       Get.to(() => const TransactionScreen());
-    } else if (index == 3) {
+    } else if (index == 2) {
       Get.to(() => const FAQSScreen());
-    } else if (index == 4) {
+    } else if (index == 3) {
       Get.to(() => const SupportIndexScreen());
-    } else if (index == 5) {
+    } else if (index == 4) {
       Get.to(() => const FeedbackScreen());
-    } else if (index == 6) {
+    } else if (index == 5) {
       Get.to(() => const MyRewardsScreen());
-    } else if (index == 7) {
+    } else if (index == 6) {
       Get.to(() => const AuthPickUpScreen());
-      // } else if (index == 8) {
-      //   Get.to(() => const UploadFileScreen());
     }
   }
 

@@ -3,6 +3,7 @@ const String boxImage = 'assets/images/box_image.png';
 const String dummyProfileImage = 'assets/images/dummy_profile.png';
 const String deliveryIcon = 'assets/images/delivery_icon.png';
 const String shippingIcon = 'assets/images/shipping_icon.png';
+const String availablePackages = 'assets/images/available_packages.png';
 const String scannerIcon = 'assets/images/scanner_icon.png';
 const String homeIcon = 'assets/images/home_icon.png';
 const String shareIcon = 'assets/images/share_icon.png';
