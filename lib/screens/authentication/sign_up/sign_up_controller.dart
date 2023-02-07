@@ -18,6 +18,7 @@ class SignUpController extends GetxController {
   RxList<Branches> branchesList = <Branches>[].obs;
   RxList locationList = [].obs;
   List<String> aboutMeList = <String>[
+    "I've Shipped Before",
     "I'm Shipping on behalf of a Company",
     "I'm New to Shipping"
   ];
