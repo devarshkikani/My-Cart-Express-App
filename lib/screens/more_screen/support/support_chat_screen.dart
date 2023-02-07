@@ -144,146 +144,144 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Obx(
-                () => replyFlag.value == 1
+                () => assistanceFlag.value == 1
                     ? Column(
-                        children: [
-                          if (fileName.value != '')
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(fileName.value),
-                            ),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: TextFormFieldWidget(
-                                      controller: messageController,
-                                      hintText: "Message",
-                                      onFieldSubmitted: (value) {
-                                        messageController.clear();
-                                      },
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () async {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      FilePickerResult? result =
-                                          await FilePicker.platform.pickFiles(
-                                        type: FileType.custom,
-                                        allowedExtensions: [
-                                          'jpg',
-                                          'tiff',
-                                          'png',
-                                          'jpeg',
-                                          'pdf',
-                                          'doc',
-                                        ],
-                                      );
-                                      await pickFile(
-                                        result,
-                                      );
-                                    },
-                                    icon: const Icon(Icons.attachment),
-                                  ),
-                                  IconButton(
-                                    onPressed: () async {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      await sendMessage();
-                                    },
-                                    icon: const Icon(Icons.send),
-                                  ),
-                                ],
-                              )),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Do you need further assistance?',
+                            style: regularText20,
+                          ),
+                          height15,
+                          buttons(
+                            "No I'm done",
+                            () async {
+                              await needAssistanceFunction();
+                            },
+                          ),
+                          height10,
+                          buttons(
+                            "Yes, I need further assistance",
+                            () async {
+                              await selfCloseTicketFunction();
+                            },
+                          ),
                         ],
                       )
-                    : assistanceFlag.value == 1
+                    : stillAssistanceFlag.value == 1
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Do you need further assistance?',
+                                'Do you need still help?',
                                 style: regularText20,
                               ),
                               height15,
                               buttons(
-                                "No I'm done",
-                                () async {
-                                  await needAssistanceFunction();
-                                },
-                              ),
-                              height10,
-                              buttons(
-                                "Yes, I need further assistance",
+                                "Yes",
                                 () async {
                                   await selfCloseTicketFunction();
                                 },
                               ),
+                              height10,
+                              buttons(
+                                "No",
+                                () async {
+                                  await needAssistanceFunction();
+                                },
+                              ),
                             ],
                           )
-                        : stillAssistanceFlag.value == 1
+                        : selfClosedAssistanceFlag.value == 1
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    'Do you need still help?',
+                                    'Do you need further assistance?',
                                     style: regularText20,
                                   ),
                                   height15,
+                                  Row(
+                                    children: [
+                                      buttons(
+                                        "No I'm done",
+                                        () async {
+                                          await needAssistanceFunction();
+                                        },
+                                      ),
+                                      width10,
+                                      const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                      ),
+                                    ],
+                                  ),
+                                  height10,
                                   buttons(
-                                    "Yes",
+                                    "Yes, I need further assistance",
                                     () async {
                                       await selfCloseTicketFunction();
                                     },
                                   ),
-                                  height10,
-                                  buttons(
-                                    "No",
-                                    () async {
-                                      await needAssistanceFunction();
-                                    },
-                                  ),
                                 ],
                               )
-                            : selfClosedAssistanceFlag.value == 1
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        'Do you need further assistance?',
-                                        style: regularText20,
-                                      ),
-                                      height15,
-                                      Row(
+                            : Column(
+                                children: [
+                                  if (fileName.value != '')
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(fileName.value),
+                                    ),
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          buttons(
-                                            "No I'm done",
-                                            () async {
-                                              await needAssistanceFunction();
-                                            },
+                                          Expanded(
+                                            child: TextFormFieldWidget(
+                                              controller: messageController,
+                                              hintText: "Message",
+                                              onFieldSubmitted: (value) {
+                                                messageController.clear();
+                                              },
+                                            ),
                                           ),
-                                          width10,
-                                          const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.green,
+                                          IconButton(
+                                            onPressed: () async {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              FilePickerResult? result =
+                                                  await FilePicker.platform
+                                                      .pickFiles(
+                                                type: FileType.custom,
+                                                allowedExtensions: [
+                                                  'jpg',
+                                                  'tiff',
+                                                  'png',
+                                                  'jpeg',
+                                                  'pdf',
+                                                  'doc',
+                                                ],
+                                              );
+                                              await pickFile(
+                                                result,
+                                              );
+                                            },
+                                            icon: const Icon(Icons.attachment),
+                                          ),
+                                          IconButton(
+                                            onPressed: () async {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              await sendMessage();
+                                            },
+                                            icon: const Icon(Icons.send),
                                           ),
                                         ],
-                                      ),
-                                      height10,
-                                      buttons(
-                                        "Yes, I need further assistance",
-                                        () async {
-                                          await selfCloseTicketFunction();
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox(),
+                                      )),
+                                ],
+                              ),
               ),
             ),
           ],
