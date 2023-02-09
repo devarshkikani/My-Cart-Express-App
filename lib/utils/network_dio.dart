@@ -11,6 +11,8 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/storage_key.dart';
+import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
+import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/utils/internet_error.dart';
 import 'package:my_cart_express/utils/progress_indicator.dart';
 
@@ -100,6 +102,12 @@ class NetworkDio {
           }
           if (responseBody['status'] == 200) {
             return responseBody;
+          } else if (responseBody['status'] == 400) {
+            box.erase();
+            MainHomeScreen.selectedIndex.value = 0;
+            Get.offAll(
+              () => const WelcomeScreen(),
+            );
           } else {
             showError(
               title: 'Error',
@@ -166,6 +174,12 @@ class NetworkDio {
           }
           if (responseBody['status'] == 200) {
             return responseBody;
+          } else if (responseBody['status'] == 400) {
+            box.erase();
+            MainHomeScreen.selectedIndex.value = 0;
+            Get.offAll(
+              () => const WelcomeScreen(),
+            );
           } else {
             showError(
               title: 'Error',
