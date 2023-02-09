@@ -11,7 +11,6 @@ import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
-import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
 import 'package:my_cart_express/widget/validator.dart';
 
@@ -36,7 +35,6 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    getAvailablePackages();
     getCategoriesList();
     super.initState();
   }
@@ -65,6 +63,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
     if (categoriesListResponse != null) {
       categoriesList.value = categoriesListResponse['list'];
     }
+    getAvailablePackages();
   }
 
   Future<void> pickFile(FilePickerResult? result) async {
@@ -110,7 +109,14 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         color: primary,
         child: Column(
           children: [
-            appBarWithAction(),
+            AppBar(
+              leading: const SizedBox(),
+              centerTitle: true,
+              elevation: 0.0,
+              title: const Text(
+                'MyCartExpress',
+              ),
+            ),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(15),
@@ -174,9 +180,11 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
             )
           : availablePackages.isEmpty
               ? Center(
-                  child: Image.asset(
-                    emptyList,
-                    height: 200,
+                  child: Text(
+                    'No available packages found.',
+                    style: lightText14.copyWith(
+                      color: Colors.grey,
+                    ),
                   ),
                 )
               : ListView.separated(

@@ -1,38 +1,29 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:my_cart_express/theme/colors.dart';
-import 'package:my_cart_express/theme/text_style.dart';
-import 'package:my_cart_express/widget/validator.dart';
-import 'package:my_cart_express/utils/network_dio.dart';
-import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
+import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/theme/colors.dart';
+import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/widget/input_text_field.dart';
-import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
-import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
-import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
-import 'package:share_plus/share_plus.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:my_cart_express/widget/validator.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class OverdueScreen extends StatefulWidget {
+  const OverdueScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<OverdueScreen> createState() => _OverdueScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  RxInt balance = 0.obs;
-  RxString howItWorks = ''.obs;
-  RxString fullName = ''.obs;
-  RxMap pickuoBranchData = {}.obs;
-  RxMap usaShippingData = {}.obs;
-  RxList packagesList = [].obs;
+class _OverdueScreenState extends State<OverdueScreen> {
+  RxList duePackages = [].obs;
+  RxBool isLoading = true.obs;
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
   File? selectedFile;
@@ -41,56 +32,30 @@ class _HomeScreenState extends State<HomeScreen> {
   RxList categoriesList = [].obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  RxMap duePackagesData = {}.obs;
   @override
   void initState() {
+    getCategoriesList();
     super.initState();
-    getBalance();
   }
 
-  void getBalance() async {
-    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
+  Future<void> getShippingOverdue() async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingOverdue,
+      data: null,
       context: context,
     );
     if (response != null) {
-      balance.value = response['data'];
+      isLoading.value = false;
+      duePackages.value = response['list'];
+      duePackagesData.value = {
+        "counts": response['counts'],
+        "storage": response['storage'],
+      };
     }
+  }
 
-    Map<String, dynamic>? packagesResponse = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
-      context: context,
-    );
-    if (packagesResponse != null) {
-      packagesList.value = packagesResponse['list'] ?? [];
-    }
-
-    Map<String, dynamic>? howItWorksResponse =
-        await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
-      context: context,
-    );
-    if (howItWorksResponse != null) {
-      howItWorks.value = howItWorksResponse['img_url'];
-    }
-
-    Map<String, dynamic>? shippingPickupAddress =
-        await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
-      context: context,
-    );
-    if (shippingPickupAddress != null) {
-      fullName.value = shippingPickupAddress['package_shipping_data']
-              ['firstname'] +
-          ' ' +
-          shippingPickupAddress['package_shipping_data']['lastname'] +
-          ' ' +
-          shippingPickupAddress['package_shipping_data']['mce_number'];
-      usaShippingData.value = shippingPickupAddress['package_shipping_data']
-          ['usa_air_address_details'];
-      pickuoBranchData.value =
-          shippingPickupAddress['package_shipping_data']['branch_data'];
-    }
-
+  Future<void> getCategoriesList() async {
     Map<String, dynamic>? categoriesListResponse =
         await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
@@ -99,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (categoriesListResponse != null) {
       categoriesList.value = categoriesListResponse['list'];
     }
+    getShippingOverdue();
   }
 
   Future<void> pickFile(FilePickerResult? result) async {
@@ -129,14 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
       Get.back();
       NetworkDio.showSuccess(
           title: 'Success', sucessMessage: response['message']);
+      isLoading.value = true;
+      duePackages.value = [];
+      duePackagesData.value = {};
+      getShippingOverdue();
     }
   }
-
-  //  Future<void> openMap(String address) async {
-  //   String googleUrl = 'https://maps.google.com/?q=$address';
-  //   // 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-  //   await launch(googleUrl);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -154,34 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: const Text(
                   'MyCartExpress',
                 ),
-                actions: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const MessagesScreen());
-                    },
-                    child: const Icon(
-                      Icons.mail_outline_rounded,
-                    ),
-                  ),
-                  width15,
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const NotificationScreen());
-                    },
-                    child: const Icon(
-                      Icons.notifications_active_outlined,
-                    ),
-                  ),
-                  width15,
-                ],
               ),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    top: 15,
-                    right: 15,
-                  ),
+                  padding: const EdgeInsets.all(15),
                   decoration: const BoxDecoration(
                     color: offWhite,
                     borderRadius: BorderRadius.only(
@@ -201,362 +141,274 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget bodyView() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        balanceView(),
-        height15,
-        detailsView(),
-        height15,
-        packagesView(),
+        Text(
+          'Overdue Packages',
+          style: regularText18,
+        ),
+        height10,
+        Obx(
+          () => isLoading.value
+              ? const SizedBox()
+              : Text(
+                  'TOTAL PACKAGES AVAILABLE : ${duePackagesData['counts']}',
+                  style: regularText14.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
+        ),
+        height10,
+        Obx(
+          () => isLoading.value
+              ? const SizedBox()
+              : Text(
+                  'TOTAL DUE : ${duePackagesData['storage']}',
+                  style: regularText14.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
+        ),
+        height25,
+        Expanded(child: duePackagesView()),
       ],
     );
   }
 
-  Widget balanceView() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: primary,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'E-Wallet Balance',
-                  style: lightText14.copyWith(
-                    color: whiteColor,
-                  ),
-                ),
-                height5,
-                Obx(
-                  () => Text(
-                    '\$${balance.value} JMD',
-                    style: regularText18.copyWith(
-                      color: whiteColor,
+  Widget duePackagesView() {
+    return Obx(
+      () => isLoading.value
+          ? Row(
+              children: const <Widget>[
+                SizedBox(),
+              ],
+            )
+          : duePackages.isEmpty
+              ? Center(
+                  child: Text(
+                    'No overdue packages found.',
+                    style: lightText14.copyWith(
+                      color: Colors.grey,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 15.0,
-          ),
-          child: GestureDetector(
-            onTap: () {
-              Share.share(Platform.isIOS
-                  ? 'https://apps.apple.com/us/app/mycart-express/id1624277416'
-                  : 'https://app.mycartexpress.com/');
-            },
-            child: Column(
-              children: [
-                Image.asset(
-                  shareIcon,
-                  height: 40,
-                  width: 40,
-                ),
-                Text(
-                  'Share this app',
-                  style: lightText12,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget detailsView() {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'USA Shipping Address',
-                    style: regularText14,
-                  ),
-                  height5,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Air freight',
-                        style: lightText14.copyWith(
-                          color: Colors.grey.shade600,
+                )
+              : ListView.separated(
+                  itemCount: duePackages.length,
+                  padding: EdgeInsets.zero,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      height20,
+                  itemBuilder: (BuildContext context, int index) => Container(
+                    decoration: BoxDecoration(
+                      color:
+                          duePackages[index]['status'] == 'Available for Pickup'
+                              ? Colors.green.shade200
+                              : Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.10),
+                          offset: const Offset(0.0, 2.0),
+                          spreadRadius: 1,
+                          blurRadius: 5,
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (ctx) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: Stack(
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: primary.withOpacity(0.2),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
+                          ),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.network(howItWorks.value),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(ctx);
-                                        },
-                                        child: Container(
-                                          decoration: const BoxDecoration(
-                                            color: blackColor,
-                                          ),
-                                          child: const Icon(
-                                            Icons.close,
-                                            color: whiteColor,
-                                          ),
+                                      const Icon(
+                                        Icons.check_circle,
+                                        color: primary,
+                                      ),
+                                      width5,
+                                      Text(
+                                        duePackages[index]['package_status'],
+                                        style: lightText12.copyWith(
+                                          color: primary,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              );
-                            },
-                          );
-                        },
-                        child: Text(
-                          "How it's Work?",
-                          style: lightText14.copyWith(
-                            color: primary,
-                            decoration: TextDecoration.underline,
+                                const VerticalDivider(
+                                  color: primary,
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'value : ',
+                                        style: lightText12,
+                                      ),
+                                      Text(
+                                        duePackages[index]['value_cost'],
+                                        style: regularText14,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  height15,
-                  Obx(
-                    () => Text(
-                      fullName.isNotEmpty ? fullName.value : '',
-                      style: lightText13,
-                    ),
-                  ),
-                  height10,
-                  Obx(
-                    () => Text(
-                      usaShippingData.isNotEmpty
-                          ? usaShippingData['address_1'] +
-                              ' ' +
-                              usaShippingData['address_2'] +
-                              ' ' +
-                              usaShippingData['city'] +
-                              ', ' +
-                              usaShippingData['state'] +
-                              ', ' +
-                              usaShippingData['postcode']
-                          : '',
-                      style: lightText13,
-                    ),
-                  ),
-                  height10,
-                  Obx(
-                    () => Text(
-                      'USA Tel: +1 ${usaShippingData.isNotEmpty ? usaShippingData['telephone'] : ''}',
-                      style: lightText13,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const VerticalDivider(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Pick-Up Branch',
-                    style: regularText14,
-                  ),
-                  height15,
-                  Obx(() => Text(
-                        pickuoBranchData.isNotEmpty
-                            ? pickuoBranchData['location'] +
-                                ' ' +
-                                pickuoBranchData['address'] +
-                                ' ' +
-                                pickuoBranchData['city'] +
-                                ', ' +
-                                pickuoBranchData['parishname'] +
-                                ', ' +
-                                pickuoBranchData['code']
-                            : '',
-                        style: lightText13.copyWith(
-                          color: primary,
-                        ),
-                      )),
-                  height10,
-                  Obx(() => Text(
-                        pickuoBranchData.isNotEmpty
-                            ? pickuoBranchData['open_hour']
-                            : '',
-                        style: lightText13.copyWith(
-                          color: primary,
-                        ),
-                      )),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget packagesView() {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.only(
-          left: 15,
-          top: 15,
-          right: 15,
-        ),
-        decoration: BoxDecoration(
-          color: greyColor.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Last 5 Packages',
-                  style: regularText18,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(
-                      () => const ShippingScreen(
-                        isFromeHome: true,
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'View all',
-                    style: lightText16,
-                  ),
-                ),
-              ],
-            ),
-            height15,
-            Expanded(
-              child: Obx(
-                () => packagesList.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No packages found.',
-                          style: lightText14.copyWith(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      )
-                    : ListView.separated(
-                        itemCount: packagesList.length,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            height10,
-                        itemBuilder: (BuildContext context, int index) =>
-                            Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: greyColor,
-                              ),
-                              borderRadius: BorderRadius.circular(12)),
+                        Container(
+                          color: greyColor.withOpacity(0.2),
+                          padding: const EdgeInsets.all(10),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              width20,
+                              Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: SizedBox(
+                                    height: 60,
+                                    width: 60,
+                                    child: Image.network(
+                                      duePackages[index]['package_image'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              width20,
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      packagesList[index]['shipping_mcecode'],
-                                      style: lightText13.copyWith(
-                                        color: blackColor,
+                                      duePackages[index]['pkg_shipging_code'],
+                                      style: regularText14.copyWith(
+                                        color: primary,
                                       ),
                                     ),
                                     height10,
                                     Text(
-                                      packagesList[index]['tracking'],
+                                      duePackages[index]['pkg_id'],
                                       overflow: TextOverflow.ellipsis,
-                                      style: lightText13.copyWith(
-                                        color: Colors.grey,
-                                      ),
+                                      style: regularText14.copyWith(),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: orangeColor,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: packagesList[index]
-                                                  ['upload_attachment_flag'] ==
-                                              1
-                                          ? 20
-                                          : 10),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                  ),
-                                ),
-                                onPressed: packagesList[index]
-                                            ['upload_attachment_flag'] ==
-                                        1
-                                    ? () {
-                                        uploadInvoice(
-                                            packagesList[index]['package_id']);
-                                      }
-                                    : null,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      packagesList[index]['invoice_type_label'],
-                                      style: const TextStyle(
-                                        letterSpacing: 0.5,
-                                      ),
+                                    height10,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          duePackages[index]['weight_label'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: regularText14.copyWith(),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 14,
+                                        ),
+                                      ],
                                     ),
-                                    width10,
-                                    packagesList[index]
-                                                ['upload_attachment_flag'] ==
-                                            1
-                                        ? Image.asset(
-                                            addIcon,
-                                            color: whiteColor,
-                                            height: 14,
-                                            width: 14,
-                                          )
-                                        : const SizedBox(),
                                   ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-              ),
-            ),
-          ],
-        ),
-      ),
+                        IntrinsicHeight(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: const BoxDecoration(
+                                    color: greyColor,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'TOTAL COST : ${duePackages[index]['amount']}',
+                                        style: lightText12.copyWith(
+                                          letterSpacing: 0.5,
+                                          color: blackColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: duePackages[index]
+                                              ['upload_attachment_flag'] ==
+                                          1
+                                      ? () {
+                                          uploadInvoice(
+                                              duePackages[index]['package_id']);
+                                        }
+                                      : null,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: duePackages[index]
+                                                  ['upload_attachment_flag'] ==
+                                              1
+                                          ? orangeColor
+                                          : primary,
+                                      borderRadius: const BorderRadius.only(
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          duePackages[index]
+                                              ['invoice_btn_text'],
+                                          style: lightText12.copyWith(
+                                            color: whiteColor,
+                                          ),
+                                        ),
+                                        width10,
+                                        duePackages[index][
+                                                    'upload_attachment_flag'] ==
+                                                1
+                                            ? Image.asset(
+                                                addIcon,
+                                                color: whiteColor,
+                                                height: 14,
+                                                width: 14,
+                                              )
+                                            : const SizedBox(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
     );
   }
 

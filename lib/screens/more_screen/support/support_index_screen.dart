@@ -204,8 +204,13 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
             () => isLoading.value
                 ? const SizedBox()
                 : data.isEmpty
-                    ? Image.asset(
-                        emptyList,
+                    ? Center(
+                        child: Text(
+                          'No ${isOpen ? 'open' : 'close'} found.',
+                          style: lightText14.copyWith(
+                            color: Colors.grey,
+                          ),
+                        ),
                       )
                     : ListView.separated(
                         itemCount: data.length,

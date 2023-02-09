@@ -108,13 +108,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       () => isLoading.value
           ? const SizedBox()
           : feedbackList.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      emptyList,
+              ? Center(
+                  child: Text(
+                    'No feedback found.',
+                    style: lightText14.copyWith(
+                      color: Colors.grey,
                     ),
-                  ],
+                  ),
                 )
               : ListView.separated(
                   itemCount: feedbackList.length,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/default_images.dart';
-import 'package:my_cart_express/screens/delivery_screen/delivery_screen.dart';
+import 'package:my_cart_express/screens/overdue_screen/overdue_screen.dart';
 import 'package:my_cart_express/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/screens/more_screen/available_packages.dart';
@@ -18,7 +18,7 @@ class MainHomeScreen extends GetView {
       isFromeHome: false,
     ),
     const AvailablePackagesScreen(),
-    const DeliveryScreen(),
+    const OverdueScreen(),
     const MoreScreen(),
   ];
 

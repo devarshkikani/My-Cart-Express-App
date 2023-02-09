@@ -204,7 +204,14 @@ class _ShippingScreenState extends State<ShippingScreen> {
             return isLoading.value
                 ? const SizedBox()
                 : shippmentsList.isEmpty
-                    ? Image.asset(emptyList)
+                    ? Center(
+                        child: Text(
+                          'No shipments found.',
+                          style: lightText14.copyWith(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )
                     : shippingList();
           }),
         ),
