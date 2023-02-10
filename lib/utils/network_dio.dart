@@ -102,7 +102,7 @@ class NetworkDio {
           }
           if (responseBody['status'] == 200) {
             return responseBody;
-          } else if (responseBody['status'] == 400) {
+          } else if (responseBody['status'] == 409) {
             box.erase();
             MainHomeScreen.selectedIndex.value = 0;
             Get.offAll(
@@ -174,7 +174,7 @@ class NetworkDio {
           }
           if (responseBody['status'] == 200) {
             return responseBody;
-          } else if (responseBody['status'] == 400) {
+          } else if (responseBody['status'] == 409) {
             box.erase();
             MainHomeScreen.selectedIndex.value = 0;
             Get.offAll(
