@@ -166,6 +166,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                               await needAssistanceFunction();
                             },
                           ),
+                          height10,
                         ],
                       )
                     : stillAssistanceFlag.value == 1
@@ -190,6 +191,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                   await selfCloseTicketFunction();
                                 },
                               ),
+                              height10,
                             ],
                           )
                         : selfClosedAssistanceFlag.value == 1
@@ -223,6 +225,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                       await needAssistanceFunction();
                                     },
                                   ),
+                                  height10,
                                 ],
                               )
                             : Column(
