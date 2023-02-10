@@ -330,7 +330,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                             horizontal: 12, vertical: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: isMe ? primary.withOpacity(0.8) : greyColor,
+                          color: isMe ? primary.withOpacity(0.5) : greyColor,
                         ),
                         child: isMe
                             ? html(repliesList[index]['messages'])
