@@ -156,14 +156,14 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           buttons(
                             "No I'm done",
                             () async {
-                              await needAssistanceFunction();
+                              await selfCloseTicketFunction();
                             },
                           ),
                           height10,
                           buttons(
                             "Yes, I need further assistance",
                             () async {
-                              await selfCloseTicketFunction();
+                              await needAssistanceFunction();
                             },
                           ),
                         ],
@@ -180,14 +180,14 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                               buttons(
                                 "Yes",
                                 () async {
-                                  await selfCloseTicketFunction();
+                                  await needAssistanceFunction();
                                 },
                               ),
                               height10,
                               buttons(
                                 "No",
                                 () async {
-                                  await needAssistanceFunction();
+                                  await selfCloseTicketFunction();
                                 },
                               ),
                             ],
@@ -206,7 +206,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                       buttons(
                                         "No I'm done",
                                         () async {
-                                          await needAssistanceFunction();
+                                          await selfCloseTicketFunction();
                                         },
                                       ),
                                       width10,
@@ -220,7 +220,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                   buttons(
                                     "Yes, I need further assistance",
                                     () async {
-                                      await selfCloseTicketFunction();
+                                      await needAssistanceFunction();
                                     },
                                   ),
                                 ],
