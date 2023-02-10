@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
-import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/screens/more_screen/support/add_ticket_screen.dart';
 import 'package:my_cart_express/screens/more_screen/support/support_chat_screen.dart';

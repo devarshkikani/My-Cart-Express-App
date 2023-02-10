@@ -330,7 +330,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                             horizontal: 12, vertical: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: isMe ? primary.withOpacity(0.5) : greyColor,
+                          color: isMe ? lightColor : greyColor,
                         ),
                         child: isMe
                             ? html(repliesList[index]['messages'])
@@ -348,6 +348,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           color: blackColor.withOpacity(0.5),
                         ),
                       ),
+                      height10,
                     ],
                   ),
                 ],
