@@ -21,6 +21,7 @@ class UserModel {
     required this.isCustomer,
     required this.priceGroupId,
     required this.isAdmin,
+    required this.verifyEmail,
   });
 
   String userId;
@@ -33,6 +34,7 @@ class UserModel {
   String profileImage;
   String isCustomer;
   String priceGroupId;
+  String verifyEmail;
   int isAdmin;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -47,6 +49,7 @@ class UserModel {
         isCustomer: json["is_customer"],
         priceGroupId: json["price_group_id"],
         isAdmin: json["is_admin"],
+        verifyEmail: json["verify_email"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +64,6 @@ class UserModel {
         "is_customer": isCustomer,
         "price_group_id": priceGroupId,
         "is_admin": isAdmin,
+        "verify_email": verifyEmail,
       };
 }

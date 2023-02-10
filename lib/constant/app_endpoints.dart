@@ -6,6 +6,7 @@ class ApiEndPoints {
 
   static String signIn = 'login';
   static String loginImages = 'login_images';
+  static String resendVerificationEmail = 'resend_verification_email';
   static String signUp = 'authentication/registration';
   static String changePassword = 'user/change_password';
   static String forgotPassword = 'authentication/forgot_password';

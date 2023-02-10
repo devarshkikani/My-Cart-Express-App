@@ -8,6 +8,7 @@ import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/storage_key.dart';
 import 'package:my_cart_express/models/user_model.dart';
 import 'package:my_cart_express/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -35,9 +36,19 @@ class SignInController extends GetxController {
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
-      Get.offAll(
-        () => MainHomeScreen(),
-      );
+      if (model.verifyEmail == '0') {
+        box.write(StorageKey.isRegister, false);
+        Get.offAll(
+          () => NotVerifyScreen(
+            userDetails: const {},
+          ),
+        );
+      } else {
+        box.write(StorageKey.isRegister, true);
+        Get.offAll(
+          () => MainHomeScreen(),
+        );
+      }
     }
   }
 }

@@ -3,4 +3,5 @@ class StorageKey {
   static String userId = 'user_id';
   static String currentUser = 'current_user';
   static String isLogedIn = 'is_loged_in';
+  static String isRegister = 'is_register';
 }
