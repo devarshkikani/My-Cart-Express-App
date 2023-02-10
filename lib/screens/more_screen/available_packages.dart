@@ -607,9 +607,8 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                     FilePickerResult? result =
                         await FilePicker.platform.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions: ['jpg', 'tiff', 'png', 'jpeg'],
+                      allowedExtensions: ['jpg', 'png', 'jpeg'],
                     );
-
                     await pickFile(
                       result,
                     );
@@ -638,7 +637,10 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                     FilePickerResult? result =
                         await FilePicker.platform.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions: ['pdf', 'doc', 'tiff'],
+                      allowedExtensions: [
+                        'pdf',
+                        'doc',
+                      ],
                     );
                     await pickFile(
                       result,
