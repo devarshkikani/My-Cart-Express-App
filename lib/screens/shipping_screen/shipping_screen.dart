@@ -38,8 +38,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
 
   @override
   void initState() {
-    getShippments(null);
     getCategoriesList();
+
     debounce<String>(searchData, validations,
         time: const Duration(milliseconds: 700));
     scrollController = ScrollController()..addListener(_scrollListener);
@@ -92,6 +92,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
     if (categoriesListResponse != null) {
       categoriesList.value = categoriesListResponse['list'];
     }
+    getShippments(null);
   }
 
   Future<void> pickFile(FilePickerResult? result) async {

@@ -34,7 +34,9 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
         context: context);
     if (response != null) {
       for (int i = 0; i < response['package_tracking'].length; i++) {
-        timeline.add(response['package_tracking'][i]['package_status']);
+        timeline.add(response['package_tracking'][i]['package_status'] +
+            ' ' +
+            '(${response['package_tracking'][i]['date_time']})');
       }
       setState(() {});
     }
