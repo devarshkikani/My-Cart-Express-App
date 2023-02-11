@@ -233,8 +233,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                       ),
                                       width5,
                                       Text(
-                                        availablePackages[index]
-                                            ['package_status'],
+                                        availablePackages[index]['status'],
                                         style: lightText12.copyWith(
                                           color: primary,
                                         ),

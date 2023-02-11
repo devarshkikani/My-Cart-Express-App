@@ -238,7 +238,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                       ),
                                       width5,
                                       Text(
-                                        duePackages[index]['package_status'],
+                                        duePackages[index]['status'],
                                         style: lightText12.copyWith(
                                           color: primary,
                                         ),

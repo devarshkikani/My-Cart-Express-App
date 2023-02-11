@@ -119,7 +119,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        widget.packagesDetails['package_status'],
+                        widget.packagesDetails['status'],
                         style: regularText14.copyWith(
                           color: primary,
                         ),
@@ -217,19 +217,26 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                       ],
                     ),
                     height15,
-                    Text(
-                      "TOTAL COST : ",
-                      style: mediumText14.copyWith(
-                        color: blackColor,
+                    if (widget.packagesDetails['status'] ==
+                            'Available for Pickup' &&
+                        widget.packagesDetails['status'] == 'Collected')
+                      Column(
+                        children: [
+                          Text(
+                            "TOTAL COST : ",
+                            style: mediumText14.copyWith(
+                              color: blackColor,
+                            ),
+                          ),
+                          height5,
+                          Text(
+                            "\$${widget.packagesDetails['amount']}",
+                            style: mediumText14.copyWith(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    height5,
-                    Text(
-                      "\$${widget.packagesDetails['amount']}",
-                      style: mediumText14.copyWith(
-                        color: Colors.grey,
-                      ),
-                    ),
                   ],
                 ),
               ),
