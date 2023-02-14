@@ -450,15 +450,15 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
             ),
             height20,
             Text(
-              'Declared Value',
+              'Declared Value in USD',
               style: regularText14,
             ),
             height10,
             TextFormFieldWidget(
-              hintText: 'Enter value here',
+              hintText: 'Enter USD Value Here',
               controller: declared,
               validator: (value) =>
-                  Validators.validateText(value, 'Declared value'),
+                  Validators.validateText(value, 'Declared Value in USD'),
             ),
             height20,
             Text(
