@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +16,26 @@ import 'package:flutter/cupertino.dart';
 
 class SignInController extends GetxController {
   GetStorage box = GetStorage();
+  RxString fcmToken = ''.obs;
+  final messaging = FirebaseMessaging.instance;
+  void setupSettings() async {
+    await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    String? token = await messaging.getToken();
+
+    fcmToken.value = token.toString();
+    if (kDebugMode) {
+      print('Registration Token=$token');
+    }
+  }
+
   Future<void> signInOnTap({
     required String email,
     required String password,
@@ -22,6 +44,7 @@ class SignInController extends GetxController {
     final data = dio.FormData.fromMap({
       'email': email,
       'password': password,
+      // 'token': fcmToken.value,
       'device': Platform.isAndroid ? 1 : 2,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(

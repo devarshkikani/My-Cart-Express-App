@@ -21,6 +21,7 @@ class SignUpScreen extends GetView<SignUpController> {
   @override
   Widget build(BuildContext context) {
     controller.getBranches(context);
+    controller.setupSettings();
     return Scaffold(
       backgroundColor: background,
       appBar: appbarWidget(title: 'Create Account'),

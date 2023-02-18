@@ -2,6 +2,8 @@
 
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -41,11 +43,25 @@ class SignUpController extends GetxController {
   RxBool termsAndService = false.obs;
   RxBool privacyPolicy = false.obs;
 
-  // @override
-  // void onInit() {
-  //   getBranches();
-  //   super.onInit();
-  // }
+  RxString fcmToken = ''.obs;
+  final messaging = FirebaseMessaging.instance;
+  void setupSettings() async {
+    await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    String? token = await messaging.getToken();
+
+    fcmToken.value = token.toString();
+    if (kDebugMode) {
+      print('Registration Token=$token');
+    }
+  }
 
   Future<void> getBranches(BuildContext context) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
@@ -90,6 +106,7 @@ class SignUpController extends GetxController {
         'password': password.text.trim(),
         'password_confirm': password.text.trim(),
         'device': Platform.isAndroid ? 1 : 2,
+        // 'token': fcmToken.value,
         // 'g_id': '1',
         // 'person_dd': '',
         // 'ipaddress': '',
