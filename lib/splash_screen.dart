@@ -1,5 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
@@ -20,7 +27,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   GetStorage box = GetStorage();
   RxMap userDetails = {}.obs;
-
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   @override
   void initState() {
     super.initState();
@@ -37,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAll(() => const WelcomeScreen());
       }
     });
+    firebaseNotificationSetup();
   }
 
   Future<void> getUserDetails() async {
@@ -73,5 +82,84 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> firebaseNotificationSetup() async {
+    await Firebase.initializeApp();
+    var initSetttings = const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: IOSInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      ),
+    );
+
+    flutterLocalNotificationsPlugin.initialize(initSetttings,
+        onSelectNotification: onSelectNotification);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
+      log('${message?.notification?.title}+++++');
+      if (Platform.isIOS) {
+        await showNotification(
+          message!.notification!.title.toString(),
+          message.notification!.body.toString(),
+          json.encode(message.data),
+        );
+      }
+      if (Platform.isAndroid) {
+        String? title = message!.notification?.title;
+        String? body = message.notification?.body;
+        if (title != null && body != null) {
+          await showNotification(
+            title,
+            body,
+            json.encode(message.data),
+          );
+        }
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+      log('${message?.notification?.title}-----');
+
+      if (Platform.isIOS) {
+        onSelectNotification(json.encode(message!.data));
+      } else {
+        onSelectNotification(json.encode(message!.data));
+      }
+    });
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  }
+
+  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    log("Handling a background message ${message.notification?.title}");
+  }
+
+  Future showNotification(String title, String message, dynamic payload) async {
+    AndroidNotificationDetails android = const AndroidNotificationDetails(
+      'channel id',
+      'channel NAME',
+      channelDescription: 'CHANNEL DESCRIPTION',
+      priority: Priority.high,
+      importance: Importance.max,
+      playSound: true,
+    );
+
+    var iOS = const IOSNotificationDetails();
+
+    var platform = NotificationDetails(iOS: iOS, android: android);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      message,
+      platform,
+      payload: payload,
+    );
+  }
+
+  Future onSelectNotification(String? payloadData) async {
+    dynamic payload = await json.decode(payloadData ?? '');
+    log(payload.toString());
   }
 }

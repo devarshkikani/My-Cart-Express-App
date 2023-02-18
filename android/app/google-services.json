@@ -29,6 +29,13 @@
             {
               "client_id": "479907967244-4oc4ck75u029sns4ag41bb6rl480dvhq.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "479907967244-h99tuof7c7mvtssh739u6o1uei05o7ec.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ios.MCart"
+              }
             }
           ]
         }

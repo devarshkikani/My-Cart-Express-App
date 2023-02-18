@@ -10,9 +10,7 @@ void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   NetworkDio.setDynamicHeader();
-  await Firebase.initializeApp(
-      // options: DefaultFirebaseOptions.currentPlatform,
-      );
+  await Firebase.initializeApp();
   PhoneInputFormatter.addAlternativePhoneMasks(
     countryCode: 'US',
     alternativeMasks: [
