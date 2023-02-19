@@ -128,8 +128,15 @@ class NetworkDio {
           print('DioError +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(
-            title: 'Error', errorMessage: response!.data['message'].toString());
+        if (response != null) {
+          showError(
+              title: 'Error',
+              errorMessage: response.data['message'].toString());
+        } else {
+          showError(
+              title: 'Error',
+              errorMessage: 'Some thing went wrong, please try again later.');
+        }
         return null;
       } catch (e) {
         if (kDebugMode) {
@@ -200,8 +207,15 @@ class NetworkDio {
           print('DioError +++ $e');
         }
         if (context != null) processIndicator.hide(context);
-        showError(
-            title: 'Error', errorMessage: response!.data['message'].toString());
+        if (response != null) {
+          showError(
+              title: 'Error',
+              errorMessage: response.data['message'].toString());
+        } else {
+          showError(
+              title: 'Error',
+              errorMessage: 'Some thing went wrong, please try again later.');
+        }
         return null;
       } catch (e) {
         if (kDebugMode) {
