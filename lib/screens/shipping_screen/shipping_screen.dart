@@ -231,6 +231,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
           onTap: () {
             Get.to(() => MyPackagesDetailsScreen(
                   packagesDetails: shippmentsList[index],
+                  isFromAll: true,
                 ));
           },
           child: Container(

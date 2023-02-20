@@ -8,6 +8,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/screens/shipping_screen/packages_details_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
@@ -197,69 +198,139 @@ class _OverdueScreenState extends State<OverdueScreen> {
                   padding: EdgeInsets.zero,
                   separatorBuilder: (BuildContext context, int index) =>
                       height20,
-                  itemBuilder: (BuildContext context, int index) => Container(
-                    decoration: BoxDecoration(
-                      color:
-                          duePackages[index]['status'] == 'Available for Pickup'
-                              ? Colors.green.shade200
-                              : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(.10),
-                          offset: const Offset(0.0, 2.0),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: primary.withOpacity(0.2),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
+                  itemBuilder: (BuildContext context, int index) => InkWell(
+                    onTap: () {
+                      Get.to(() => MyPackagesDetailsScreen(
+                            packagesDetails: duePackages[index],
+                            isFromAll: false,
+                          ));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: duePackages[index]['status'] ==
+                                'Available for Pickup'
+                            ? Colors.green.shade200
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(.10),
+                            offset: const Offset(0.0, 2.0),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: primary.withOpacity(0.2),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                            ),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: primary,
+                                        ),
+                                        width5,
+                                        Text(
+                                          duePackages[index]['status'],
+                                          style: lightText12.copyWith(
+                                            color: primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const VerticalDivider(
+                                    color: primary,
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'value : ',
+                                          style: lightText12,
+                                        ),
+                                        Text(
+                                          duePackages[index]['value_cost'],
+                                          style: regularText14,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          child: IntrinsicHeight(
+                          Container(
+                            color: greyColor.withOpacity(0.2),
+                            padding: const EdgeInsets.all(10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.check_circle,
-                                        color: primary,
+                                width20,
+                                Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: Image.network(
+                                        duePackages[index]['package_image'],
+                                        fit: BoxFit.cover,
                                       ),
-                                      width5,
+                                    ),
+                                  ),
+                                ),
+                                width20,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        duePackages[index]['status'],
-                                        style: lightText12.copyWith(
+                                        duePackages[index]['pkg_shipging_code'],
+                                        style: regularText14.copyWith(
                                           color: primary,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                const VerticalDivider(
-                                  color: primary,
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                      height10,
                                       Text(
-                                        'value : ',
-                                        style: lightText12,
+                                        duePackages[index]['tracking'],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: regularText14.copyWith(),
                                       ),
-                                      Text(
-                                        duePackages[index]['value_cost'],
-                                        style: regularText14,
+                                      height10,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            duePackages[index]['weight_label'],
+                                            overflow: TextOverflow.ellipsis,
+                                            style: regularText14.copyWith(),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 14,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -267,154 +338,98 @@ class _OverdueScreenState extends State<OverdueScreen> {
                               ],
                             ),
                           ),
-                        ),
-                        Container(
-                          color: greyColor.withOpacity(0.2),
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              width20,
-                              Center(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: SizedBox(
-                                    height: 60,
-                                    width: 60,
-                                    child: Image.network(
-                                      duePackages[index]['package_image'],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              width20,
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      duePackages[index]['shipping_mcecode'],
-                                      style: regularText14.copyWith(
-                                        color: primary,
-                                      ),
-                                    ),
-                                    height10,
-                                    Text(
-                                      duePackages[index]['tracking'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: regularText14.copyWith(),
-                                    ),
-                                    height10,
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          duePackages[index]['weight_label'],
-                                          overflow: TextOverflow.ellipsis,
-                                          style: regularText14.copyWith(),
-                                        ),
-                                        const Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          size: 14,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        IntrinsicHeight(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: const BoxDecoration(
-                                    color: greyColor,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      duePackages[index]['status'] ==
-                                                  'Available for Pickup' &&
-                                              duePackages[index]['status'] ==
-                                                  'Collected'
-                                          ? Text(
-                                              'TOTAL COST : ${duePackages[index]['amount']}',
-                                              style: lightText12.copyWith(
-                                                color: blackColor,
-                                              ),
-                                            )
-                                          : Text(
-                                              duePackages[index]['ontime_text'],
-                                              style: lightText12.copyWith(
-                                                color: blackColor,
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: duePackages[index]
-                                              ['upload_attachment_flag'] ==
-                                          1
-                                      ? () {
-                                          uploadInvoice(
-                                              duePackages[index]['package_id']);
-                                        }
-                                      : null,
+                          IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
                                   child: Container(
                                     padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: duePackages[index]
-                                                  ['upload_attachment_flag'] ==
-                                              1
-                                          ? orangeColor
-                                          : primary,
-                                      borderRadius: const BorderRadius.only(
-                                        bottomRight: Radius.circular(10),
+                                    decoration: const BoxDecoration(
+                                      color: greyColor,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
                                       ),
                                     ),
-                                    child: Row(
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          duePackages[index]
-                                              ['invoice_btn_text'],
-                                          style: lightText12.copyWith(
-                                            color: whiteColor,
-                                          ),
-                                        ),
-                                        width10,
-                                        duePackages[index][
-                                                    'upload_attachment_flag'] ==
-                                                1
-                                            ? Image.asset(
-                                                addIcon,
-                                                color: whiteColor,
-                                                height: 14,
-                                                width: 14,
+                                        duePackages[index]['status'] ==
+                                                    'Available for Pickup' &&
+                                                duePackages[index]['status'] ==
+                                                    'Collected'
+                                            ? Text(
+                                                'TOTAL COST : ${duePackages[index]['amount']}',
+                                                style: lightText12.copyWith(
+                                                  color: blackColor,
+                                                ),
                                               )
-                                            : const SizedBox(),
+                                            : Text(
+                                                duePackages[index]
+                                                    ['ontime_text'],
+                                                style: lightText12.copyWith(
+                                                  color: blackColor,
+                                                ),
+                                              ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: duePackages[index]
+                                                ['upload_attachment_flag'] ==
+                                            1
+                                        ? () {
+                                            uploadInvoice(duePackages[index]
+                                                ['package_id']);
+                                          }
+                                        : null,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: duePackages[index][
+                                                    'upload_attachment_flag'] ==
+                                                1
+                                            ? orangeColor
+                                            : primary,
+                                        borderRadius: const BorderRadius.only(
+                                          bottomRight: Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            duePackages[index]
+                                                ['invoice_btn_text'],
+                                            style: lightText12.copyWith(
+                                              color: whiteColor,
+                                            ),
+                                          ),
+                                          width10,
+                                          duePackages[index][
+                                                      'upload_attachment_flag'] ==
+                                                  1
+                                              ? Image.asset(
+                                                  addIcon,
+                                                  color: whiteColor,
+                                                  height: 14,
+                                                  width: 14,
+                                                )
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

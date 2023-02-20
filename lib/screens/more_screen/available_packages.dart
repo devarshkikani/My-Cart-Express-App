@@ -197,6 +197,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                     onTap: () {
                       Get.to(() => MyPackagesDetailsScreen(
                             packagesDetails: availablePackages[index],
+                            isFromAll: false,
                           ));
                     },
                     child: Container(
@@ -302,7 +303,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                     children: [
                                       Text(
                                         availablePackages[index]
-                                            ['shipping_mcecode'],
+                                            ['pkg_shipging_code'],
                                         style: regularText14.copyWith(
                                           color: primary,
                                         ),

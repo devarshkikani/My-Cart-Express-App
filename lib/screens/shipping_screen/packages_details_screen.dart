@@ -12,7 +12,9 @@ import 'package:timelines/timelines.dart';
 
 class MyPackagesDetailsScreen extends StatefulWidget {
   Map packagesDetails = {}.obs;
-  MyPackagesDetailsScreen({super.key, required this.packagesDetails});
+  late bool isFromAll;
+  MyPackagesDetailsScreen(
+      {super.key, required this.packagesDetails, required this.isFromAll});
 
   @override
   State<MyPackagesDetailsScreen> createState() =>
@@ -30,7 +32,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint +
             ApiEndPoints.shippingTracking +
-            widget.packagesDetails['package_id'],
+            widget.packagesDetails[widget.isFromAll ? 'package_id' : 'pkg_id'],
         context: context);
     if (response != null) {
       for (int i = 0; i < response['package_tracking'].length; i++) {
@@ -130,13 +132,15 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                       Row(
                         children: [
                           Text(
-                            '${widget.packagesDetails['flight_eta_status']} : ',
+                            '${widget.packagesDetails[widget.isFromAll ? 'flight_eta_status' : 'ontime_text']} : ',
                             style: regularText14.copyWith(
                               color: success,
                             ),
                           ),
                           Text(
-                            widget.packagesDetails['flight_eta_date'],
+                            widget.packagesDetails[widget.isFromAll
+                                ? 'flight_eta_date'
+                                : 'ontime_eta'],
                             style: const TextStyle(
                               color: primary,
                             ),
@@ -179,7 +183,9 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.packagesDetails['shipping_mcecode'],
+                                widget.packagesDetails[widget.isFromAll
+                                    ? 'shipping_mcecode'
+                                    : 'pkg_shipging_code'],
                                 style: regularText14.copyWith(
                                   color: primary,
                                 ),
