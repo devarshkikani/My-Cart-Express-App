@@ -205,12 +205,12 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                         ),
                       ],
                     ),
-                    height15,
                     if (widget.packagesDetails['status'] ==
                             'Available for Pickup' &&
                         widget.packagesDetails['status'] == 'Collected')
                       Column(
                         children: [
+                          height15,
                           Text(
                             "TOTAL COST : ",
                             style: mediumText14.copyWith(
