@@ -193,23 +193,12 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                                 ),
                               ),
                               height10,
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    widget.packagesDetails['weight_label'],
-                                    overflow: TextOverflow.ellipsis,
-                                    style: regularText14.copyWith(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.grey,
-                                    size: 14,
-                                  ),
-                                ],
+                              Text(
+                                widget.packagesDetails['weight_label'],
+                                overflow: TextOverflow.ellipsis,
+                                style: regularText14.copyWith(
+                                  color: Colors.grey,
+                                ),
                               ),
                             ],
                           ),
