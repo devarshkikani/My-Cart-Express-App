@@ -367,16 +367,23 @@ class _ShippingScreenState extends State<ShippingScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (shippmentsList[index]['status'] ==
-                                      'Available for Pickup' &&
-                                  shippmentsList[index]['status'] ==
-                                      'Collected')
-                                Text(
-                                  'TOTAL COST : ${shippmentsList[index]['amount']}',
-                                  style: lightText12.copyWith(
-                                    color: blackColor,
-                                  ),
-                                ),
+                              shippmentsList[index]['status'] ==
+                                          'Available for Pickup' &&
+                                      shippmentsList[index]['status'] ==
+                                          'Collected'
+                                  ? Text(
+                                      'TOTAL COST : ${shippmentsList[index]['amount']}',
+                                      style: lightText12.copyWith(
+                                        color: blackColor,
+                                      ),
+                                    )
+                                  : Text(
+                                      shippmentsList[index]
+                                          ['flight_eta_status'],
+                                      style: lightText12.copyWith(
+                                        color: blackColor,
+                                      ),
+                                    ),
                             ],
                           ),
                         ),

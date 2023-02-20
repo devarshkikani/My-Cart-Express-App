@@ -342,13 +342,22 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        'TOTAL COST : ${duePackages[index]['amount']}',
-                                        style: lightText12.copyWith(
-                                          letterSpacing: 0.5,
-                                          color: blackColor,
-                                        ),
-                                      ),
+                                      duePackages[index]['status'] ==
+                                                  'Available for Pickup' &&
+                                              duePackages[index]['status'] ==
+                                                  'Collected'
+                                          ? Text(
+                                              'TOTAL COST : ${duePackages[index]['amount']}',
+                                              style: lightText12.copyWith(
+                                                color: blackColor,
+                                              ),
+                                            )
+                                          : Text(
+                                              duePackages[index]['ontime_text'],
+                                              style: lightText12.copyWith(
+                                                color: blackColor,
+                                              ),
+                                            ),
                                     ],
                                   ),
                                 ),
