@@ -370,7 +370,7 @@ class MoreScreenState extends State<MoreScreen> {
             categoryOntap(index);
           },
           child: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.all(8),
             alignment: Alignment.bottomCenter,
             decoration: BoxDecoration(
@@ -395,6 +395,7 @@ class MoreScreenState extends State<MoreScreen> {
                 const Spacer(),
                 Text(
                   categoryList[index],
+                  style: lightText14,
                   textAlign: TextAlign.center,
                 ),
               ],
