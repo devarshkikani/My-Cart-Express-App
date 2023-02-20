@@ -302,14 +302,14 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                     children: [
                                       Text(
                                         availablePackages[index]
-                                            ['pkg_shipging_code'],
+                                            ['shipping_mcecode'],
                                         style: regularText14.copyWith(
                                           color: primary,
                                         ),
                                       ),
                                       height10,
                                       Text(
-                                        availablePackages[index]['pkg_id'],
+                                        availablePackages[index]['tracking'],
                                         overflow: TextOverflow.ellipsis,
                                         style: regularText14.copyWith(),
                                       ),

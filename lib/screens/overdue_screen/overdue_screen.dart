@@ -293,14 +293,14 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      duePackages[index]['pkg_shipging_code'],
+                                      duePackages[index]['shipping_mcecode'],
                                       style: regularText14.copyWith(
                                         color: primary,
                                       ),
                                     ),
                                     height10,
                                     Text(
-                                      duePackages[index]['pkg_id'],
+                                      duePackages[index]['tracking'],
                                       overflow: TextOverflow.ellipsis,
                                       style: regularText14.copyWith(),
                                     ),
