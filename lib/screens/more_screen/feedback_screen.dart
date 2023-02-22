@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
-import 'package:my_cart_express/constant/default_images.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';

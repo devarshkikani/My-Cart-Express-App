@@ -150,6 +150,7 @@ class NetworkDio {
       if (context != null) InternetError.addOverlayEntry(context);
       return null;
     }
+    return null;
   }
 
   static Future<Map<String, dynamic>?> getDioHttpMethod({
@@ -229,6 +230,7 @@ class NetworkDio {
       if (context != null) InternetError.addOverlayEntry(context);
       return null;
     }
+    return null;
   }
 
   static void showSuccess({
