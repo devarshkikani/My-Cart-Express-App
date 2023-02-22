@@ -354,24 +354,12 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        availablePackages[index]['status'] ==
-                                                    'Available for Pickup' &&
-                                                availablePackages[index]
-                                                        ['status'] ==
-                                                    'Collected'
-                                            ? Text(
-                                                'TOTAL COST : ${availablePackages[index]['amount']}',
-                                                style: lightText12.copyWith(
-                                                  color: blackColor,
-                                                ),
-                                              )
-                                            : Text(
-                                                availablePackages[index]
-                                                    ['ontime_text'],
-                                                style: lightText12.copyWith(
-                                                  color: blackColor,
-                                                ),
-                                              ),
+                                        Text(
+                                          'TOTAL COST : ${availablePackages[index]['amount']}',
+                                          style: lightText12.copyWith(
+                                            color: blackColor,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
