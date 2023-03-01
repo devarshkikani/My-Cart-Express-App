@@ -1,21 +1,23 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:my_cart_express/constant/app_endpoints.dart';
-import 'package:my_cart_express/constant/default_images.dart';
-import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
-import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:my_cart_express/widget/pdf_viewer.dart';
+import 'package:my_cart_express/constant/sizedbox.dart';
+import 'package:my_cart_express/widget/app_bar_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:my_cart_express/widget/input_text_field.dart';
+import 'package:my_cart_express/constant/app_endpoints.dart';
+import 'package:my_cart_express/constant/default_images.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -27,9 +29,13 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   ScrollController scrollController = ScrollController();
   RxInt limit = 10.obs;
+  String? emojiStatus;
+  String? ratingStatus;
+  TextEditingController feedbackController = TextEditingController();
   RxList transactionList = [].obs;
   RxBool isLoading = true.obs;
   RxBool isDownloading = false.obs;
+
   @override
   void initState() {
     super.initState();
@@ -119,6 +125,58 @@ class _TransactionScreenState extends State<TransactionScreen> {
         title: 'Error',
         errorMessage: e.toString(),
       );
+    }
+  }
+
+  Future<void> saveFeedBack(String id) async {
+    if (emojiStatus == null) {
+      Get.showSnackbar(
+        const GetSnackBar(
+          message: 'Add how satisfied are you with this trasaction?',
+          duration: Duration(
+            seconds: 3,
+          ),
+        ),
+      );
+    } else if (ratingStatus == null) {
+      Get.showSnackbar(
+        const GetSnackBar(
+          message: 'Add how do you rate your Driver/Cashier interraction?',
+          duration: Duration(
+            seconds: 3,
+          ),
+        ),
+      );
+    } else if (feedbackController.text == '') {
+      Get.showSnackbar(
+        const GetSnackBar(
+          message: 'Add your feedback first',
+          duration: Duration(
+            seconds: 3,
+          ),
+        ),
+      );
+    } else {
+      final data = dio.FormData.fromMap({
+        'transaction_id': id,
+        'satisfied': emojiStatus,
+        'rating': ratingStatus,
+        'feedback': feedbackController.text,
+      });
+      Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.feedbackSend,
+        context: context,
+        data: data,
+      );
+      if (response != null) {
+        emojiStatus = null;
+        ratingStatus = null;
+        feedbackController = TextEditingController();
+        Navigator.pop(context);
+        getTransaction();
+        NetworkDio.showSuccess(
+            title: 'Suceess', sucessMessage: response['message']);
+      }
     }
   }
 
@@ -259,23 +317,58 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             ],
                           ),
                         ),
-                        height5,
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
                           child: Row(
                             children: [
-                              Text('Type', style: lightText13),
-                              width5,
-                              Text(
-                                '${transactionList[index]['payment_type']} ${transactionList[index]['payment_type_label']}',
-                                style: lightText13.copyWith(
-                                  color: primary,
+                              Expanded(
+                                flex: 2,
+                                child: Row(
+                                  children: [
+                                    Text('Type', style: lightText13),
+                                    width5,
+                                    Text(
+                                      '${transactionList[index]['payment_type']} ${transactionList[index]['payment_type_label']}',
+                                      style: lightText13.copyWith(
+                                        color: primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: transactionList[index]
+                                            ['hide_leave_feedback'] >
+                                        0
+                                    ? () {}
+                                    : () {
+                                        feedBackDialoag(context,
+                                            transactionList[index]['id']);
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: transactionList[index]
+                                              ['hide_leave_feedback'] >
+                                          0
+                                      ? Colors.grey
+                                      : secondary,
+                                  fixedSize: const Size(130, 30),
+                                  minimumSize: const Size(130, 30),
+                                  padding: EdgeInsets.zero,
+                                ),
+                                child: Text(
+                                  transactionList[index]
+                                              ['hide_leave_feedback'] >
+                                          0
+                                      ? 'Feedback Left'
+                                      : 'Leave Feedback',
+                                  style: lightText12.copyWith(
+                                    color: whiteColor,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        height10,
                         Row(
                           children: [
                             buttonDecoration(
@@ -331,6 +424,184 @@ class _TransactionScreenState extends State<TransactionScreen> {
             style: regularText14.copyWith(color: whiteColor),
           ),
         ),
+      ),
+    );
+  }
+
+  void feedBackDialoag(BuildContext context, String id) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            height15,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Text(
+                'Leave Feedback',
+                style: mediumText18,
+              ),
+            ),
+            const Divider(),
+            height10,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Text(
+                'How satisfied are you with this trasaction?',
+                style: regularText14,
+              ),
+            ),
+            height10,
+            emojiRating(),
+            height10,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Text(
+                'How do you rate your Driver/Cashier interraction?',
+                style: regularText14,
+              ),
+            ),
+            height10,
+            starRating(),
+            height10,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Text(
+                'Write your feedback',
+                style: regularText14,
+              ),
+            ),
+            height10,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 280,
+                    height: 90,
+                    child: TextFormFieldWidget(
+                      maxLines: 3,
+                      controller: feedbackController,
+                      contentPadding: const EdgeInsets.all(10),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: secondary,
+                  ),
+                  onPressed: () {
+                    emojiStatus = null;
+                    ratingStatus = null;
+                    feedbackController = TextEditingController();
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Close',
+                  ),
+                ),
+                width15,
+                ElevatedButton(
+                  onPressed: () {
+                    saveFeedBack(id);
+                  },
+                  child: const Text(
+                    'Save Feedback',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget emojiRating() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: RatingBar.builder(
+        itemCount: 5,
+        itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+        itemBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return const Icon(
+                Icons.sentiment_very_dissatisfied,
+                color: Colors.red,
+              );
+            case 1:
+              return const Icon(
+                Icons.sentiment_dissatisfied,
+                color: Colors.redAccent,
+              );
+            case 2:
+              return const Icon(
+                Icons.sentiment_neutral,
+                color: Colors.amber,
+              );
+            case 3:
+              return const Icon(
+                Icons.sentiment_satisfied,
+                color: Colors.lightGreen,
+              );
+            case 4:
+              return const Icon(
+                Icons.sentiment_very_satisfied,
+                color: Colors.green,
+              );
+            default:
+              return Container();
+          }
+        },
+        onRatingUpdate: (rating) {
+          setState(() {
+            if (rating != 1.0) {
+              emojiStatus = 'Very unsatisfied';
+            } else if (rating != 2.0) {
+              emojiStatus = 'Unsatisfied';
+            } else if (rating != 3.0) {
+              emojiStatus = 'Neutral';
+            } else if (rating != 4.0) {
+              emojiStatus = 'Satisfied';
+            } else if (rating != 5.0) {
+              emojiStatus = 'Very Satisfied';
+            }
+          });
+        },
+        updateOnDrag: true,
+      ),
+    );
+  }
+
+  Widget starRating() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: RatingBar.builder(
+        minRating: 1,
+        unratedColor: greyColor.withOpacity(0.5),
+        glowColor: greyColor,
+        itemCount: 5,
+        itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+        itemBuilder: (context, _) => const Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        onRatingUpdate: (rating) {
+          setState(() {
+            ratingStatus = rating.toString();
+          });
+        },
+        updateOnDrag: true,
       ),
     );
   }
