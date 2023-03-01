@@ -45,6 +45,7 @@ dependencies:
   flutter_html: ^2.2.1
   flutter_local_notifications: ^9.9.1
   flutter_multi_formatter: ^2.10.2
+  flutter_pdfview: ^1.2.5
   get: ^4.6.5
   get_storage: ^2.0.3
   image_cropper: ^3.0.1
