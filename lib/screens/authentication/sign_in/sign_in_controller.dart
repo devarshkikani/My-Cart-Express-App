@@ -44,7 +44,7 @@ class SignInController extends GetxController {
     final data = dio.FormData.fromMap({
       'email': email,
       'password': password,
-      // 'token': fcmToken.value,
+      'firebase_token': fcmToken.value,
       'device': Platform.isAndroid ? 1 : 2,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(

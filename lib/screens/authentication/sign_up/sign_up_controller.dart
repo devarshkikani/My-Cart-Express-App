@@ -106,7 +106,7 @@ class SignUpController extends GetxController {
         'password': password.text.trim(),
         'password_confirm': password.text.trim(),
         'device': Platform.isAndroid ? 1 : 2,
-        // 'token': fcmToken.value,
+        'firebase_token': fcmToken.value,
         // 'g_id': '1',
         // 'person_dd': '',
         // 'ipaddress': '',
