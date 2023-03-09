@@ -86,6 +86,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> firebaseNotificationSetup() async {
     await Firebase.initializeApp();
+
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
     var initSetttings = const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: IOSInitializationSettings(
@@ -97,6 +108,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     flutterLocalNotificationsPlugin.initialize(initSetttings,
         onSelectNotification: onSelectNotification);
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       log('${message?.notification?.title}+++++');
@@ -133,6 +151,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await showNotification(
+      message.notification!.title.toString(),
+      message.notification!.body.toString(),
+      json.encode(message.data),
+    );
     log("Handling a background message ${message.notification?.title}");
   }
 
