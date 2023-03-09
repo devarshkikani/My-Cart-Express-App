@@ -132,7 +132,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     if (emojiStatus == null) {
       Get.showSnackbar(
         const GetSnackBar(
-          message: 'Add how satisfied are you with this trasaction?',
+          message: 'Add how satisfied are you with this transaction?',
           duration: Duration(
             seconds: 3,
           ),
@@ -515,7 +515,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     saveFeedBack(id);
                   },
                   child: const Text(
-                    'Save Feedback',
+                    'Send Feedback',
                   ),
                 ),
               ],
@@ -531,33 +531,42 @@ class _TransactionScreenState extends State<TransactionScreen> {
       padding: const EdgeInsets.only(left: 10.0),
       child: RatingBar.builder(
         itemCount: 5,
+        unratedColor: Colors.grey,
         itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
-              return const Icon(
+              return Icon(
                 Icons.sentiment_very_dissatisfied,
-                color: Colors.red,
+                color: emojiStatus == 'Very unsatisfied'
+                    ? Colors.red
+                    : Colors.grey,
               );
             case 1:
-              return const Icon(
+              return Icon(
                 Icons.sentiment_dissatisfied,
-                color: Colors.redAccent,
+                color: emojiStatus == 'Unsatisfied'
+                    ? Colors.redAccent
+                    : Colors.grey,
               );
             case 2:
-              return const Icon(
+              return Icon(
                 Icons.sentiment_neutral,
-                color: Colors.amber,
+                color: emojiStatus == 'Neutral' ? Colors.amber : Colors.grey,
               );
             case 3:
-              return const Icon(
+              return Icon(
                 Icons.sentiment_satisfied,
-                color: Colors.lightGreen,
+                color: emojiStatus == 'Satisfied'
+                    ? Colors.lightGreen
+                    : Colors.grey,
               );
             case 4:
-              return const Icon(
+              return Icon(
                 Icons.sentiment_very_satisfied,
-                color: Colors.green,
+                color: emojiStatus == 'Very Satisfied'
+                    ? Colors.green
+                    : Colors.grey,
               );
             default:
               return Container();
@@ -565,15 +574,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
         },
         onRatingUpdate: (rating) {
           setState(() {
-            if (rating != 1.0) {
+            if (rating == 1.0) {
               emojiStatus = 'Very unsatisfied';
-            } else if (rating != 2.0) {
+            } else if (rating == 2.0) {
               emojiStatus = 'Unsatisfied';
-            } else if (rating != 3.0) {
+            } else if (rating == 3.0) {
               emojiStatus = 'Neutral';
-            } else if (rating != 4.0) {
+            } else if (rating == 4.0) {
               emojiStatus = 'Satisfied';
-            } else if (rating != 5.0) {
+            } else if (rating == 5.0) {
               emojiStatus = 'Very Satisfied';
             }
           });
