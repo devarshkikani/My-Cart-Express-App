@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/theme/colors.dart';
@@ -22,6 +23,8 @@ class MyPackagesDetailsScreen extends StatefulWidget {
 }
 
 class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
+  List timeline = [];
+  List dateTimeline = [];
   @override
   void initState() {
     super.initState();
@@ -36,9 +39,9 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
         context: context);
     if (response != null) {
       for (int i = 0; i < response['package_tracking'].length; i++) {
-        timeline.add(response['package_tracking'][i]['package_status'] +
-            ' ' +
-            '(${response['package_tracking'][i]['date_time']})');
+        timeline.add(response['package_tracking'][i]['package_status']);
+        dateTimeline.add(
+            '${response['package_tracking'][i]['date_time'].toString().split('/').first}-${DateFormat('MMMM').format(DateTime(0, int.parse(response['package_tracking'][i]['date_time'].toString().split('/')[1].toString())))}');
       }
       setState(() {});
     }
@@ -183,16 +186,14 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.packagesDetails[widget.isFromAll
-                                    ? 'shipping_mcecode'
-                                    : 'pkg_shipging_code'],
+                                '''Package #: ${widget.packagesDetails[widget.isFromAll ? 'shipping_mcecode' : 'pkg_shipging_code']}''',
                                 style: regularText14.copyWith(
                                   color: primary,
                                 ),
                               ),
                               height10,
                               Text(
-                                widget.packagesDetails['tracking'],
+                                '''Tracking #: ${widget.packagesDetails['tracking']}''',
                                 overflow: TextOverflow.ellipsis,
                                 style: regularText14.copyWith(
                                   color: Colors.grey,
@@ -200,7 +201,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                               ),
                               height10,
                               Text(
-                                widget.packagesDetails['weight_label'],
+                                '''Weight: ${widget.packagesDetails['weight_label']}''',
                                 overflow: TextOverflow.ellipsis,
                                 style: regularText14.copyWith(
                                   color: Colors.grey,
@@ -247,28 +248,28 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
         Expanded(
           child: Timeline.tileBuilder(
             padding: EdgeInsets.zero,
-            theme: TimelineThemeData(nodePosition: -10.0),
+            theme: TimelineThemeData(nodePosition: 0.25),
             builder: TimelineTileBuilder.fromStyle(
-              contentsAlign: ContentsAlign.basic,
-              contentsBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  timeline[index],
-                ),
-              ),
               itemCount: timeline.length,
+              contentsAlign: ContentsAlign.basic,
+              oppositeContentsBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(dateTimeline[index]),
+                );
+              },
+              contentsBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    timeline[index],
+                  ),
+                );
+              },
             ),
           ),
         )
       ],
     );
   }
-
-  List timeline = [
-    //   'Recevied in Florida',
-    //   'Airline Boked',
-    //   'Custooms Booked',
-    //   'Available for Pickup',
-    //   'Collected',
-  ];
 }

@@ -27,8 +27,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   GetStorage box = GetStorage();
   RxMap userDetails = {}.obs;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
     super.initState();
@@ -97,17 +96,22 @@ class _SplashScreenState extends State<SplashScreen> {
       sound: true,
     );
 
-    var initSetttings = const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: IOSInitializationSettings(
+    var initSetttings = InitializationSettings(
+      android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
+        onDidReceiveLocalNotification:
+            (int id, String? title, String? body, String? payload) async {},
       ),
     );
 
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: onSelectNotification);
+    await FlutterLocalNotificationsPlugin().initialize(
+      initSetttings,
+      onDidReceiveBackgroundNotificationResponse: onSelectNotification,
+      onDidReceiveNotificationResponse: onSelectNotification,
+    );
 
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
@@ -115,6 +119,13 @@ class _SplashScreenState extends State<SplashScreen> {
       badge: true,
       sound: true,
     );
+
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      firebaseMessagingBackgroundHandler(initialMessage);
+    }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       log('${message?.notification?.title}+++++');
@@ -138,19 +149,20 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
 
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
       log('${message?.notification?.title}-----');
 
       if (Platform.isIOS) {
-        onSelectNotification(json.encode(message!.data));
+        onSelectNotification(null);
       } else {
-        onSelectNotification(json.encode(message!.data));
+        onSelectNotification(null);
       }
     });
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   }
 
-  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  static Future<void> firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
     await showNotification(
       message.notification!.title.toString(),
       message.notification!.body.toString(),
@@ -159,30 +171,32 @@ class _SplashScreenState extends State<SplashScreen> {
     log("Handling a background message ${message.notification?.title}");
   }
 
-  Future showNotification(String title, String message, dynamic payload) async {
-    AndroidNotificationDetails android = const AndroidNotificationDetails(
-      'channel id',
-      'channel NAME',
-      channelDescription: 'CHANNEL DESCRIPTION',
-      priority: Priority.high,
-      importance: Importance.max,
-      playSound: true,
-    );
-
-    var iOS = const IOSNotificationDetails();
-
-    var platform = NotificationDetails(iOS: iOS, android: android);
-    await flutterLocalNotificationsPlugin.show(
+  static Future showNotification(
+      String title, String message, dynamic payload) async {
+    await FlutterLocalNotificationsPlugin().show(
       0,
       title,
       message,
-      platform,
+      const NotificationDetails(
+        iOS: DarwinNotificationDetails(),
+        android: AndroidNotificationDetails(
+          'channel id',
+          'channel NAME',
+          channelDescription: 'CHANNEL DESCRIPTION',
+          priority: Priority.high,
+          importance: Importance.max,
+          playSound: true,
+        ),
+      ),
       payload: payload,
     );
   }
 
-  Future onSelectNotification(String? payloadData) async {
-    dynamic payload = await json.decode(payloadData ?? '');
-    log(payload.toString());
+  static Future onSelectNotification(NotificationResponse? payloadData) async {
+    if (payloadData != null) {
+      log(payloadData.notificationResponseType.toString());
+    } else {
+      log('Null');
+    }
   }
 }
