@@ -32,10 +32,6 @@ class MyPackagesDetailsScreen extends StatefulWidget {
 class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   List timeline = [];
   List dateTimeline = [];
-  RxList shippmentsList = [].obs;
-  RxString searchData = ''.obs;
-  RxBool isLoading = true.obs;
-  RxInt offSet = 0.obs;
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
   File? selectedFile;
@@ -105,8 +101,6 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
       Get.back();
       NetworkDio.showSuccess(
           title: 'Success', sucessMessage: response['message']);
-      offSet.value = 0;
-      shippmentsList.value = [];
     }
   }
 
@@ -271,6 +265,16 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                                   color: Colors.grey,
                                 ),
                               ),
+                              if (widget.packagesDetails['status_id'] == '6')
+                                height10,
+                              if (widget.packagesDetails['status_id'] == '6')
+                                Text(
+                                  '''Storage days: ${widget.packagesDetails['storage_days']}''',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: regularText14.copyWith(
+                                    color: Colors.grey,
+                                  ),
+                                ),
                             ],
                           ),
                         ),
