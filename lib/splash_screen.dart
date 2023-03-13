@@ -186,6 +186,8 @@ class _SplashScreenState extends State<SplashScreen> {
           priority: Priority.high,
           importance: Importance.max,
           playSound: true,
+          fullScreenIntent: true,
+          enableVibration: true,
         ),
       ),
       payload: payload,
