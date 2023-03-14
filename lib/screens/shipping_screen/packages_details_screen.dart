@@ -252,7 +252,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                               height10,
                               Text(
                                 '''Tracking #: ${widget.packagesDetails['tracking']}''',
-                                overflow: TextOverflow.ellipsis,
+                                // overflow: TextOverflow.ellipsis,
                                 style: regularText14.copyWith(
                                   color: Colors.grey,
                                 ),
