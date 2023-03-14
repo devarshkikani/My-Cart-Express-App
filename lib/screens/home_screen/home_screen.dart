@@ -5,6 +5,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
 import 'package:my_cart_express/widget/validator.dart';
@@ -17,7 +18,6 @@ import 'package:my_cart_express/screens/messages_screen/messages_screen.dart';
 import 'package:my_cart_express/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/screens/notification_screen/notifications_screen.dart';
 import 'package:share_plus/share_plus.dart';
-// import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,6 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (response != null) {
       balance.value = response['data'];
+    }
+
+    Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
+      context: context,
+    );
+    if (shippingCount != null) {
+      packageCounts.value = shippingCount['package_counts'];
+      availablePackageCounts.value = shippingCount['available_package_counts'];
+      overduePackageCounts.value = shippingCount['overdue_package_counts'];
     }
 
     Map<String, dynamic>? packagesResponse = await NetworkDio.getDioHttpMethod(
