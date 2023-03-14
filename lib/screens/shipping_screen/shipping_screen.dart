@@ -321,12 +321,16 @@ class _ShippingScreenState extends State<ShippingScreen> {
                               ),
                             ),
                             height10,
-                            Text(
-                              shippmentsList[index]['tracking'],
-                              overflow: TextOverflow.ellipsis,
-                              style: regularText14.copyWith(
-                                color: Colors.grey,
-                              ),
+                            Column(
+                              children: [
+                                Text(
+                                  shippmentsList[index]['tracking'],
+                                  // overflow: TextOverflow.ellipsis,
+                                  style: regularText14.copyWith(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                             height10,
                             Row(

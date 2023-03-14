@@ -309,10 +309,15 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                         ),
                                       ),
                                       height10,
-                                      Text(
-                                        availablePackages[index]['tracking'],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: regularText14.copyWith(),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            availablePackages[index]
+                                                ['tracking'],
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: regularText14.copyWith(),
+                                          ),
+                                        ],
                                       ),
                                       height10,
                                       Row(

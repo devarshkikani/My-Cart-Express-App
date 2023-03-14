@@ -311,10 +311,14 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                         ),
                                       ),
                                       height10,
-                                      Text(
-                                        duePackages[index]['tracking'],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: regularText14.copyWith(),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            duePackages[index]['tracking'],
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: regularText14.copyWith(),
+                                          ),
+                                        ],
                                       ),
                                       height10,
                                       Row(
