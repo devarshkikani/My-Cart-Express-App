@@ -25,7 +25,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  GetStorage box = GetStorage();
+  static GetStorage box = GetStorage();
   RxMap userDetails = {}.obs;
 
   @override
@@ -111,13 +111,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await FlutterLocalNotificationsPlugin().initialize(
       initSetttings,
-      onDidReceiveBackgroundNotificationResponse:
-          (NotificationResponse response) {
-        onSelectNotification(json.decode(response.payload!));
-      },
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        onSelectNotification(json.decode(response.payload!));
-      },
+      onDidReceiveBackgroundNotificationResponse: receiveNotification,
+      onDidReceiveNotificationResponse: receiveNotification,
     );
 
     await FirebaseMessaging.instance
@@ -149,13 +144,15 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
-      if (Platform.isIOS) {
-        onSelectNotification(message!.data);
-      } else {
-        onSelectNotification(message?.data);
-      }
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen(onMessageOpenedApp);
+  }
+
+  static Future<void> receiveNotification(NotificationResponse response) async {
+    await onSelectNotification(json.decode(response.payload!));
+  }
+
+  static Future<void> onMessageOpenedApp(RemoteMessage? message) async {
+    await onSelectNotification(message?.data);
   }
 
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -194,14 +191,18 @@ class _SplashScreenState extends State<SplashScreen> {
   static Future onSelectNotification(Map<String, dynamic>? payloadData) async {
     if (payloadData != null) {
       log(payloadData.toString());
-      if (payloadData['page_id'] == '1') {
-        Get.offAll(
-          () => MainHomeScreen(selectedIndex: 1.obs),
-        );
+      if (box.read(StorageKey.isLogedIn) ?? false) {
+        if (payloadData['page_id'] == '1') {
+          Get.offAll(
+            () => MainHomeScreen(selectedIndex: 1.obs),
+          );
+        } else {
+          Get.offAll(
+            () => MainHomeScreen(selectedIndex: 0.obs),
+          );
+        }
       } else {
-        Get.offAll(
-          () => MainHomeScreen(selectedIndex: 0.obs),
-        );
+        Get.offAll(() => const WelcomeScreen());
       }
     }
   }

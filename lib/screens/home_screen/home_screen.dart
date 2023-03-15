@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: FutureBuilder<Uri>(
             future: DynamicRepository().createDynamicLink(
-              GetStorage().read(StorageKey.userId),
+              GetStorage().read(StorageKey.userId) ?? '',
             ),
             builder: (context, snapshot) {
               Uri? uri = snapshot.data;

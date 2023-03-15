@@ -12,14 +12,18 @@ class DynamicRepository {
     final dynamicLinkParams = DynamicLinkParameters(
       link: Uri.parse(url),
       uriPrefix: uriPrefix,
-      androidParameters: const AndroidParameters(
+      androidParameters: AndroidParameters(
         packageName: "com.app.MyCartExpress",
         minimumVersion: 21,
+        fallbackUrl: Uri.parse(
+            'https://play.google.com/store/apps/details?id=com.app.MyCartExpress'),
       ),
-      iosParameters: const IOSParameters(
+      iosParameters: IOSParameters(
         bundleId: "com.ios.MCart",
         appStoreId: '1624277416',
         minimumVersion: '3.0.1',
+        fallbackUrl: Uri.parse(
+            'https://apps.apple.com/us/app/mycart-express/id1624277416'),
       ),
     );
 
