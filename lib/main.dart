@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/my_cart_express_app.dart';
+import 'package:my_cart_express/utils/dynamic_linking_service.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
 
 void main() async {
@@ -13,6 +14,7 @@ void main() async {
   NetworkDio.setDynamicHeader();
   await Firebase.initializeApp();
   await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  await DynamicRepository.initDynamicLinks();
   PhoneInputFormatter.addAlternativePhoneMasks(
     countryCode: 'US',
     alternativeMasks: [

@@ -37,7 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
           await getUserDetails();
         } else {
           Get.offAll(
-            () => MainHomeScreen(),
+            () => MainHomeScreen(
+              selectedIndex: 0.obs,
+            ),
           );
         }
       } else {
@@ -63,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         box.write(StorageKey.isRegister, true);
         Get.offAll(
-          () => MainHomeScreen(),
+          () => MainHomeScreen(selectedIndex: 0.obs),
         );
       }
     }
@@ -109,8 +111,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await FlutterLocalNotificationsPlugin().initialize(
       initSetttings,
-      onDidReceiveBackgroundNotificationResponse: onSelectNotification,
-      onDidReceiveNotificationResponse: onSelectNotification,
+      onDidReceiveBackgroundNotificationResponse:
+          (NotificationResponse response) {
+        onSelectNotification(json.decode(response.payload!));
+      },
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        onSelectNotification(json.decode(response.payload!));
+      },
     );
 
     await FirebaseMessaging.instance
@@ -120,15 +127,7 @@ class _SplashScreenState extends State<SplashScreen> {
       sound: true,
     );
 
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    if (initialMessage != null) {
-      firebaseMessagingBackgroundHandler(initialMessage);
-    }
-
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
-      log('${message?.notification?.title}+++++');
       if (Platform.isIOS) {
         await showNotification(
           message!.notification!.title.toString(),
@@ -151,12 +150,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
-      log('${message?.notification?.title}-----');
-
       if (Platform.isIOS) {
-        onSelectNotification(null);
+        onSelectNotification(message!.data);
       } else {
-        onSelectNotification(null);
+        onSelectNotification(message?.data);
       }
     });
   }
@@ -194,11 +191,18 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  static Future onSelectNotification(NotificationResponse? payloadData) async {
+  static Future onSelectNotification(Map<String, dynamic>? payloadData) async {
     if (payloadData != null) {
-      log(payloadData.notificationResponseType.toString());
-    } else {
-      log('Null');
+      log(payloadData.toString());
+      if (payloadData['page_id'] == '1') {
+        Get.offAll(
+          () => MainHomeScreen(selectedIndex: 1.obs),
+        );
+      } else {
+        Get.offAll(
+          () => MainHomeScreen(selectedIndex: 0.obs),
+        );
+      }
     }
   }
 }

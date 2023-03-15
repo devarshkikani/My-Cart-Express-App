@@ -33,7 +33,7 @@ class Circle {
 
   addOverlay(OverlayEntry entry, context) async {
     try {
-      return Overlay.of(context)!.insert(entry);
+      return Overlay.of(context)?.insert(entry);
     } catch (e) {
       return Future.error(e);
     }

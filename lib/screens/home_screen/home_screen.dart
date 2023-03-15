@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -5,9 +7,12 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:my_cart_express/constant/storage_key.dart';
 import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/theme/colors.dart';
 import 'package:my_cart_express/theme/text_style.dart';
+import 'package:my_cart_express/utils/dynamic_linking_service.dart';
 import 'package:my_cart_express/widget/validator.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/constant/sizedbox.dart';
@@ -54,60 +59,63 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (response != null) {
       balance.value = response['data'];
-    }
 
-    Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
-      context: context,
-    );
-    if (shippingCount != null) {
-      packageCounts.value = shippingCount['package_counts'];
-      availablePackageCounts.value = shippingCount['available_package_counts'];
-      overduePackageCounts.value = shippingCount['overdue_package_counts'];
-    }
+      Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
+        context: context,
+      );
+      if (shippingCount != null) {
+        packageCounts.value = shippingCount['package_counts'];
+        availablePackageCounts.value =
+            shippingCount['available_package_counts'];
+        overduePackageCounts.value = shippingCount['overdue_package_counts'];
 
-    Map<String, dynamic>? packagesResponse = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
-      context: context,
-    );
-    if (packagesResponse != null) {
-      packagesList.value = packagesResponse['list'] ?? [];
-    }
+        Map<String, dynamic>? packagesResponse =
+            await NetworkDio.getDioHttpMethod(
+          url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
+          context: context,
+        );
+        if (packagesResponse != null) {
+          packagesList.value = packagesResponse['list'] ?? [];
 
-    Map<String, dynamic>? howItWorksResponse =
-        await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
-      context: context,
-    );
-    if (howItWorksResponse != null) {
-      howItWorks.value = howItWorksResponse['img_url'];
-    }
+          Map<String, dynamic>? howItWorksResponse =
+              await NetworkDio.getDioHttpMethod(
+            url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
+            context: context,
+          );
+          if (howItWorksResponse != null) {
+            howItWorks.value = howItWorksResponse['img_url'];
+            Map<String, dynamic>? shippingPickupAddress =
+                await NetworkDio.getDioHttpMethod(
+              url:
+                  ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
+              context: context,
+            );
+            if (shippingPickupAddress != null) {
+              fullName.value = shippingPickupAddress['package_shipping_data']
+                      ['firstname'] +
+                  ' ' +
+                  shippingPickupAddress['package_shipping_data']['lastname'] +
+                  ' ' +
+                  shippingPickupAddress['package_shipping_data']['mce_number'];
+              usaShippingData.value =
+                  shippingPickupAddress['package_shipping_data']
+                      ['usa_air_address_details'];
+              pickuoBranchData.value =
+                  shippingPickupAddress['package_shipping_data']['branch_data'];
 
-    Map<String, dynamic>? shippingPickupAddress =
-        await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
-      context: context,
-    );
-    if (shippingPickupAddress != null) {
-      fullName.value = shippingPickupAddress['package_shipping_data']
-              ['firstname'] +
-          ' ' +
-          shippingPickupAddress['package_shipping_data']['lastname'] +
-          ' ' +
-          shippingPickupAddress['package_shipping_data']['mce_number'];
-      usaShippingData.value = shippingPickupAddress['package_shipping_data']
-          ['usa_air_address_details'];
-      pickuoBranchData.value =
-          shippingPickupAddress['package_shipping_data']['branch_data'];
-    }
-
-    Map<String, dynamic>? categoriesListResponse =
-        await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
-      context: context,
-    );
-    if (categoriesListResponse != null) {
-      categoriesList.value = categoriesListResponse['list'];
+              Map<String, dynamic>? categoriesListResponse =
+                  await NetworkDio.getDioHttpMethod(
+                url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
+                context: context,
+              );
+              if (categoriesListResponse != null) {
+                categoriesList.value = categoriesListResponse['list'];
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -257,25 +265,39 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(
             left: 15.0,
           ),
-          child: GestureDetector(
-            onTap: () {
-              Share.share(Platform.isIOS
-                  ? 'https://apps.apple.com/us/app/mycart-express/id1624277416'
-                  : 'https://app.mycartexpress.com/');
-            },
-            child: Column(
-              children: [
-                Image.asset(
-                  shareIcon,
-                  height: 40,
-                  width: 40,
-                ),
-                Text(
-                  'Share this app',
-                  style: lightText12,
-                ),
-              ],
+          child: FutureBuilder<Uri>(
+            future: DynamicRepository().createDynamicLink(
+              GetStorage().read(StorageKey.userId),
             ),
+            builder: (context, snapshot) {
+              Uri? uri = snapshot.data;
+              return GestureDetector(
+                onTap: () {
+                  if (uri != null) {
+                    Share.share(uri.toString());
+                  } else {
+                    NetworkDio.showError(
+                      title: 'Error',
+                      errorMessage:
+                          'Something went wrong, please try again later',
+                    );
+                  }
+                },
+                child: Column(
+                  children: [
+                    Image.asset(
+                      shareIcon,
+                      height: 40,
+                      width: 40,
+                    ),
+                    Text(
+                      'Share this app',
+                      style: lightText12,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],

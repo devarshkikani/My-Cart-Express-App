@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,9 +17,12 @@ RxInt availablePackageCounts = 0.obs;
 RxInt overduePackageCounts = 0.obs;
 
 class MainHomeScreen extends GetView {
-  MainHomeScreen({super.key});
+  MainHomeScreen({
+    super.key,
+    required this.selectedIndex,
+  });
 
-  static RxInt selectedIndex = 0.obs;
+  RxInt selectedIndex;
   final pages = [
     const HomeScreen(),
     const ShippingScreen(

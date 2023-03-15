@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, body_might_complete_normally_catch_error
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -13,7 +15,6 @@ import 'package:my_cart_express/constant/sizedbox.dart';
 import 'package:my_cart_express/utils/network_dio.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/constant/default_images.dart';
-import 'package:my_cart_express/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/screens/more_screen/faqs_screen.dart';
 import 'package:my_cart_express/screens/more_screen/feedback_screen.dart';
 import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
@@ -92,7 +93,6 @@ class MoreScreenState extends State<MoreScreen> {
 
   Future<void> logOutOnTap() async {
     box.erase();
-    MainHomeScreen.selectedIndex.value = 0;
     Get.offAll(
       () => const WelcomeScreen(),
     );
@@ -109,7 +109,6 @@ class MoreScreenState extends State<MoreScreen> {
     );
     if (response != null) {
       box.erase();
-      MainHomeScreen.selectedIndex.value = 0;
       Get.offAll(
         () => const WelcomeScreen(),
       );

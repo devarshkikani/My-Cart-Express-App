@@ -69,7 +69,7 @@ class SignInController extends GetxController {
       } else {
         box.write(StorageKey.isRegister, true);
         Get.offAll(
-          () => MainHomeScreen(),
+          () => MainHomeScreen(selectedIndex: 0.obs),
         );
       }
     }

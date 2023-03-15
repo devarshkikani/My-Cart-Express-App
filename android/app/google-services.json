@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "479907967244-dbcajd89j4ltid2jrh237snb9lm99nue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.MyCartExpress",
+            "certificate_hash": "252af02109980a1c7597b9608d98635f8bfb4fd3"
+          }
+        },
+        {
           "client_id": "479907967244-4oc4ck75u029sns4ag41bb6rl480dvhq.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -31,10 +39,11 @@
               "client_type": 3
             },
             {
-              "client_id": "479907967244-h99tuof7c7mvtssh739u6o1uei05o7ec.apps.googleusercontent.com",
+              "client_id": "479907967244-74plimkpdfk4k60entuacr5nts314je4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.ios.MCart"
+                "bundle_id": "com.ios.MCart",
+                "app_store_id": "1624277416"
               }
             }
           ]
