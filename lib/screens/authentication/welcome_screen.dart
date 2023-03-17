@@ -40,74 +40,69 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteMoke,
-      body: Column(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Obx(
-                        () => imagesList.isEmpty
-                            ? const SizedBox(
-                                height: 450,
-                              )
-                            : CarouselSlider.builder(
-                                itemCount: imagesList.length,
-                                options: CarouselOptions(
-                                  enlargeCenterPage: true,
-                                  padEnds: true,
-                                  viewportFraction: 1.0,
-                                  scrollPhysics:
-                                      const NeverScrollableScrollPhysics(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        child: Obx(
+                          () => imagesList.isEmpty
+                              ? const SizedBox(
                                   height: 450,
-                                  autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 5),
+                                )
+                              : CarouselSlider.builder(
+                                  itemCount: imagesList.length,
+                                  options: CarouselOptions(
+                                    enlargeCenterPage: true,
+                                    padEnds: true,
+                                    viewportFraction: 1.0,
+                                    scrollPhysics:
+                                        const NeverScrollableScrollPhysics(),
+                                    height: 450,
+                                    autoPlay: true,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 5),
+                                  ),
+                                  itemBuilder: (context, i, id) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          imagesList[i]['image_url'],
+                                          width: Get.width,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                                itemBuilder: (context, i, id) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        imagesList[i]['image_url'],
-                                        width: Get.width,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                        ),
                       ),
-                    ),
-                    // Text(
-                    //   'Shopping online has never been easier with your preffered shipping partner',
-                    //   style: regularText14.copyWith(
-                    //     fontFamily: 'Montserrat',
-                    //   ),
-                    //   textAlign: TextAlign.center,
-                    // ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: bottomView(),
-          ),
-        ],
+            SizedBox(
+              height: 200,
+              child: bottomView(),
+            ),
+          ],
+        ),
       ),
     );
   }
