@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously, prefer_adjacent_string_concatenation
 
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -102,10 +104,13 @@ class NetworkDio {
           if (responseBody['status'] == 200) {
             return responseBody;
           } else if (responseBody['status'] == 409) {
-            box.erase();
-            Get.offAll(
-              () => const WelcomeScreen(),
+            Map<String, dynamic>? res = await handleErrorRefreshToken(
+              data: data,
+              isPost: true,
+              url: url,
+              context: context,
             );
+            return res;
           } else {
             showError(
               title: 'Error',
@@ -148,7 +153,6 @@ class NetworkDio {
       if (context != null) InternetError.addOverlayEntry(context);
       return null;
     }
-    return null;
   }
 
   static Future<Map<String, dynamic>?> getDioHttpMethod({
@@ -181,10 +185,13 @@ class NetworkDio {
           if (responseBody['status'] == 200) {
             return responseBody;
           } else if (responseBody['status'] == 409) {
-            box.erase();
-            Get.offAll(
-              () => const WelcomeScreen(),
+            Map<String, dynamic>? res = await handleErrorRefreshToken(
+              isPost: false,
+              url: url,
+              context: context,
+              data: null,
             );
+            return res;
           } else {
             showError(
               title: 'Error',
@@ -227,7 +234,66 @@ class NetworkDio {
       if (context != null) InternetError.addOverlayEntry(context);
       return null;
     }
-    return null;
+  }
+
+  static Future<Map<String, dynamic>?> handleErrorRefreshToken({
+    BuildContext? context,
+    required String url,
+    required Map<String, dynamic>? data,
+    required bool isPost,
+  }) async {
+    String? token = await refreshToken(context);
+    if (token != null) {
+      Map<String, dynamic>? response = await reExecuteRequest(
+        isPost,
+        context,
+        url,
+        data,
+      );
+      return response;
+    } else {
+      box.erase();
+      Get.offAll(
+        () => const WelcomeScreen(),
+      );
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> reExecuteRequest(
+      bool type, BuildContext? context, String url, data) async {
+    Map<String, dynamic>? response = type
+        ? await postDioHttpMethod(context: context, url: url, data: data)
+        : await getDioHttpMethod(context: context, url: url);
+    return response;
+  }
+
+  static Future<String?> refreshToken(BuildContext? context) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    final data = dio.FormData.fromMap({
+      'firebase_token': token,
+      'user_id': box.read(StorageKey.userId),
+      'device': Platform.isAndroid ? 1 : 2,
+    });
+    if (token == null) {
+      return null;
+    }
+    Map<String, dynamic>? response = await postDioHttpMethod(
+      data: data,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.refreshToken,
+      context: context,
+    );
+    if (response != null) {
+      if (response['status'] == 200) {
+        box.write(StorageKey.apiToken, response['token']);
+        await setDynamicHeader();
+        return token;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   static void showSuccess({

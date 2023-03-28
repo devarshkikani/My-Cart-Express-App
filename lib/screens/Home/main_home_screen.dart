@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/constant/default_images.dart';
@@ -67,10 +67,10 @@ class MainHomeScreen extends GetView {
                   onTap: () {
                     selectedIndex.value = 1;
                   },
-                  child: Badge(
+                  child: b.Badge(
                     showBadge: packageCounts.value > 0,
-                    badgeStyle: const BadgeStyle(
-                      shape: BadgeShape.instagram,
+                    badgeStyle: const b.BadgeStyle(
+                      shape: b.BadgeShape.instagram,
                     ),
                     badgeContent: Text(
                       '${packageCounts.value}',
@@ -90,10 +90,10 @@ class MainHomeScreen extends GetView {
                   onTap: () {
                     selectedIndex.value = 2;
                   },
-                  child: Badge(
+                  child: b.Badge(
                     showBadge: availablePackageCounts.value > 0,
-                    badgeStyle: const BadgeStyle(
-                      shape: BadgeShape.instagram,
+                    badgeStyle: const b.BadgeStyle(
+                      shape: b.BadgeShape.instagram,
                     ),
                     badgeContent: Text(
                       '${availablePackageCounts.value}',
@@ -113,10 +113,10 @@ class MainHomeScreen extends GetView {
                   onTap: () {
                     selectedIndex.value = 3;
                   },
-                  child: Badge(
+                  child: b.Badge(
                     showBadge: overduePackageCounts.value > 0,
-                    badgeStyle: const BadgeStyle(
-                      shape: BadgeShape.instagram,
+                    badgeStyle: const b.BadgeStyle(
+                      shape: b.BadgeShape.instagram,
                     ),
                     badgeContent: Text(
                       '${overduePackageCounts.value}',

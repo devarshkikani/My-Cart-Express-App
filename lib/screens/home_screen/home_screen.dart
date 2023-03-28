@@ -53,64 +53,62 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getBalance() async {
-    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
+    Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
       context: context,
     );
-    if (response != null) {
-      balance.value = response['data'];
+    if (shippingCount != null) {
+      packageCounts.value = shippingCount['package_counts'];
+      availablePackageCounts.value = shippingCount['available_package_counts'];
+      overduePackageCounts.value = shippingCount['overdue_package_counts'];
 
-      Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
-        url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
+      Map<String, dynamic>? packagesResponse =
+          await NetworkDio.getDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
         context: context,
       );
-      if (shippingCount != null) {
-        packageCounts.value = shippingCount['package_counts'];
-        availablePackageCounts.value =
-            shippingCount['available_package_counts'];
-        overduePackageCounts.value = shippingCount['overdue_package_counts'];
+      if (packagesResponse != null) {
+        packagesList.value = packagesResponse['list'] ?? [];
 
-        Map<String, dynamic>? packagesResponse =
+        Map<String, dynamic>? howItWorksResponse =
             await NetworkDio.getDioHttpMethod(
-          url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
+          url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
           context: context,
         );
-        if (packagesResponse != null) {
-          packagesList.value = packagesResponse['list'] ?? [];
-
-          Map<String, dynamic>? howItWorksResponse =
+        if (howItWorksResponse != null) {
+          howItWorks.value = howItWorksResponse['img_url'];
+          Map<String, dynamic>? shippingPickupAddress =
               await NetworkDio.getDioHttpMethod(
-            url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
+            url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
             context: context,
           );
-          if (howItWorksResponse != null) {
-            howItWorks.value = howItWorksResponse['img_url'];
-            Map<String, dynamic>? shippingPickupAddress =
+          if (shippingPickupAddress != null) {
+            fullName.value = shippingPickupAddress['package_shipping_data']
+                    ['firstname'] +
+                ' ' +
+                shippingPickupAddress['package_shipping_data']['lastname'] +
+                ' ' +
+                shippingPickupAddress['package_shipping_data']['mce_number'];
+            usaShippingData.value =
+                shippingPickupAddress['package_shipping_data']
+                    ['usa_air_address_details'];
+            pickuoBranchData.value =
+                shippingPickupAddress['package_shipping_data']['branch_data'];
+
+            Map<String, dynamic>? categoriesListResponse =
                 await NetworkDio.getDioHttpMethod(
-              url:
-                  ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
+              url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
               context: context,
             );
-            if (shippingPickupAddress != null) {
-              fullName.value = shippingPickupAddress['package_shipping_data']
-                      ['firstname'] +
-                  ' ' +
-                  shippingPickupAddress['package_shipping_data']['lastname'] +
-                  ' ' +
-                  shippingPickupAddress['package_shipping_data']['mce_number'];
-              usaShippingData.value =
-                  shippingPickupAddress['package_shipping_data']
-                      ['usa_air_address_details'];
-              pickuoBranchData.value =
-                  shippingPickupAddress['package_shipping_data']['branch_data'];
-
-              Map<String, dynamic>? categoriesListResponse =
+            if (categoriesListResponse != null) {
+              categoriesList.value = categoriesListResponse['list'];
+              Map<String, dynamic>? response =
                   await NetworkDio.getDioHttpMethod(
-                url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
+                url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
                 context: context,
               );
-              if (categoriesListResponse != null) {
-                categoriesList.value = categoriesListResponse['list'];
+              if (response != null) {
+                balance.value = response['data'];
               }
             }
           }
