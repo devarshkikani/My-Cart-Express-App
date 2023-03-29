@@ -102,23 +102,23 @@ flutter:
           weight: 400
         - asset: assets/fonts/Roboto/Roboto-Thin.ttf
           weight: 300
-    - family: Montserrat
-      fonts:
-        - asset: assets/fonts/Montserrat/Montserrat-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Montserrat/Montserrat-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf
-          weight: 200
+    # - family: Montserrat
+    #   fonts:
+    #     - asset: assets/fonts/Montserrat/Montserrat-Black.ttf
+    #       weight: 900
+    #     - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.ttf
+    #       weight: 800
+    #     - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
+    #       weight: 700
+    #     - asset: assets/fonts/Montserrat/Montserrat-SemiBold.ttf
+    #       weight: 600
+    #     - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
+    #       weight: 500
+    #     - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+    #       weight: 400
+    #     - asset: assets/fonts/Montserrat/Montserrat-Light.ttf
+    #       weight: 300
+    #     - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf
+    #       weight: 200
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

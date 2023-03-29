@@ -68,45 +68,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         height20,
         profileView(),
         height20,
-        // GestureDetector(
-        //   onTap: () {
-        //     Get.to(() => const EditProfileScreen())?.then((value) {
-        //       if (value != null) {
-        //         userDetails.value = value;
-        //       }
-        //     });
-        //   },
-        //   child: Container(
-        //     padding: const EdgeInsets.all(15),
-        //     decoration: BoxDecoration(
-        //       color: greyColor.withOpacity(0.2),
-        //       borderRadius: BorderRadius.circular(10),
-        //     ),
-        //     child: Row(
-        //       children: [
-        //         Container(
-        //           height: 30,
-        //           width: 30,
-        //           decoration: BoxDecoration(
-        //             color: primary,
-        //             borderRadius: BorderRadius.circular(50),
-        //           ),
-        //           child: Image.asset(settingUserIcon),
-        //         ),
-        //         width10,
-        //         const Text(
-        //           'Edit Profile',
-        //         ),
-        //         const Spacer(),
-        //         const Icon(
-        //           Icons.arrow_forward_ios_rounded,
-        //           size: 18,
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        // height10,
         GestureDetector(
           onTap: () {
             Get.to(() => const ChangePasswordScreen());
