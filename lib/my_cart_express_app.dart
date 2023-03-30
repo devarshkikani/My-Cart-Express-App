@@ -16,7 +16,7 @@ class MyCartExpressApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       theme: ThemeData(
-        fontFamily: 'Roboto',
+        fontFamily: 'roboto',
         primaryColor: primary,
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
