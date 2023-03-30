@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
   Widget silderView(BuildContext context, HomeController _) {
     return Column(
       children: <Widget>[
-        Container(
+        SizedBox(
           height: 150,
           width: Get.width,
           child: CarouselSlider(
@@ -147,7 +147,7 @@ class HomePage extends StatelessWidget {
                             .colorScheme
                             .secondary
                             .withOpacity(0.5),
-                        child: Container(
+                        child: SizedBox(
                           width: Get.width,
                           child: Image.network(
                             item,

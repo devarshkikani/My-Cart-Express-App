@@ -1,5 +1,3 @@
-// ignore_for_file: always_specify_types
-
 import 'package:get/get.dart';
 import 'package:my_cart_express/e_commerce_app/binding/address/add_new_address_screen_bindings.dart';
 import 'package:my_cart_express/e_commerce_app/binding/address/delivery_address_screen_binding.dart';
@@ -49,7 +47,7 @@ class AppPages {
   static final List<GetPage> pages = <GetPage>[
     GetPage(
       name: Routes.initial,
-      page: () => SplashScreen(),
+      page: () => const SplashScreen(),
       binding: SplashScreenBinding(),
     ),
     GetPage(
@@ -73,7 +71,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.home,
-      page: () => HomePage(),
+      page: () => const HomePage(),
       binding: HomeBinding(),
     ),
     GetPage(

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class RaisedButtonCustomWidget extends StatelessWidget {
   const RaisedButtonCustomWidget(
-      {required this.icon,
+      {super.key,
+      required this.icon,
       this.text,
       this.onPressed,
       this.borderColor = Colors.white});

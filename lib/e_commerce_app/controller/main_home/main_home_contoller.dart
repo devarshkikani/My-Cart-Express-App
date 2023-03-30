@@ -1,5 +1,3 @@
-// ignore_for_file: use_setters_to_change_properties
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -12,7 +10,7 @@ import 'package:my_cart_express/e_commerce_app/screen/profile/profile_screen.dar
 class MainHomeController extends GetxController {
   GlobalKey<CurvedNavigationBarState> bottomNavigationKey = GlobalKey();
   List<Widget> pageList = <Widget>[
-    HomePage(),
+    const HomePage(),
     const CategoryScreen(),
     const FavoritesScreen(),
     const CartScreen(),
