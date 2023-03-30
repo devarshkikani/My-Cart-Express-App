@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +12,7 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:my_cart_express/constant/storage_key.dart';
 import 'package:my_cart_express/utils/internet_error.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/constant/app_endpoints.dart';
 import 'package:my_cart_express/utils/progress_indicator.dart';
 import 'package:my_cart_express/screens/authentication/welcome_screen.dart';
@@ -43,7 +43,6 @@ class NetworkDio {
     String? apiToken = box.read(StorageKey.apiToken);
     if (kDebugMode) {
       print('~~~~~~~~~~~~~~~~~~~~ X-API-KEY : $apiToken ~~~~~~~~~~~~~~~~~~~');
-      print('AUTH KEY : $apiToken ');
     }
     if (apiToken != null) {
       return {

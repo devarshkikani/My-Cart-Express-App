@@ -32,7 +32,6 @@ class DynamicRepository {
       dynamicLinkParams,
       shortLinkType: ShortDynamicLinkType.short,
     );
-    log(unguessableDynamicLink.shortUrl.toString());
     return unguessableDynamicLink.shortUrl;
   }
 

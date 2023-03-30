@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
@@ -81,7 +80,6 @@ class _ShippingScreenState extends State<ShippingScreen> {
         }
       }
       offSet.value = response['offset'];
-      log(offSet.value.toString());
     }
   }
 

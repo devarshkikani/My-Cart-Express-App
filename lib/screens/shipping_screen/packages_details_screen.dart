@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'dart:io';
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -106,7 +105,6 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.packagesDetails.toString());
     return Scaffold(
       body: Container(
         width: Get.height,
