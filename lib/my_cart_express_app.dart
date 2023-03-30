@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/splash_screen.dart';
-import 'package:my_cart_express/theme/colors.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey<NavigatorState>(debugLabel: "navigator");
