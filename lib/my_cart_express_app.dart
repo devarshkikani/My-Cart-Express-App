@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
+import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.dart';
+import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
+import 'package:my_cart_express/e_commerce_app/e_theme/e_app_theme.dart';
+import 'package:my_cart_express/order_tracking_app/theme/theme.dart';
 import 'package:my_cart_express/splash_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
@@ -11,28 +14,23 @@ class MyCartExpressApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'My Cart Express',
-      debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
-      theme: ThemeData(
-        fontFamily: 'roboto',
-        primaryColor: primary,
-        colorScheme: const ColorScheme(
-          brightness: Brightness.light,
-          primary: primary,
-          onPrimary: whiteColor,
-          secondary: secondary,
-          onSecondary: whiteColor,
-          error: error,
-          onError: error,
-          background: background,
-          onBackground: whiteColor,
-          surface: surface,
-          onSurface: surface,
-        ),
+    return GetX<ThemeController>(
+      init: ThemeController(),
+      builder: (_) => GetMaterialApp(
+        title: 'My Cart Express',
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
+        getPages: EAppPages.pages,
+        themeMode: _.isECommerce.value
+            ? _.isDarkTheme.value
+                ? ThemeMode.dark
+                : ThemeMode.system
+            : ThemeMode.system,
+        theme: _.isECommerce.value ? EAppTheme.lightTheme : AppTheme.lightTheme,
+        darkTheme:
+            _.isECommerce.value ? EAppTheme.darkTheme : AppTheme.lightTheme,
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }

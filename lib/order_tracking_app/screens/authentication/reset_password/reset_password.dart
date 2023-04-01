@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/sign_in/sign_in_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
@@ -96,7 +96,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.to(() => SignInScreen());
+                      Get.to(() => LoginScreen());
                     },
                     child: Text(
                       'Existing User Login Here',

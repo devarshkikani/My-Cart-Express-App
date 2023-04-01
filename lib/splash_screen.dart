@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
@@ -31,7 +32,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () async {
+    Future.delayed(const Duration(seconds: 3), redirectScreen);
+    firebaseNotificationSetup();
+  }
+
+  Future<void> redirectScreen() async {
+    if (box.read(StorageKey.isECommerce) == true) {
+      Get.offAndToNamed(ERoutes.firstOnboarding); //e commerce
+    } else {
+      // order tracking app
       if (box.read(StorageKey.isLogedIn) == true) {
         if (box.read(StorageKey.isRegister) == false) {
           await getUserDetails();
@@ -45,8 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         Get.offAll(() => const WelcomeScreen());
       }
-    });
-    firebaseNotificationSetup();
+    }
   }
 
   Future<void> getUserDetails() async {

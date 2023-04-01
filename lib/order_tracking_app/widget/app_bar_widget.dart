@@ -43,6 +43,7 @@ AppBar appBarWithAction({
   Color? backgroundColor,
 }) {
   return AppBar(
+    backgroundColor: backgroundColor ?? Colors.transparent,
     leading: IconButton(
       onPressed: onTap ??
           () {
@@ -52,12 +53,16 @@ AppBar appBarWithAction({
         Platform.isAndroid
             ? Icons.arrow_back_rounded
             : Icons.arrow_back_ios_rounded,
+        color: whiteColor,
       ),
     ),
     centerTitle: true,
     elevation: 0.0,
-    title: const Text(
+    title: Text(
       'MyCartExpress',
+      style: regularText20.copyWith(
+        color: whiteColor,
+      ),
     ),
     actions: [
       GestureDetector(
@@ -66,6 +71,7 @@ AppBar appBarWithAction({
         },
         child: const Icon(
           Icons.mail_outline_rounded,
+          color: whiteColor,
         ),
       ),
       width15,
@@ -75,6 +81,7 @@ AppBar appBarWithAction({
         },
         child: const Icon(
           Icons.notifications_active_outlined,
+          color: whiteColor,
         ),
       ),
       width15,

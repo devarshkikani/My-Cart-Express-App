@@ -30,6 +30,12 @@ TextStyle mediumText24 = const TextStyle(
   fontWeight: FontWeight.w600,
 );
 
+TextStyle mediumText22 = const TextStyle(
+  fontSize: 24,
+  color: Colors.black,
+  fontWeight: FontWeight.w600,
+);
+
 TextStyle mediumText20 = const TextStyle(
   fontSize: 20,
   color: Colors.black,

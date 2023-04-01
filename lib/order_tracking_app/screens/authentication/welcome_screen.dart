@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/sign_up/sign_up_bindings.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/sign_up/sign_up_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/register/register_bindings.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/register/register_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/sign_in/sign_in_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -135,7 +135,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               onPressed: () {
                 Get.to(
-                  () => SignInScreen(),
+                  () => LoginScreen(),
                 );
               },
               child: const Text(
@@ -161,8 +161,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Get.to(
-                          () => SignUpScreen(),
-                          binding: SignupBinding(),
+                          () => RegisterScreen(),
+                          binding: RegisterBinding(),
                         );
                       },
                   ),

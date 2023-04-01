@@ -113,11 +113,15 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         child: Column(
           children: [
             AppBar(
+              backgroundColor: Colors.transparent,
               leading: const SizedBox(),
               centerTitle: true,
               elevation: 0.0,
-              title: const Text(
+              title: Text(
                 'MyCartExpress',
+                style: regularText20.copyWith(
+                  color: whiteColor,
+                ),
               ),
             ),
             Expanded(

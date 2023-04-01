@@ -138,6 +138,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
         child: Column(
           children: [
             AppBar(
+              backgroundColor: Colors.transparent,
               leading: widget.isFromeHome
                   ? IconButton(
                       onPressed: () {
@@ -153,8 +154,11 @@ class _ShippingScreenState extends State<ShippingScreen> {
                   : const SizedBox(),
               centerTitle: true,
               elevation: 0.0,
-              title: const Text(
+              title: Text(
                 'MyCartExpress',
+                style: regularText20.copyWith(
+                  color: whiteColor,
+                ),
               ),
             ),
             Expanded(

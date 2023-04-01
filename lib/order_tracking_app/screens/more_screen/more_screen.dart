@@ -179,11 +179,15 @@ class MoreScreenState extends State<MoreScreen> {
           child: Column(
             children: [
               AppBar(
+                backgroundColor: Colors.transparent,
                 leading: const SizedBox(),
                 centerTitle: true,
                 elevation: 0.0,
-                title: const Text(
+                title: Text(
                   'MyCartExpress',
+                  style: regularText20.copyWith(
+                    color: whiteColor,
+                  ),
                 ),
                 actions: [
                   GestureDetector(
@@ -192,6 +196,7 @@ class MoreScreenState extends State<MoreScreen> {
                     },
                     child: const Icon(
                       Icons.mail_outline_rounded,
+                      color: whiteColor,
                     ),
                   ),
                   width15,
@@ -201,6 +206,7 @@ class MoreScreenState extends State<MoreScreen> {
                     },
                     child: const Icon(
                       Icons.notifications_active_outlined,
+                      color: whiteColor,
                     ),
                   ),
                   width15,
@@ -394,7 +400,7 @@ class MoreScreenState extends State<MoreScreen> {
                 const Spacer(),
                 Text(
                   categoryList[index],
-                  style: lightText14,
+                  style: lightText13,
                   textAlign: TextAlign.center,
                 ),
               ],

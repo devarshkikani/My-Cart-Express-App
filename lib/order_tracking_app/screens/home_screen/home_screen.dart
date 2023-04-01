@@ -1,22 +1,16 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'dart:io';
-
 import 'package:get/get.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
-import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/dynamic_linking_service.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
-import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
 import 'package:my_cart_express/order_tracking_app/screens/messages_screen/messages_screen.dart';
@@ -24,210 +18,104 @@ import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/shipp
 import 'package:my_cart_express/order_tracking_app/screens/notification_screen/notifications_screen.dart';
 import 'package:share_plus/share_plus.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  RxInt balance = 0.obs;
-  RxString howItWorks = ''.obs;
-  RxString fullName = ''.obs;
-  RxMap pickuoBranchData = {}.obs;
-  RxMap usaShippingData = {}.obs;
-  RxList packagesList = [].obs;
-  TextEditingController type = TextEditingController();
-  TextEditingController declared = TextEditingController();
-  File? selectedFile;
-  RxString catId = ''.obs;
-  RxString fileName = ''.obs;
-  RxList categoriesList = [].obs;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    getBalance();
-  }
-
-  void getBalance() async {
-    Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
-      context: context,
-    );
-    if (shippingCount != null) {
-      packageCounts.value = shippingCount['package_counts'];
-      availablePackageCounts.value = shippingCount['available_package_counts'];
-      overduePackageCounts.value = shippingCount['overdue_package_counts'];
-
-      Map<String, dynamic>? packagesResponse =
-          await NetworkDio.getDioHttpMethod(
-        url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
-        context: context,
-      );
-      if (packagesResponse != null) {
-        packagesList.value = packagesResponse['list'] ?? [];
-
-        Map<String, dynamic>? howItWorksResponse =
-            await NetworkDio.getDioHttpMethod(
-          url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
-          context: context,
-        );
-        if (howItWorksResponse != null) {
-          howItWorks.value = howItWorksResponse['img_url'];
-          Map<String, dynamic>? shippingPickupAddress =
-              await NetworkDio.getDioHttpMethod(
-            url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
-            context: context,
-          );
-          if (shippingPickupAddress != null) {
-            fullName.value = shippingPickupAddress['package_shipping_data']
-                    ['firstname'] +
-                ' ' +
-                shippingPickupAddress['package_shipping_data']['lastname'] +
-                ' ' +
-                shippingPickupAddress['package_shipping_data']['mce_number'];
-            usaShippingData.value =
-                shippingPickupAddress['package_shipping_data']
-                    ['usa_air_address_details'];
-            pickuoBranchData.value =
-                shippingPickupAddress['package_shipping_data']['branch_data'];
-
-            Map<String, dynamic>? categoriesListResponse =
-                await NetworkDio.getDioHttpMethod(
-              url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
-              context: context,
-            );
-            if (categoriesListResponse != null) {
-              categoriesList.value = categoriesListResponse['list'];
-              Map<String, dynamic>? response =
-                  await NetworkDio.getDioHttpMethod(
-                url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
-                context: context,
-              );
-              if (response != null) {
-                balance.value = response['data'];
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  Future<void> pickFile(FilePickerResult? result) async {
-    if (result != null) {
-      selectedFile = File(result.files.first.path!);
-      fileName.value = result.files.first.name;
-      setState(() {});
-    }
-  }
-
-  Future<void> submitOnTap(String? packageId) async {
-    final data = dio.FormData.fromMap({
-      'files': await dio.MultipartFile.fromFile(
-        selectedFile!.path,
-        filename: fileName.value,
-      ),
-      'attachment_package_id': packageId,
-      'attach_for': 'invoice',
-      'customer_input_value': declared.text,
-      'category_id': catId.value,
-    });
-    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.uploadAttachments,
-      data: data,
-      context: context,
-    );
-    if (response != null) {
-      Get.back();
-      NetworkDio.showSuccess(
-          title: 'Success', sucessMessage: response['message']);
-    }
-  }
-
-  //  Future<void> openMap(String address) async {
-  //   String googleUrl = 'https://maps.google.com/?q=$address';
-  //   // 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-  //   await launch(googleUrl);
-  // }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: Get.height,
-        color: primary,
-        child: SafeArea(
-          child: Column(
-            children: [
-              AppBar(
-                leading: const SizedBox(),
-                centerTitle: true,
-                elevation: 0.0,
-                title: const Text(
-                  'MyCartExpress',
-                ),
-                actions: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const MessagesScreen());
-                    },
-                    child: const Icon(
-                      Icons.mail_outline_rounded,
+    return GetBuilder<HomeScreenController>(
+      init: HomeScreenController(),
+      initState: (_) {},
+      builder: (_) {
+        _.getBalance(context);
+        return Scaffold(
+          body: Container(
+            width: Get.height,
+            color: primary,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    leading: IconButton(
+                      onPressed: () async {
+                        await _.changeApp();
+                      },
+                      icon: const Icon(
+                        Icons.change_circle_outlined,
+                        color: whiteColor,
+                      ),
+                    ),
+                    centerTitle: true,
+                    elevation: 0.0,
+                    title: Text(
+                      'MyCartExpress',
+                      style: regularText20.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    actions: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const MessagesScreen());
+                        },
+                        child: const Icon(
+                          Icons.mail_outline_rounded,
+                          color: whiteColor,
+                        ),
+                      ),
+                      width15,
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const NotificationScreen());
+                        },
+                        child: const Icon(
+                          Icons.notifications_active_outlined,
+                          color: whiteColor,
+                        ),
+                      ),
+                      width15,
+                    ],
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        top: 15,
+                        right: 15,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: offWhite,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: bodyView(_, context),
                     ),
                   ),
-                  width15,
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const NotificationScreen());
-                    },
-                    child: const Icon(
-                      Icons.notifications_active_outlined,
-                    ),
-                  ),
-                  width15,
                 ],
               ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    top: 15,
-                    right: 15,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: offWhite,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  child: bodyView(),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget bodyView() {
+  Widget bodyView(HomeScreenController _, BuildContext context) {
     return Column(
       children: [
-        balanceView(),
+        balanceView(_),
         height15,
-        detailsView(),
+        detailsView(_, context),
         height15,
-        packagesView(),
+        packagesView(_),
       ],
     );
   }
 
-  Widget balanceView() {
+  Widget balanceView(HomeScreenController _) {
     return Row(
       children: [
         Expanded(
@@ -249,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height5,
                 Obx(
                   () => Text(
-                    '\$${balance.value} JMD',
+                    '\$${_.balance.value} JMD',
                     style: regularText18.copyWith(
                       color: whiteColor,
                     ),
@@ -302,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget detailsView() {
+  Widget detailsView(HomeScreenController _, BuildContext context) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'Air freight',
-                        style: lightText14.copyWith(
+                        style: lightText13.copyWith(
                           color: Colors.grey.shade600,
                         ),
                       ),
@@ -337,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Center(
                                   child: Stack(
                                     children: [
-                                      Image.network(howItWorks.value),
+                                      Image.network(_.howItWorks.value),
                                       GestureDetector(
                                         onTap: () {
                                           Navigator.pop(ctx);
@@ -361,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Text(
                           "How it's Work?",
-                          style: lightText14.copyWith(
+                          style: lightText13.copyWith(
                             color: primary,
                             decoration: TextDecoration.underline,
                           ),
@@ -369,26 +257,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  height15,
+                  height10,
                   Obx(
                     () => Text(
-                      fullName.isNotEmpty ? fullName.value : '',
+                      _.fullName.isNotEmpty ? _.fullName.value : '',
                       style: lightText13,
                     ),
                   ),
                   height10,
                   Obx(
                     () => Text(
-                      usaShippingData.isNotEmpty
-                          ? usaShippingData['address_1'] +
+                      _.usaShippingData.isNotEmpty
+                          ? _.usaShippingData['address_1'] +
                               ' ' +
-                              usaShippingData['address_2'] +
+                              _.usaShippingData['address_2'] +
                               ' ' +
-                              usaShippingData['city'] +
+                              _.usaShippingData['city'] +
                               ', ' +
-                              usaShippingData['state'] +
+                              _.usaShippingData['state'] +
                               ', ' +
-                              usaShippingData['postcode']
+                              _.usaShippingData['postcode']
                           : '',
                       style: lightText13,
                     ),
@@ -396,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height10,
                   Obx(
                     () => Text(
-                      'USA Tel: +1 ${usaShippingData.isNotEmpty ? usaShippingData['telephone'] : ''}',
+                      'USA Tel: +1 ${_.usaShippingData.isNotEmpty ? _.usaShippingData['telephone'] : ''}',
                       style: lightText13,
                     ),
                   ),
@@ -417,16 +305,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   height15,
                   Obx(() => Text(
-                        pickuoBranchData.isNotEmpty
-                            ? pickuoBranchData['location'] +
+                        _.pickuoBranchData.isNotEmpty
+                            ? _.pickuoBranchData['location'] +
                                 ' ' +
-                                pickuoBranchData['address'] +
+                                _.pickuoBranchData['address'] +
                                 ' ' +
-                                pickuoBranchData['city'] +
+                                _.pickuoBranchData['city'] +
                                 ', ' +
-                                pickuoBranchData['parishname'] +
+                                _.pickuoBranchData['parishname'] +
                                 ', ' +
-                                pickuoBranchData['code']
+                                _.pickuoBranchData['code']
                             : '',
                         style: lightText13.copyWith(
                           color: primary,
@@ -434,8 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   height10,
                   Obx(() => Text(
-                        pickuoBranchData.isNotEmpty
-                            ? pickuoBranchData['open_hour']
+                        _.pickuoBranchData.isNotEmpty
+                            ? _.pickuoBranchData['open_hour']
                             : '',
                         style: lightText13.copyWith(
                           color: primary,
@@ -450,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget packagesView() {
+  Widget packagesView(HomeScreenController _) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(
@@ -489,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height15,
             Expanded(
               child: Obx(
-                () => packagesList.isEmpty
+                () => _.packagesList.isEmpty
                     ? Center(
                         child: Text(
                           'No packages found.',
@@ -499,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       )
                     : ListView.separated(
-                        itemCount: packagesList.length,
+                        itemCount: _.packagesList.length,
                         separatorBuilder: (BuildContext context, int index) =>
                             height10,
                         itemBuilder: (BuildContext context, int index) =>
@@ -518,14 +406,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      packagesList[index]['shipping_mcecode'],
+                                      _.packagesList[index]['shipping_mcecode'],
                                       style: lightText13.copyWith(
                                         color: blackColor,
                                       ),
                                     ),
                                     height10,
                                     Text(
-                                      packagesList[index]['tracking'],
+                                      _.packagesList[index]['tracking'],
                                       overflow: TextOverflow.ellipsis,
                                       style: lightText13.copyWith(
                                         color: Colors.grey,
@@ -538,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: orangeColor,
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: packagesList[index]
+                                      horizontal: _.packagesList[index]
                                                   ['upload_attachment_flag'] ==
                                               1
                                           ? 20
@@ -548,24 +436,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                         BorderRadius.all(Radius.circular(5)),
                                   ),
                                 ),
-                                onPressed: packagesList[index]
+                                onPressed: _.packagesList[index]
                                             ['upload_attachment_flag'] ==
                                         1
                                     ? () {
                                         uploadInvoice(
-                                            packagesList[index]['package_id']);
+                                            _.packagesList[index]['package_id'],
+                                            _,
+                                            context);
                                       }
                                     : null,
                                 child: Row(
                                   children: [
                                     Text(
-                                      packagesList[index]['invoice_type_label'],
+                                      _.packagesList[index]
+                                          ['invoice_type_label'],
                                       style: const TextStyle(
                                         letterSpacing: 0.5,
                                       ),
                                     ),
                                     width10,
-                                    packagesList[index]
+                                    _.packagesList[index]
                                                 ['upload_attachment_flag'] ==
                                             1
                                         ? Image.asset(
@@ -590,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void uploadInvoice(String packageId) async {
+  void uploadInvoice(String packageId, HomeScreenController _, context) async {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext ctx) {
@@ -603,20 +494,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 topRight: Radius.circular(20),
               ),
             ),
-            child: uploadFileBodyView(packageId),
+            child: uploadFileBodyView(packageId, _, context),
           );
         }).then((value) {
-      declared.text = '';
-      type.text = '';
-      fileName.value = '';
-      catId.value = '';
-      selectedFile = null;
+      _.declared.text = '';
+      _.type.text = '';
+      _.fileName.value = '';
+      _.catId.value = '';
+      _.selectedFile = null;
     });
   }
 
-  Widget uploadFileBodyView(String packageId) {
+  Widget uploadFileBodyView(
+      String packageId, HomeScreenController _, BuildContext context) {
     return Form(
-      key: _formKey,
+      key: _.formKey,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -637,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height10,
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
-              controller: declared,
+              controller: _.declared,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),
@@ -649,10 +541,14 @@ class _HomeScreenState extends State<HomeScreen> {
             height10,
             TextFormFieldWidget(
               hintText: 'Select category',
-              controller: type,
+              controller: _.type,
               readOnly: true,
               onTap: () {
-                showBottomSheet(context, 1);
+                showBottomSheet(
+                  context,
+                  1,
+                  _,
+                );
               },
               suffixIcon: const Icon(
                 Icons.keyboard_arrow_down_rounded,
@@ -689,8 +585,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Invoice file',
                         ),
                         Obx(() => Text(
-                              fileName.value != ''
-                                  ? fileName.value
+                              _.fileName.value != ''
+                                  ? _.fileName.value
                                   : '(filename.txt)',
                               style: lightText14.copyWith(
                                 color: primary,
@@ -712,7 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           onPressed: () async {
-                            selectFileType(context);
+                            selectFileType(context, _);
                           },
                           child: const Text(
                             'Click to select file...',
@@ -738,9 +634,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  if (selectedFile != null) {
-                    await submitOnTap(packageId);
+                if (_.formKey.currentState!.validate()) {
+                  if (_.selectedFile != null) {
+                    await _.submitOnTap(packageId, context);
                   } else {
                     NetworkDio.showError(
                       title: 'Warning',
@@ -763,9 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void selectFileType(
-    BuildContext context,
-  ) {
+  void selectFileType(BuildContext context, HomeScreenController _) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -789,9 +683,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       type: FileType.custom,
                       allowedExtensions: ['jpg', 'png', 'jpeg'],
                     );
-                    await pickFile(
-                      result,
-                    );
+                    await _.pickFile(result);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
@@ -822,9 +714,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         'doc',
                       ],
                     );
-                    await pickFile(
-                      result,
-                    );
+                    await _.pickFile(result);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
@@ -873,7 +763,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void showBottomSheet(BuildContext context, int index) {
+  void showBottomSheet(
+      BuildContext context, int index, HomeScreenController _) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -893,15 +784,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    type.text = categoriesList[i]['cat_name'];
-                    catId.value = categoriesList[i]['id'];
+                    _.type.text = _.categoriesList[i]['cat_name'];
+                    _.catId.value = _.categoriesList[i]['id'];
                   },
                   children: List.generate(
-                    categoriesList.length,
+                    _.categoriesList.length,
                     (index) => Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        categoriesList[index]['cat_name'],
+                        _.categoriesList[index]['cat_name'],
                         style: mediumText18.copyWith(
                           color: primary,
                         ),
