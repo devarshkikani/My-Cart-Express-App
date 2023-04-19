@@ -337,7 +337,8 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                widget.packagesDetails['invoice_type_label'],
+                                widget.packagesDetails['invoice_type_label'] ??
+                                    'Invoice Uploaded',
                                 style: lightText12.copyWith(
                                   color: whiteColor,
                                 ),

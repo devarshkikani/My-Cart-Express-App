@@ -37,15 +37,15 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   AppBar(
                     backgroundColor: Colors.transparent,
-                    leading: IconButton(
-                      onPressed: () async {
-                        await _.changeApp();
-                      },
-                      icon: const Icon(
-                        Icons.change_circle_outlined,
-                        color: whiteColor,
-                      ),
-                    ),
+                    // leading: IconButton(
+                    //   onPressed: () async {
+                    //     await _.changeApp();
+                    //   },
+                    //   icon: const Icon(
+                    //     Icons.change_circle_outlined,
+                    //     color: whiteColor,
+                    //   ),
+                    // ),
                     centerTitle: true,
                     elevation: 0.0,
                     title: Text(
