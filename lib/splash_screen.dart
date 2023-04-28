@@ -15,6 +15,8 @@ import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/add_feedback_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 
@@ -203,6 +205,22 @@ class _SplashScreenState extends State<SplashScreen> {
         if (payloadData['page_id'] == '1') {
           Get.offAll(
             () => MainHomeScreen(selectedIndex: 1.obs),
+          );
+        } else if (payloadData['page_id'] == '2') {
+          Get.offAll(
+            () => AddFeedbackScreen(
+              id: payloadData['ref_id'],
+            ),
+          );
+        } else if (payloadData['page_id'] == '3') {
+          Get.offAll(
+            () => SupportChatScreen(
+              isFromHome: false,
+              data: {
+                'title': 'Support Chat',
+                'ticket_id': payloadData['ref_id'],
+              },
+            ),
           );
         } else {
           Get.offAll(

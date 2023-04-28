@@ -18,7 +18,7 @@ import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 
 class HomeScreenController extends GetxController {
   Rx<File>? selectedFile;
-  RxInt balance = 0.obs;
+  var balance = 0.obs;
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxString fullName = ''.obs;

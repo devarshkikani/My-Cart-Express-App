@@ -1,23 +1,22 @@
 // ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:my_cart_express/Order_tracking_app/theme/colors.dart';
-import 'package:my_cart_express/Order_tracking_app/theme/text_style.dart';
-import 'package:my_cart_express/Order_tracking_app/utils/network_dio.dart';
-import 'package:my_cart_express/Order_tracking_app/widget/pdf_viewer.dart';
-import 'package:my_cart_express/Order_tracking_app/constant/sizedbox.dart';
-import 'package:my_cart_express/Order_tracking_app/widget/app_bar_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:my_cart_express/Order_tracking_app/widget/input_text_field.dart';
-import 'package:my_cart_express/Order_tracking_app/constant/app_endpoints.dart';
-import 'package:my_cart_express/Order_tracking_app/constant/default_images.dart';
+import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
+import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/order_tracking_app/widget/pdf_viewer.dart';
+import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/widget/app_bar_widget.dart';
+import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
+import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
+import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
+import 'package:my_cart_express/e_commerce_app/e_widget/rating_bar/c_rating_bar.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -43,7 +42,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     getTransaction();
   }
 
-  void getTransaction() async {
+  Future<void> getTransaction() async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
       url:
           '${ApiEndPoints.apiEndPoint}${ApiEndPoints.transactionList}?offset=0&limit=$limit',
@@ -106,7 +105,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       }
       isDownloading.value = true;
       var response =
-          await Dio().download(downloadUrl, '${dir.path}/Invoice-$id.pdf');
+          await dio.Dio().download(downloadUrl, '${dir.path}/Invoice-$id.pdf');
       isDownloading.value = false;
       if (response.statusCode == 200) {
         NetworkDio.showSuccess(
@@ -184,7 +183,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: Get.height,
+        width: Get.width,
         color: primary,
         child: Column(
           children: [

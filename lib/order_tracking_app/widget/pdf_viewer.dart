@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewerPage extends StatefulWidget {
   String pdfUrl;
@@ -42,7 +42,7 @@ class PdfViewerPageState extends State<PdfViewerPage> {
 
   @override
   void initState() {
-    loadNetwork();
+    // loadNetwork();
 
     super.initState();
   }
@@ -60,8 +60,8 @@ class PdfViewerPageState extends State<PdfViewerPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
-              child: PDFView(
-                filePath: pdfFile.path,
+              child: SfPdfViewer.network(
+                widget.pdfUrl,
               ),
             ),
     );

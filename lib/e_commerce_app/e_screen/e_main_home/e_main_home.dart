@@ -1,8 +1,8 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/e_commerce_app/e_controller/e_main_home/e_main_home_contoller.dart';
 import 'package:my_cart_express/e_commerce_app/e_theme/e_app_colors.dart';
+import 'package:my_cart_express/e_commerce_app/e_widget/bottom_navigation/c_curved_navigation_bar.dart';
 
 class EMainHome extends GetView<EMainHomeController> {
   const EMainHome({super.key});

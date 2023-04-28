@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
@@ -16,7 +17,12 @@ import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart'
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportChatScreen extends StatefulWidget {
-  SupportChatScreen({super.key, required this.data});
+  final bool isFromHome;
+  SupportChatScreen({
+    super.key,
+    required this.data,
+    required this.isFromHome,
+  });
 
   Map data;
 
@@ -127,167 +133,198 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.data['title'],
-          style: regularText14.copyWith(
-            color: whiteColor,
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.isFromHome) {
+          Get.back();
+        } else {
+          Get.offAll(
+            () => MainHomeScreen(selectedIndex: 4.obs),
+          );
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: InkWell(
+            onTap: () {
+              if (widget.isFromHome) {
+                Get.back();
+              } else {
+                Get.offAll(
+                  () => MainHomeScreen(selectedIndex: 4.obs),
+                );
+              }
+            },
+            child: Icon(
+              Platform.isAndroid
+                  ? Icons.arrow_back_rounded
+                  : Icons.arrow_back_ios_rounded,
+            ),
+          ),
+          title: Text(
+            widget.data['title'],
+            style: regularText14.copyWith(
+              color: whiteColor,
+            ),
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            chatView(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Obx(
-                () => assistanceFlag.value == 1
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Do you need further assistance?',
-                            style: regularText20,
-                          ),
-                          height15,
-                          buttons(
-                            "No I'm done",
-                            () async {
-                              await selfCloseTicketFunction();
-                            },
-                          ),
-                          height10,
-                          buttons(
-                            "Yes, I need further assistance",
-                            () async {
-                              await needAssistanceFunction();
-                            },
-                          ),
-                          height10,
-                        ],
-                      )
-                    : stillAssistanceFlag.value == 1
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Do you need still help?',
-                                style: regularText20,
-                              ),
-                              height15,
-                              buttons(
-                                "Yes",
-                                () async {
-                                  await needAssistanceFunction();
-                                },
-                              ),
-                              height10,
-                              buttons(
-                                "No",
-                                () async {
-                                  await selfCloseTicketFunction();
-                                },
-                              ),
-                              height10,
-                            ],
-                          )
-                        : selfClosedAssistanceFlag.value == 1
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Do you need further assistance?',
-                                    style: regularText20,
-                                  ),
-                                  height15,
-                                  Row(
-                                    children: [
-                                      buttons(
-                                        "No I'm done",
-                                        () async {
-                                          await selfCloseTicketFunction();
-                                        },
-                                      ),
-                                      width10,
-                                      const Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                      ),
-                                    ],
-                                  ),
-                                  height10,
-                                  buttons(
-                                    "Yes, I need further assistance",
-                                    () async {
-                                      await needAssistanceFunction();
-                                    },
-                                  ),
-                                  height10,
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  if (fileName.value != '')
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(fileName.value),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              chatView(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Obx(
+                  () => assistanceFlag.value == 1
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Do you need further assistance?',
+                              style: regularText20,
+                            ),
+                            height15,
+                            buttons(
+                              "No I'm done",
+                              () async {
+                                await selfCloseTicketFunction();
+                              },
+                            ),
+                            height10,
+                            buttons(
+                              "Yes, I need further assistance",
+                              () async {
+                                await needAssistanceFunction();
+                              },
+                            ),
+                            height10,
+                          ],
+                        )
+                      : stillAssistanceFlag.value == 1
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Do you need still help?',
+                                  style: regularText20,
+                                ),
+                                height15,
+                                buttons(
+                                  "Yes",
+                                  () async {
+                                    await needAssistanceFunction();
+                                  },
+                                ),
+                                height10,
+                                buttons(
+                                  "No",
+                                  () async {
+                                    await selfCloseTicketFunction();
+                                  },
+                                ),
+                                height10,
+                              ],
+                            )
+                          : selfClosedAssistanceFlag.value == 1
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Do you need further assistance?',
+                                      style: regularText20,
                                     ),
-                                  Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: TextFormFieldWidget(
-                                              controller: messageController,
-                                              hintText: "Message",
-                                              onFieldSubmitted: (value) {
-                                                messageController.clear();
-                                              },
+                                    height15,
+                                    Row(
+                                      children: [
+                                        buttons(
+                                          "No I'm done",
+                                          () async {
+                                            await selfCloseTicketFunction();
+                                          },
+                                        ),
+                                        width10,
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                        ),
+                                      ],
+                                    ),
+                                    height10,
+                                    buttons(
+                                      "Yes, I need further assistance",
+                                      () async {
+                                        await needAssistanceFunction();
+                                      },
+                                    ),
+                                    height10,
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    if (fileName.value != '')
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(fileName.value),
+                                      ),
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Expanded(
+                                              child: TextFormFieldWidget(
+                                                controller: messageController,
+                                                hintText: "Message",
+                                                onFieldSubmitted: (value) {
+                                                  messageController.clear();
+                                                },
+                                              ),
                                             ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () async {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              FilePickerResult? result =
-                                                  await FilePicker.platform
-                                                      .pickFiles(
-                                                type: FileType.custom,
-                                                allowedExtensions: [
-                                                  'jpg',
-                                                  'tiff',
-                                                  'png',
-                                                  'jpeg',
-                                                  'pdf',
-                                                  'doc',
-                                                ],
-                                              );
-                                              await pickFile(
-                                                result,
-                                              );
-                                            },
-                                            icon: const Icon(Icons.attachment),
-                                          ),
-                                          IconButton(
-                                            onPressed: () async {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              await sendMessage();
-                                            },
-                                            icon: const Icon(Icons.send),
-                                          ),
-                                        ],
-                                      )),
-                                ],
-                              ),
+                                            IconButton(
+                                              onPressed: () async {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                                FilePickerResult? result =
+                                                    await FilePicker.platform
+                                                        .pickFiles(
+                                                  type: FileType.custom,
+                                                  allowedExtensions: [
+                                                    'jpg',
+                                                    'tiff',
+                                                    'png',
+                                                    'jpeg',
+                                                    'pdf',
+                                                    'doc',
+                                                  ],
+                                                );
+                                                await pickFile(
+                                                  result,
+                                                );
+                                              },
+                                              icon:
+                                                  const Icon(Icons.attachment),
+                                            ),
+                                            IconButton(
+                                              onPressed: () async {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                                await sendMessage();
+                                              },
+                                              icon: const Icon(Icons.send),
+                                            ),
+                                          ],
+                                        )),
+                                  ],
+                                ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

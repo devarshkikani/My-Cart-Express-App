@@ -35,7 +35,7 @@ class RegisterScreen extends GetView<RegisterController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Text(
-                    "Thousands of happy customers are using mCart Express to elevate their shipping experience. Let's make you one.",
+                    "Thousands of happy customers are using MyCart Express to elevate their shipping experience. Let's make you one.",
                     style: lightText16,
                   ),
                   height20,
@@ -192,7 +192,7 @@ class RegisterScreen extends GetView<RegisterController> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "I agree to My Cart Quick Limited's ",
+                                text: "I agree to MyCart Quick Limited's ",
                                 style: lightText14,
                               ),
                               TextSpan(
@@ -232,7 +232,7 @@ class RegisterScreen extends GetView<RegisterController> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "I agree to My Cart Quick Limited's ",
+                                text: "I agree to MyCart Quick Limited's ",
                                 style: lightText14,
                               ),
                               TextSpan(

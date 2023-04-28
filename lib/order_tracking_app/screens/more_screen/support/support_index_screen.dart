@@ -330,6 +330,7 @@ class _SupportIndexScreenState extends State<SupportIndexScreen> {
                                               Get.to(
                                                 () => SupportChatScreen(
                                                   data: data[index],
+                                                  isFromHome: true,
                                                 ),
                                               );
                                             },

@@ -35,7 +35,7 @@ class ForgotPasswordScreen extends GetView {
                     ),
                     height10,
                     Text(
-                      "Wee get it. stuff happens. Just enter your email address below and we'll send you a Verification code to reset password!",
+                      "We get it. stuff happens. just enter your email address below and we'll send you a verification code to reset password!",
                       style: lightText14,
                     ),
                     height25,

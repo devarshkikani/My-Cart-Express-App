@@ -122,7 +122,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           children: [
             Text(
-              'Welcome to Mycart express 👋',
+              'Welcome to MyCart express 👋',
               style: regularText20,
             ),
             height20,

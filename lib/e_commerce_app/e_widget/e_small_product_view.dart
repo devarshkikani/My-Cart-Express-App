@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_sizedbox.dart';
 import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.dart';
 import 'package:my_cart_express/e_commerce_app/e_theme/e_app_colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_theme/e_app_text_theme.dart';
+import 'package:my_cart_express/e_commerce_app/e_widget/rating_bar/c_rating_bar.dart';
 
 class ESmallProductView extends StatelessWidget {
   const ESmallProductView({
