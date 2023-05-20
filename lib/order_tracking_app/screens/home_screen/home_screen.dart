@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -106,6 +107,45 @@ class HomeScreen extends StatelessWidget {
   Widget bodyView(HomeScreenController _, BuildContext context) {
     return Column(
       children: [
+        Obx(
+          () => _.imageList.isNotEmpty
+              ? CarouselSlider.builder(
+                  itemCount: _.imageList.length,
+                  options: CarouselOptions(
+                    enlargeCenterPage: true,
+                    padEnds: true,
+                    viewportFraction: 1.0,
+                    height: 200,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 3),
+                  ),
+                  itemBuilder: (context, i, id) {
+                    return InkWell(
+                      onTap: () {
+                        _.redirectHome(i);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            _.imageList[i]['image_url'],
+                            width: Get.width,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : const SizedBox(),
+        ),
+        height15,
         balanceView(_),
         height15,
         detailsView(_, context),
@@ -392,7 +432,10 @@ class HomeScreen extends StatelessWidget {
                             height10,
                         itemBuilder: (BuildContext context, int index) =>
                             Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                               border: Border.all(
                                 color: greyColor,

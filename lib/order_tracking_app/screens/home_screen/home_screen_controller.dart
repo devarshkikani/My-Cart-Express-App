@@ -13,8 +13,16 @@ import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.d
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/auth_pickup/auth_pickup_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/faqs_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/feedback_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/my_rewards_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_index_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/transaction_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreenController extends GetxController {
   Rx<File>? selectedFile;
@@ -28,6 +36,7 @@ class HomeScreenController extends GetxController {
   RxMap usaShippingData = {}.obs;
   RxMap pickuoBranchData = {}.obs;
   GetStorage box = GetStorage();
+  RxList imageList = [].obs;
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -89,11 +98,41 @@ class HomeScreenController extends GetxController {
               );
               if (response != null) {
                 balance.value = response['data'];
+                Map<String, dynamic>? images =
+                    await NetworkDio.getDioHttpMethod(
+                  url: ApiEndPoints.apiEndPoint +
+                      ApiEndPoints.branchBannerImages,
+                  context: context,
+                );
+                if (images != null) {
+                  imageList.value = images['data'];
+                }
               }
             }
           }
         }
       }
+    }
+  }
+
+  void redirectHome(int i) {
+    bool isInAppRedirect = imageList[i]['image_link_type'] == "1";
+    if (isInAppRedirect && imageList[i]['image_link'] == "1") {
+      Get.to(const ShippingCalculatorScreen());
+    } else if (isInAppRedirect && imageList[i]['image_link'] == "2") {
+      Get.to(() => const TransactionScreen());
+    } else if (isInAppRedirect && imageList[i]['image_link'] == "3") {
+      Get.to(() => const FAQSScreen());
+    } else if (isInAppRedirect && imageList[i]['image_link'] == "4") {
+      Get.to(() => const SupportIndexScreen());
+    } else if (isInAppRedirect && imageList[i]['image_link'] == "5") {
+      Get.to(() => const FeedbackScreen());
+    } else if (isInAppRedirect && imageList[i]['image_link'] == "6") {
+      Get.to(() => const MyRewardsScreen());
+    } else if (isInAppRedirect && imageList[i]['image_link'] == "7") {
+      Get.to(() => const AuthPickUpScreen());
+    } else if (imageList[i]['image_link_type'] == "2") {
+      launchUrl(Uri.parse(imageList[i]['image_link']));
     }
   }
 

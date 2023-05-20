@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
 import 'package:my_cart_express/e_commerce_app/e_theme/e_app_colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_sizedbox.dart';
@@ -87,8 +88,8 @@ class EHomePage extends StatelessWidget {
                   onTap: () {
                     Get.toNamed(ERoutes.notification);
                   },
-                  child: Badge(
-                    label: const Text(
+                  child: b.Badge(
+                    badgeContent: const Text(
                       '5',
                     ),
                     child: Icon(
@@ -102,8 +103,8 @@ class EHomePage extends StatelessWidget {
                   onTap: () {
                     Get.toNamed(ERoutes.cart);
                   },
-                  child: Badge(
-                    label: const Text(
+                  child: b.Badge(
+                    badgeContent: const Text(
                       '3',
                     ),
                     child: Icon(

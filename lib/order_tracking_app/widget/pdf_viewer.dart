@@ -1,11 +1,12 @@
 // ignore_for_file: must_be_immutable, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+// import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewerPage extends StatefulWidget {
   String pdfUrl;
@@ -60,8 +61,12 @@ class PdfViewerPageState extends State<PdfViewerPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
-              child: SfPdfViewer.network(
+              child: const PDF().fromUrl(
                 widget.pdfUrl,
+                placeholder: (double progress) =>
+                    Center(child: Text('$progress %')),
+                errorWidget: (dynamic error) =>
+                    Center(child: Text(error.toString())),
               ),
             ),
     );
