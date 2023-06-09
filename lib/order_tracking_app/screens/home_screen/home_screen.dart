@@ -145,7 +145,7 @@ class HomeScreen extends StatelessWidget {
                 )
               : const SizedBox(),
         ),
-        height15,
+        if (_.imageList.isNotEmpty) height15,
         balanceView(_),
         height15,
         detailsView(_, context),

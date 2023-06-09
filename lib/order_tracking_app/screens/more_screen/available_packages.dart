@@ -18,7 +18,15 @@ import 'package:my_cart_express/order_tracking_app/constant/default_images.dart'
 import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/packages_details_screen.dart';
 
 class AvailablePackagesScreen extends StatefulWidget {
-  const AvailablePackagesScreen({super.key});
+  final RxList? availablePackages;
+  final RxMap? availablePackagesData;
+  final bool fromHome;
+  const AvailablePackagesScreen({
+    super.key,
+    required this.fromHome,
+    this.availablePackages,
+    this.availablePackagesData,
+  });
 
   @override
   State<AvailablePackagesScreen> createState() =>
@@ -26,8 +34,8 @@ class AvailablePackagesScreen extends StatefulWidget {
 }
 
 class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
-  RxList availablePackages = [].obs;
   RxBool isLoading = true.obs;
+  RxList availablePackages = [].obs;
   RxMap availablePackagesData = {}.obs;
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
@@ -38,15 +46,20 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
+    if (!widget.fromHome) {
+      availablePackages.value = widget.availablePackages!;
+      availablePackagesData.value = widget.availablePackagesData!;
+    }
     getCategoriesList();
     super.initState();
   }
 
   Future<void> getAvailablePackages() async {
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
-        url: ApiEndPoints.apiEndPoint + ApiEndPoints.availableShipping,
-        context: context,
-        data: null);
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.availableShipping,
+      context: context,
+      data: null,
+    );
     if (response != null) {
       isLoading.value = false;
       availablePackages.value = response['list'];
@@ -66,7 +79,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
     if (categoriesListResponse != null) {
       categoriesList.value = categoriesListResponse['list'];
     }
-    getAvailablePackages();
+    isLoading.value = false;
   }
 
   Future<void> pickFile(FilePickerResult? result) async {
@@ -96,11 +109,15 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
     if (response != null) {
       Get.back();
       NetworkDio.showSuccess(
-          title: 'Success', sucessMessage: response['message']);
-      isLoading.value = true;
-      availablePackages.value = [];
-      availablePackagesData.value = {};
-      getAvailablePackages();
+        title: 'Success',
+        sucessMessage: response['message'],
+      );
+      if (widget.fromHome) {
+        isLoading.value = true;
+        availablePackages.value = [];
+        availablePackagesData.value = {};
+        getAvailablePackages();
+      }
     }
   }
 

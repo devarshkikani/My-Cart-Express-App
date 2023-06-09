@@ -8,6 +8,7 @@ import 'package:my_cart_express/order_tracking_app/screens/overdue_screen/overdu
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/available_packages.dart';
+import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
@@ -25,10 +26,11 @@ class MainHomeScreen extends GetView {
   RxInt selectedIndex;
   final pages = [
     const HomeScreen(),
+    const ScannerScreen(),
     const ShippingScreen(
       isFromeHome: false,
     ),
-    const AvailablePackagesScreen(),
+    const AvailablePackagesScreen(fromHome: true),
     const OverdueScreen(),
     const MoreScreen(),
   ];
@@ -67,6 +69,17 @@ class MainHomeScreen extends GetView {
                   onTap: () {
                     selectedIndex.value = 1;
                   },
+                  child: Image.asset(
+                    scannerIcon,
+                    color: selectedIndex.value == 1 ? null : Colors.grey,
+                    height: 24,
+                    width: 24,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    selectedIndex.value = 2;
+                  },
                   child: b.Badge(
                     showBadge: packageCounts.value > 0,
                     badgeStyle: const b.BadgeStyle(
@@ -80,7 +93,7 @@ class MainHomeScreen extends GetView {
                     ),
                     child: Image.asset(
                       shippingIcon,
-                      color: selectedIndex.value == 1 ? null : Colors.grey,
+                      color: selectedIndex.value == 2 ? null : Colors.grey,
                       height: 24,
                       width: 24,
                     ),
@@ -88,7 +101,7 @@ class MainHomeScreen extends GetView {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 2;
+                    selectedIndex.value = 3;
                   },
                   child: b.Badge(
                     showBadge: availablePackageCounts.value > 0,
@@ -103,7 +116,7 @@ class MainHomeScreen extends GetView {
                     ),
                     child: Image.asset(
                       availablePackages,
-                      color: selectedIndex.value == 2 ? null : Colors.grey,
+                      color: selectedIndex.value == 3 ? null : Colors.grey,
                       height: 24,
                       width: 24,
                     ),
@@ -111,7 +124,7 @@ class MainHomeScreen extends GetView {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 3;
+                    selectedIndex.value = 4;
                   },
                   child: b.Badge(
                     showBadge: overduePackageCounts.value > 0,
@@ -126,7 +139,7 @@ class MainHomeScreen extends GetView {
                     ),
                     child: Image.asset(
                       deliveryIcon,
-                      color: selectedIndex.value == 3 ? null : Colors.grey,
+                      color: selectedIndex.value == 4 ? null : Colors.grey,
                       height: 24,
                       width: 24,
                     ),
@@ -134,11 +147,11 @@ class MainHomeScreen extends GetView {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 4;
+                    selectedIndex.value = 5;
                   },
                   child: Icon(
                     Icons.more_horiz_rounded,
-                    color: selectedIndex.value == 4 ? primary : Colors.grey,
+                    color: selectedIndex.value == 5 ? primary : Colors.grey,
                     size: 30,
                   ),
                 ),
