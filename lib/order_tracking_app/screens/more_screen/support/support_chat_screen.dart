@@ -403,12 +403,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   Widget html(String data) {
     return Html(
       data: data,
-      onAnchorTap: (url, context, attributes, element) {
+      onAnchorTap: (url, attributes, element) {
         if (url != null) {
           launchUrl(Uri.parse(url));
         }
       },
-      onLinkTap: (url, context, attributes, element) {
+      onLinkTap: (url, attributes, element) {
         if (url != null) {
           launchUrl(Uri.parse(url));
         }
