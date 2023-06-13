@@ -52,8 +52,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
     setState(() {
       this.controller = controller;
     });
-
-    await this.controller!.resumeCamera();
+    if (Platform.isAndroid) {
+      await this.controller!.resumeCamera();
+    }
 
     controller.scannedDataStream.listen((scanData) async {
       if (!Get.isSnackbarOpen && !isAPICalling.value) {
