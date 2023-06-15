@@ -79,6 +79,12 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
     if (categoriesListResponse != null) {
       categoriesList.value = categoriesListResponse['list'];
     }
+    if (widget.fromHome) {
+      isLoading.value = true;
+      availablePackages.value = [];
+      availablePackagesData.value = {};
+      await getAvailablePackages();
+    }
     isLoading.value = false;
   }
 
@@ -112,12 +118,10 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         title: 'Success',
         sucessMessage: response['message'],
       );
-      if (widget.fromHome) {
-        isLoading.value = true;
-        availablePackages.value = [];
-        availablePackagesData.value = {};
-        getAvailablePackages();
-      }
+      isLoading.value = true;
+      availablePackages.value = [];
+      availablePackagesData.value = {};
+      getAvailablePackages();
     }
   }
 

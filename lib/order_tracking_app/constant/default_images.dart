@@ -20,3 +20,5 @@ const String shippingIcon = 'assets/images/shipping_icon.png';
 const String supportMailIcon = 'assets/images/support_mail_icon.png';
 const String transactionIcon = 'assets/images/transaction_icon.png';
 const String trashIcon = 'assets/images/trash_icon.png';
+const String successScan = 'assets/images/success_scan.png';
+const String successCheck = 'assets/images/success_check.gif';

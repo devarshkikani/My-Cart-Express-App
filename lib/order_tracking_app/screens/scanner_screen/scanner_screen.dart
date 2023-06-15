@@ -6,6 +6,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scan_success_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -14,7 +15,6 @@ import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
-import 'package:my_cart_express/order_tracking_app/screens/more_screen/available_packages.dart';
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -166,13 +166,10 @@ class _ScannerScreenState extends State<ScannerScreen> {
         "counts": response['counts'],
         "due": response['due'],
       };
-      Get.to(
-        AvailablePackagesScreen(
-          fromHome: false,
-          availablePackages: availablePackages,
-          availablePackagesData: availablePackagesData,
-        ),
-      );
+      Get.to(ScanSuccessScreen(
+        availablePackages: availablePackages,
+        availablePackagesData: availablePackagesData,
+      ));
     }
   }
 
@@ -261,7 +258,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         const Icon(Icons.arrow_drop_up_rounded),
         height5,
         Text(
-          'Scab QR code to check in',
+          'Scan QR code to check in',
           style: regularText14.copyWith(
             color: primary,
           ),
