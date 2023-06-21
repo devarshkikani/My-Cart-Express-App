@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class HomeScreenController extends GetxController {
   RxMap pickuoBranchData = {}.obs;
   GetStorage box = GetStorage();
   RxList imageList = [].obs;
+  CarouselController carouselController = CarouselController();
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();

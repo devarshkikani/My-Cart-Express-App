@@ -1,23 +1,23 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
-import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
-import 'package:my_cart_express/order_tracking_app/utils/dynamic_linking_service.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
+import 'package:my_cart_express/order_tracking_app/utils/dynamic_linking_service.dart';
 import 'package:my_cart_express/order_tracking_app/screens/messages_screen/messages_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/shipping_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/screens/notification_screen/notifications_screen.dart';
-import 'package:share_plus/share_plus.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -109,43 +109,111 @@ class HomeScreen extends StatelessWidget {
       children: [
         Obx(
           () => _.imageList.isNotEmpty
-              ? CarouselSlider.builder(
-                  itemCount: _.imageList.length,
-                  options: CarouselOptions(
-                    enlargeCenterPage: true,
-                    padEnds: true,
-                    viewportFraction: 1.0,
-                    height: 200,
-                    autoPlay: true,
-                    autoPlayInterval: const Duration(seconds: 3),
-                  ),
-                  itemBuilder: (context, i, id) {
-                    return InkWell(
-                      onTap: () {
-                        _.redirectHome(i);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.network(
-                            _.imageList[i]['image_url'],
-                            width: Get.width,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+              ? Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CarouselSlider.builder(
+                      itemCount: _.imageList.length,
+                      carouselController: _.carouselController,
+                      options: CarouselOptions(
+                        enlargeCenterPage: true,
+                        padEnds: true,
+                        viewportFraction: 1.0,
+                        height: 200,
+                        autoPlay: _.imageList.length > 1,
+                        scrollPhysics: _.imageList.length > 1
+                            ? const AlwaysScrollableScrollPhysics()
+                            : const NeverScrollableScrollPhysics(),
+                        autoPlayInterval: const Duration(seconds: 6),
                       ),
-                    );
-                  },
+                      itemBuilder: (context, i, id) {
+                        return InkWell(
+                          onTap: () {
+                            _.redirectHome(i);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.network(
+                                _.imageList[i]['image_url'],
+                                width: Get.width,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    if (_.imageList.length > 1)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            height: 200,
+                            width: 100,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                topLeft: Radius.circular(15),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _.carouselController.previousPage();
+                                  },
+                                  child: Image.asset(
+                                    arrowLeft,
+                                    height: 24,
+                                    width: 24,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 200,
+                            width: 100,
+                            padding: const EdgeInsets.only(right: 10),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _.carouselController.nextPage();
+                                  },
+                                  child: Image.asset(
+                                    arrowRight,
+                                    height: 24,
+                                    width: 24,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
                 )
               : const SizedBox(),
         ),
-        if (_.imageList.isNotEmpty) height15,
+        Obx(() => _.imageList.isNotEmpty ? height15 : const SizedBox()),
         balanceView(_),
         height15,
         detailsView(_, context),
