@@ -21,9 +21,11 @@ class AvailablePackagesScreen extends StatefulWidget {
   final RxList? availablePackages;
   final RxMap? availablePackagesData;
   final bool fromHome;
+  final String? title;
   const AvailablePackagesScreen({
     super.key,
     required this.fromHome,
+    this.title,
     this.availablePackages,
     this.availablePackagesData,
   });
@@ -135,7 +137,19 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
           children: [
             AppBar(
               backgroundColor: Colors.transparent,
-              leading: const SizedBox(),
+              leading: widget.title == 'Packages for pickup'
+                  ? IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: Icon(
+                        Platform.isAndroid
+                            ? Icons.arrow_back_rounded
+                            : Icons.arrow_back_ios_rounded,
+                        color: whiteColor,
+                      ),
+                    )
+                  : const SizedBox(),
               centerTitle: true,
               elevation: 0.0,
               title: Text(
@@ -169,7 +183,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Available Packages',
+          widget.title ?? 'Available Packages',
           style: regularText18,
         ),
         height10,

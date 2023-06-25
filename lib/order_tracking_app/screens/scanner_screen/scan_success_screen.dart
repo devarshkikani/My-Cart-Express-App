@@ -87,6 +87,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
             Get.to(
               AvailablePackagesScreen(
                 fromHome: false,
+                title: 'Packages for pickup',
                 availablePackages: widget.availablePackages,
                 availablePackagesData: widget.availablePackagesData,
               ),
