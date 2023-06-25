@@ -149,17 +149,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             height5,
             Text(
-              'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'].toString()}',
+              'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'] ?? ''}',
               style: lightText16,
             ),
             height5,
             Text(
-              'Email : ${userDetails.isEmpty ? '' : userDetails['email'].toString()}',
+              'Email : ${userDetails.isEmpty ? '' : userDetails['email'] ?? ''}',
               style: lightText16,
             ),
             height5,
             Text(
-              'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'].toString()}',
+              'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'] ?? ''}',
               style: lightText16,
             ),
           ],

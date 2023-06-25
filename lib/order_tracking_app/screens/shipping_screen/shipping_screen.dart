@@ -379,7 +379,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                               shippmentsList[index]['status_id'] == '6' ||
                                       shippmentsList[index]['status_id'] == '19'
                                   ? Text(
-                                      'TOTAL COST : ${shippmentsList[index]['amount']}',
+                                      'TOTAL COST : ${shippmentsList[index]['amount'] ?? 0.00}',
                                       style: lightText12.copyWith(
                                         color: blackColor,
                                       ),

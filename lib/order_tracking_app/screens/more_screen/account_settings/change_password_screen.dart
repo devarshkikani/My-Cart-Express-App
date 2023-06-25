@@ -172,7 +172,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ),
             height20,
             Text(
-              userDetails.isEmpty ? '' : userDetails['name'].toString(),
+              userDetails.isEmpty ? '' : userDetails['name'] ?? '',
               style: regularText18.copyWith(
                 color: blackColor,
                 letterSpacing: 0.3,
@@ -180,17 +180,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ),
             height5,
             Text(
-              'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'].toString()}',
+              'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'] ?? ''}',
               style: lightText16,
             ),
             height5,
             Text(
-              'Email : ${userDetails.isEmpty ? '' : userDetails['email'].toString()}',
+              'Email : ${userDetails.isEmpty ? '' : userDetails['email'] ?? ''}',
               style: lightText16,
             ),
             height5,
             Text(
-              'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'].toString()}',
+              'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'] ?? ''}',
               style: lightText16,
             ),
           ],

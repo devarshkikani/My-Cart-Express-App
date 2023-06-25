@@ -176,7 +176,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         Obx(() => isLoading.value
             ? const SizedBox()
             : Text(
-                'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts']}',
+                'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts'] ?? 0}',
                 style: regularText14.copyWith(
                   color: Colors.grey,
                 ),
@@ -185,7 +185,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         Obx(() => isLoading.value
             ? const SizedBox()
             : Text(
-                'TOTAL DUE : ${availablePackagesData['due']}',
+                'TOTAL DUE : ${availablePackagesData['due'] ?? 0.00}',
                 style: regularText14.copyWith(
                   color: Colors.grey,
                 ),
@@ -389,7 +389,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'TOTAL COST : ${availablePackages[index]['amount']}',
+                                          'TOTAL COST : ${availablePackages[index]['amount'] ?? 0.00}',
                                           style: lightText12.copyWith(
                                             color: blackColor,
                                           ),

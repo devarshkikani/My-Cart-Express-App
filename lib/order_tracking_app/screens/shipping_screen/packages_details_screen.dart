@@ -249,7 +249,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                               ),
                               height10,
                               Text(
-                                '''Tracking #: ${widget.packagesDetails['tracking']}''',
+                                '''Tracking #: ${widget.packagesDetails['tracking'] ?? ''}''',
                                 // overflow: TextOverflow.ellipsis,
                                 style: regularText14.copyWith(
                                   color: Colors.grey,
@@ -257,7 +257,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                               ),
                               height10,
                               Text(
-                                '''Weight: ${widget.packagesDetails['weight_label']}''',
+                                '''Weight: ${widget.packagesDetails['weight_label'] ?? '00LB'}''',
                                 overflow: TextOverflow.ellipsis,
                                 style: regularText14.copyWith(
                                   color: Colors.grey,
@@ -267,7 +267,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                                 height10,
                               if (widget.packagesDetails['status_id'] == '6')
                                 Text(
-                                  '''Storage days: ${widget.packagesDetails['storage_days']}''',
+                                  '''Storage days: ${widget.packagesDetails['storage_days'] ?? 0}''',
                                   overflow: TextOverflow.ellipsis,
                                   style: regularText14.copyWith(
                                     color: Colors.grey,
@@ -303,7 +303,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '''Declared Value: \n\$${widget.packagesDetails['value_cost']} USD''',
+                      '''Declared Value: \n\$${widget.packagesDetails['value_cost'] ?? 0.00} USD''',
                       overflow: TextOverflow.ellipsis,
                       style: regularText18.copyWith(
                         color: primary,
@@ -374,13 +374,13 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '''Freight Charges: \$${widget.packagesDetails['freight_cost']} JMD''',
+                      '''Freight Charges: \$${widget.packagesDetails['freight_cost'] ?? 0.00} JMD''',
                       overflow: TextOverflow.ellipsis,
                       style: lightText14,
                     ),
                     height10,
                     Text(
-                      '''Processing Fee: ${widget.packagesDetails['processing_fee']} JMD''',
+                      '''Processing Fee: ${widget.packagesDetails['processing_fee'] ?? 0.00} JMD''',
                       overflow: TextOverflow.ellipsis,
                       style: lightText14,
                     ),
@@ -399,7 +399,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                   ),
                 ),
                 child: Text(
-                  '''Estimated Total Due: \n\$${widget.packagesDetails['amount']} JMD''',
+                  '''Estimated Total Due: \n\$${widget.packagesDetails['amount'] ?? 0.00} JMD''',
                   overflow: TextOverflow.ellipsis,
                   style: regularText18.copyWith(
                     color: primary,

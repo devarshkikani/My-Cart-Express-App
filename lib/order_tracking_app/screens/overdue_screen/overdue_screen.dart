@@ -159,7 +159,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
           () => isLoading.value
               ? const SizedBox()
               : Text(
-                  'TOTAL PACKAGES AVAILABLE : ${duePackagesData['counts']}',
+                  'TOTAL PACKAGES AVAILABLE : ${duePackagesData['counts'] ?? 0}',
                   style: regularText14.copyWith(
                     color: Colors.grey,
                   ),
@@ -170,7 +170,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
           () => isLoading.value
               ? const SizedBox()
               : Text(
-                  'TOTAL DUE : ${duePackagesData['storage']}',
+                  'TOTAL DUE : ${duePackagesData['storage'] ?? 0.00}',
                   style: regularText14.copyWith(
                     color: Colors.grey,
                   ),
@@ -366,7 +366,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'TOTAL COST : ${duePackages[index]['amount']}',
+                                          'TOTAL COST : ${duePackages[index]['amount'] ?? 0.00}',
                                           style: lightText12.copyWith(
                                             color: blackColor,
                                           ),
