@@ -1,25 +1,25 @@
+import 'dart:io';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
-import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
+import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/add_feedback_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
-import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
-import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
-import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
