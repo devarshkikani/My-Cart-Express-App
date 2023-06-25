@@ -18,6 +18,7 @@ import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/add_feedback_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
+import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -83,10 +84,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+      ],
+    );
     return Scaffold(
+      backgroundColor: primary,
       body: Center(
         child: Image.asset(
           appLogo,
