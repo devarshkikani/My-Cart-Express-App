@@ -204,7 +204,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (box.read(StorageKey.isLogedIn) ?? false) {
         if (payloadData['page_id'] == '1') {
           Get.offAll(
-            () => MainHomeScreen(selectedIndex: 1.obs),
+            () => MainHomeScreen(selectedIndex: 2.obs),
           );
         } else if (payloadData['page_id'] == '2') {
           Get.offAll(
@@ -221,6 +221,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 'ticket_id': payloadData['ref_id'],
               },
             ),
+          );
+        } else if (payloadData['page_id'] == '4') {
+          Get.offAll(
+            () => MainHomeScreen(selectedIndex: 4.obs),
           );
         } else {
           Get.offAll(
