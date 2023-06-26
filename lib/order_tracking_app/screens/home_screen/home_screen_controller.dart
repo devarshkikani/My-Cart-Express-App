@@ -3,6 +3,8 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -21,8 +23,10 @@ import 'package:my_cart_express/order_tracking_app/screens/more_screen/my_reward
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_index_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/transaction_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
+import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreenController extends GetxController {
@@ -44,6 +48,7 @@ class HomeScreenController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void getBalance(BuildContext context) async {
+    getCurrentPosition();
     Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
       context: context,
@@ -52,7 +57,6 @@ class HomeScreenController extends GetxController {
       packageCounts.value = shippingCount['package_counts'];
       availablePackageCounts.value = shippingCount['available_package_counts'];
       overduePackageCounts.value = shippingCount['overdue_package_counts'];
-
       Map<String, dynamic>? packagesResponse =
           await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
@@ -115,6 +119,41 @@ class HomeScreenController extends GetxController {
         }
       }
     }
+  }
+
+  Future<void> getCurrentPosition() async {
+    final bool hasPermission = await handleLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      currentPosition = position;
+    } on Position catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<bool> handleLocationPermission() async {
+    LocationPermission permission;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Get.to(() => const LocationPermissionScreen());
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Get.to(() => const LocationPermissionScreen());
+      return false;
+    }
+    return true;
   }
 
   void redirectHome(int i) {

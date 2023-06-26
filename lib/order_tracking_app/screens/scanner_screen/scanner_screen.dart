@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,7 +12,6 @@ import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
-import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scan_success_screen.dart';
 
 class ScannerScreen extends StatefulWidget {
@@ -69,7 +67,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
               );
             }
           } else {
-            await getCurrentPosition();
             NetworkDio.showError(
               title: 'Wait',
               errorMessage: 'We fetching your current location',
@@ -89,24 +86,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
     // }
   }
 
-  Future<bool> handleLocationPermission() async {
-    LocationPermission permission;
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Get.to(() => const LocationPermissionScreen());
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      Get.to(() => const LocationPermissionScreen());
-      return false;
-    }
-    return true;
-  }
-
   Future getCameraPermission() async {
     final PermissionStatus status = await Permission.camera.request();
     if (status.isPermanentlyDenied || status.isDenied) {
@@ -124,25 +103,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
           ),
         ),
       );
-    }
-    await getCurrentPosition();
-  }
-
-  Future<void> getCurrentPosition() async {
-    final bool hasPermission = await handleLocationPermission();
-
-    if (!hasPermission) {
-      return;
-    }
-    try {
-      final Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      currentPosition = position;
-      return;
-    } on Position catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
     }
   }
 
