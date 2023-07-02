@@ -29,6 +29,8 @@ import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+RxList imageList = [].obs;
+
 class HomeScreenController extends GetxController {
   Rx<File>? selectedFile;
   var balance = 0.obs;
@@ -41,7 +43,6 @@ class HomeScreenController extends GetxController {
   RxMap usaShippingData = {}.obs;
   RxMap pickuoBranchData = {}.obs;
   GetStorage box = GetStorage();
-  RxList imageList = [].obs;
   CarouselController carouselController = CarouselController();
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
@@ -156,27 +157,6 @@ class HomeScreenController extends GetxController {
     return true;
   }
 
-  void redirectHome(int i) {
-    bool isInAppRedirect = imageList[i]['image_link_type'] == "1";
-    if (isInAppRedirect && imageList[i]['image_link'] == "1") {
-      Get.to(const ShippingCalculatorScreen());
-    } else if (isInAppRedirect && imageList[i]['image_link'] == "2") {
-      Get.to(() => const TransactionScreen());
-    } else if (isInAppRedirect && imageList[i]['image_link'] == "3") {
-      Get.to(() => const FAQSScreen());
-    } else if (isInAppRedirect && imageList[i]['image_link'] == "4") {
-      Get.to(() => const SupportIndexScreen());
-    } else if (isInAppRedirect && imageList[i]['image_link'] == "5") {
-      Get.to(() => const FeedbackScreen());
-    } else if (isInAppRedirect && imageList[i]['image_link'] == "6") {
-      Get.to(() => const MyRewardsScreen());
-    } else if (isInAppRedirect && imageList[i]['image_link'] == "7") {
-      Get.to(() => const AuthPickUpScreen());
-    } else if (imageList[i]['image_link_type'] == "2") {
-      launchUrl(Uri.parse(imageList[i]['image_link']));
-    }
-  }
-
   Future<void> pickFile(FilePickerResult? result) async {
     if (result != null) {
       selectedFile?.value = File(result.files.first.path!);
@@ -215,5 +195,26 @@ class HomeScreenController extends GetxController {
     } else {
       Get.offAllNamed(ERoutes.firstOnboarding);
     }
+  }
+}
+
+void redirectHome(int i) {
+  bool isInAppRedirect = imageList[i]['image_link_type'] == "1";
+  if (isInAppRedirect && imageList[i]['image_link'] == "1") {
+    Get.to(const ShippingCalculatorScreen());
+  } else if (isInAppRedirect && imageList[i]['image_link'] == "2") {
+    Get.to(() => const TransactionScreen());
+  } else if (isInAppRedirect && imageList[i]['image_link'] == "3") {
+    Get.to(() => const FAQSScreen());
+  } else if (isInAppRedirect && imageList[i]['image_link'] == "4") {
+    Get.to(() => const SupportIndexScreen());
+  } else if (isInAppRedirect && imageList[i]['image_link'] == "5") {
+    Get.to(() => const FeedbackScreen());
+  } else if (isInAppRedirect && imageList[i]['image_link'] == "6") {
+    Get.to(() => const MyRewardsScreen());
+  } else if (isInAppRedirect && imageList[i]['image_link'] == "7") {
+    Get.to(() => const AuthPickUpScreen());
+  } else if (imageList[i]['image_link_type'] == "2") {
+    launchUrl(Uri.parse(imageList[i]['image_link']));
   }
 }

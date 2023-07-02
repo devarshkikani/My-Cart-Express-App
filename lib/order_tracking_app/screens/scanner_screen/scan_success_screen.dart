@@ -11,9 +11,11 @@ import 'package:my_cart_express/order_tracking_app/screens/more_screen/available
 class ScanSuccessScreen extends StatefulWidget {
   const ScanSuccessScreen({
     super.key,
+    required this.barcode,
     required this.availablePackages,
     required this.availablePackagesData,
   });
+  final String barcode;
   final RxList availablePackages;
   final RxMap availablePackagesData;
 
@@ -140,7 +142,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
                     ),
                   ),
                   child: Image.asset(
-                    availablePackages,
+                    availablePackagesIcon,
                     color: selectedIndex.value == 3 ? null : Colors.grey,
                     height: 24,
                     width: 24,
@@ -229,6 +231,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
               AvailablePackagesScreen(
                 fromHome: false,
                 title: 'Packages for pickup',
+                barcode: widget.barcode,
                 availablePackages: widget.availablePackages,
                 availablePackagesData: widget.availablePackagesData,
               ),

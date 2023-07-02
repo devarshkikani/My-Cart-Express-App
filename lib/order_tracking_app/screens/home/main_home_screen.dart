@@ -115,7 +115,7 @@ class MainHomeScreen extends GetView {
                       ),
                     ),
                     child: Image.asset(
-                      availablePackages,
+                      availablePackagesIcon,
                       color: selectedIndex.value == 3 ? null : Colors.grey,
                       height: 24,
                       width: 24,

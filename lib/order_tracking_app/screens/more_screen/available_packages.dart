@@ -1,12 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'package:badges/badges.dart' as b;
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
+import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
@@ -22,10 +27,12 @@ class AvailablePackagesScreen extends StatefulWidget {
   final RxMap? availablePackagesData;
   final bool fromHome;
   final String? title;
+  final String? barcode;
   const AvailablePackagesScreen({
     super.key,
     required this.fromHome,
     this.title,
+    this.barcode,
     this.availablePackages,
     this.availablePackagesData,
   });
@@ -37,6 +44,7 @@ class AvailablePackagesScreen extends StatefulWidget {
 
 class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   RxBool isLoading = true.obs;
+  RxInt selectedIndex = 1.obs;
   RxList availablePackages = [].obs;
   RxMap availablePackagesData = {}.obs;
   TextEditingController type = TextEditingController();
@@ -45,6 +53,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxList categoriesList = [].obs;
+  CarouselController carouselController = CarouselController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -69,6 +78,30 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
         "counts": response['counts'],
         "due": response['due'],
       };
+    }
+  }
+
+  Future<void> getScanPackages(String barcode, {bool? show}) async {
+    isLoading.value = true;
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.availableShipping,
+      context: context,
+      data: dio.FormData.fromMap({
+        "offset": 0,
+        "limit": 10,
+        "branch_qr_code": barcode,
+        "latitude": currentPosition?.latitude,
+        "longitude": currentPosition?.longitude,
+      }),
+    );
+    isLoading.value = false;
+    if (response != null) {
+      availablePackages.value = response['list'];
+      availablePackagesData.value = {
+        "counts": response['counts'],
+        "due": response['due'],
+      };
+      setState(() {});
     }
   }
 
@@ -130,81 +163,316 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: Get.height,
-        color: primary,
-        child: Column(
-          children: [
-            AppBar(
-              backgroundColor: Colors.transparent,
-              leading: widget.title == 'Packages for pickup'
-                  ? IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: Icon(
-                        Platform.isAndroid
-                            ? Icons.arrow_back_rounded
-                            : Icons.arrow_back_ios_rounded,
-                        color: whiteColor,
-                      ),
-                    )
-                  : const SizedBox(),
-              centerTitle: true,
-              elevation: 0.0,
-              title: Text(
-                'MyCartExpress',
-                style: regularText20.copyWith(
-                  color: whiteColor,
+        body: Container(
+          width: Get.height,
+          color: primary,
+          child: Column(
+            children: [
+              AppBar(
+                backgroundColor: Colors.transparent,
+                leading: const SizedBox(),
+                centerTitle: true,
+                elevation: 0.0,
+                title: Text(
+                  widget.title ?? 'Available Packages',
+                  style: regularText20.copyWith(
+                    color: whiteColor,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  color: offWhite,
-                  borderRadius: BorderRadius.only(
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: offWhite,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: bodyView(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: widget.title == 'Packages for pickup'
+            ? Container(
+                height: 80,
+                padding: const EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                  color: greyColor.withOpacity(0.2),
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
                 ),
-                child: bodyView(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                child: SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.offAll(
+                            () => MainHomeScreen(selectedIndex: 0.obs),
+                          );
+                        },
+                        child: Image.asset(
+                          homeIcon,
+                          color: selectedIndex.value == 0 ? null : Colors.grey,
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.offAll(
+                            () => MainHomeScreen(selectedIndex: 1.obs),
+                          );
+                        },
+                        child: Image.asset(
+                          scannerIcon,
+                          color: selectedIndex.value == 1 ? null : Colors.grey,
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.offAll(
+                            () => MainHomeScreen(selectedIndex: 2.obs),
+                          );
+                        },
+                        child: b.Badge(
+                          showBadge: packageCounts.value > 0,
+                          badgeStyle: const b.BadgeStyle(
+                            shape: b.BadgeShape.instagram,
+                          ),
+                          badgeContent: Text(
+                            '${packageCounts.value}',
+                            style: lightText12.copyWith(
+                              color: whiteColor,
+                            ),
+                          ),
+                          child: Image.asset(
+                            shippingIcon,
+                            color:
+                                selectedIndex.value == 2 ? null : Colors.grey,
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.offAll(
+                            () => MainHomeScreen(selectedIndex: 3.obs),
+                          );
+                        },
+                        child: b.Badge(
+                          showBadge: availablePackageCounts.value > 0,
+                          badgeStyle: const b.BadgeStyle(
+                            shape: b.BadgeShape.instagram,
+                          ),
+                          badgeContent: Text(
+                            '${availablePackageCounts.value}',
+                            style: lightText12.copyWith(
+                              color: whiteColor,
+                            ),
+                          ),
+                          child: Image.asset(
+                            availablePackagesIcon,
+                            color:
+                                selectedIndex.value == 3 ? null : Colors.grey,
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.offAll(
+                            () => MainHomeScreen(selectedIndex: 4.obs),
+                          );
+                        },
+                        child: b.Badge(
+                          showBadge: overduePackageCounts.value > 0,
+                          badgeStyle: const b.BadgeStyle(
+                            shape: b.BadgeShape.instagram,
+                          ),
+                          badgeContent: Text(
+                            '${overduePackageCounts.value}',
+                            style: lightText12.copyWith(
+                              color: whiteColor,
+                            ),
+                          ),
+                          child: Image.asset(
+                            deliveryIcon,
+                            color:
+                                selectedIndex.value == 4 ? null : Colors.grey,
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.offAll(
+                            () => MainHomeScreen(selectedIndex: 5.obs),
+                          );
+                        },
+                        child: Icon(
+                          Icons.more_horiz_rounded,
+                          color:
+                              selectedIndex.value == 5 ? primary : Colors.grey,
+                          size: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : null);
   }
 
   Widget bodyView() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.title ?? 'Available Packages',
-          style: regularText18,
+        height10,
+        Obx(
+          () => imageList.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CarouselSlider.builder(
+                        itemCount: imageList.length,
+                        carouselController: carouselController,
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          padEnds: true,
+                          viewportFraction: 1.0,
+                          height: 200,
+                          autoPlay: imageList.length > 1,
+                          scrollPhysics: imageList.length > 1
+                              ? const AlwaysScrollableScrollPhysics()
+                              : const NeverScrollableScrollPhysics(),
+                          autoPlayInterval: const Duration(seconds: 6),
+                        ),
+                        itemBuilder: (context, i, id) {
+                          return InkWell(
+                            onTap: () {
+                              redirectHome(i);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  imageList[i]['image_url'],
+                                  width: Get.width,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      if (imageList.length > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              height: 200,
+                              width: 100,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      carouselController.previousPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowLeft,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 200,
+                              width: 100,
+                              padding: const EdgeInsets.only(right: 10),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      carouselController.nextPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowRight,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                )
+              : const SizedBox(),
         ),
-        height10,
+        Obx(() => imageList.isNotEmpty ? height10 : const SizedBox()),
         Obx(() => isLoading.value
             ? const SizedBox()
-            : Text(
-                'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts'] ?? 0}',
-                style: regularText14.copyWith(
-                  color: Colors.grey,
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'TOTAL PACKAGES AVAILABLE : ${availablePackagesData['counts'] ?? 0}',
+                  style: regularText12.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
+              )),
+        height5,
+        Obx(() => isLoading.value
+            ? const SizedBox()
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'TOTAL DUE : ${availablePackagesData['due'] ?? 0.00}',
+                  style: regularText12.copyWith(
+                    color: Colors.grey,
+                  ),
                 ),
               )),
         height10,
-        Obx(() => isLoading.value
-            ? const SizedBox()
-            : Text(
-                'TOTAL DUE : ${availablePackagesData['due'] ?? 0.00}',
-                style: regularText14.copyWith(
-                  color: Colors.grey,
-                ),
-              )),
-        height15,
         Expanded(
           child: shippingList(),
         ),
@@ -231,7 +499,11 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                 )
               : RefreshIndicator(
                   onRefresh: () async {
-                    await getAvailablePackages(show: true);
+                    if (widget.title == 'Packages for pickup') {
+                      await getScanPackages(widget.barcode!, show: true);
+                    } else {
+                      await getAvailablePackages(show: true);
+                    }
                   },
                   child: Stack(
                     children: [
@@ -240,7 +512,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                         itemCount: availablePackages.length,
                         padding: EdgeInsets.zero,
                         separatorBuilder: (BuildContext context, int index) =>
-                            height20,
+                            height10,
                         itemBuilder: (BuildContext context, int index) =>
                             InkWell(
                           onTap: () {
@@ -252,6 +524,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                             );
                           },
                           child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 15),
                             decoration: BoxDecoration(
                               color: availablePackages[index]['status'] ==
                                       'Available for Pickup'
@@ -270,7 +543,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                             child: Column(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: const BoxDecoration(
                                     color: greyColor,
                                     borderRadius: BorderRadius.only(
@@ -291,6 +564,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                               const Icon(
                                                 Icons.check_circle,
                                                 color: primary,
+                                                size: 20,
                                               ),
                                               width5,
                                               Text(
@@ -329,7 +603,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                 ),
                                 Container(
                                   color: greyColor.withOpacity(0.2),
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(8),
                                   child: Row(
                                     children: [
                                       width20,
@@ -357,23 +631,22 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                             Text(
                                               availablePackages[index]
                                                   ['pkg_shipging_code'],
-                                              style: regularText14.copyWith(
+                                              style: regularText12.copyWith(
                                                 color: primary,
                                               ),
                                             ),
-                                            height10,
+                                            height5,
                                             Column(
                                               children: [
                                                 Text(
                                                   availablePackages[index]
                                                       ['tracking'],
                                                   // overflow: TextOverflow.ellipsis,
-                                                  style:
-                                                      regularText14.copyWith(),
+                                                  style: regularText12,
                                                 ),
                                               ],
                                             ),
-                                            height10,
+                                            height5,
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -389,7 +662,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                                 const Icon(
                                                   Icons
                                                       .arrow_forward_ios_rounded,
-                                                  size: 14,
+                                                  size: 12,
                                                 ),
                                               ],
                                             ),
@@ -406,7 +679,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                     children: [
                                       Expanded(
                                         child: Container(
-                                          padding: const EdgeInsets.all(12),
+                                          padding: const EdgeInsets.all(8),
                                           decoration: const BoxDecoration(
                                             color: greyColor,
                                             borderRadius: BorderRadius.only(
@@ -439,7 +712,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                                 }
                                               : null,
                                           child: Container(
-                                            padding: const EdgeInsets.all(12),
+                                            padding: const EdgeInsets.all(8),
                                             decoration: BoxDecoration(
                                               color: availablePackages[index][
                                                           'upload_attachment_flag'] ==

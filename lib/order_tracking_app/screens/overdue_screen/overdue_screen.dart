@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/packages_details_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
@@ -34,6 +36,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
   RxString fileName = ''.obs;
   RxList categoriesList = [].obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  CarouselController carouselController = CarouselController();
 
   RxMap duePackagesData = {}.obs;
   @override
@@ -120,7 +123,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                 centerTitle: true,
                 elevation: 0.0,
                 title: Text(
-                  'MyCartExpress',
+                  'Overdue Packages',
                   style: regularText20.copyWith(
                     color: whiteColor,
                   ),
@@ -128,7 +131,6 @@ class _OverdueScreenState extends State<OverdueScreen> {
               ),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(15),
                   decoration: const BoxDecoration(
                     color: offWhite,
                     borderRadius: BorderRadius.only(
@@ -150,18 +152,127 @@ class _OverdueScreenState extends State<OverdueScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Overdue Packages',
-          style: regularText18,
-        ),
         height10,
+        Obx(
+          () => imageList.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CarouselSlider.builder(
+                        itemCount: imageList.length,
+                        carouselController: carouselController,
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          padEnds: true,
+                          viewportFraction: 1.0,
+                          height: 200,
+                          autoPlay: imageList.length > 1,
+                          scrollPhysics: imageList.length > 1
+                              ? const AlwaysScrollableScrollPhysics()
+                              : const NeverScrollableScrollPhysics(),
+                          autoPlayInterval: const Duration(seconds: 6),
+                        ),
+                        itemBuilder: (context, i, id) {
+                          return InkWell(
+                            onTap: () {
+                              redirectHome(i);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  imageList[i]['image_url'],
+                                  width: Get.width,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      if (imageList.length > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              height: 200,
+                              width: 100,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      carouselController.previousPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowLeft,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 200,
+                              width: 100,
+                              padding: const EdgeInsets.only(right: 10),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      carouselController.nextPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowRight,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                )
+              : const SizedBox(),
+        ),
+        Obx(() => imageList.isNotEmpty ? height10 : const SizedBox()),
         Obx(
           () => isLoading.value
               ? const SizedBox()
-              : Text(
-                  'TOTAL PACKAGES AVAILABLE : ${duePackagesData['counts'] ?? 0}',
-                  style: regularText14.copyWith(
-                    color: Colors.grey,
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'TOTAL PACKAGES AVAILABLE : ${duePackagesData['counts'] ?? 0}',
+                    style: regularText12.copyWith(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
         ),
@@ -169,14 +280,17 @@ class _OverdueScreenState extends State<OverdueScreen> {
         Obx(
           () => isLoading.value
               ? const SizedBox()
-              : Text(
-                  'TOTAL DUE : ${duePackagesData['storage'] ?? 0.00}',
-                  style: regularText14.copyWith(
-                    color: Colors.grey,
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'TOTAL DUE : ${duePackagesData['storage'] ?? 0.00}',
+                    style: regularText12.copyWith(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
         ),
-        height25,
+        height10,
         Expanded(child: duePackagesView()),
       ],
     );
@@ -203,7 +317,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                   itemCount: duePackages.length,
                   padding: EdgeInsets.zero,
                   separatorBuilder: (BuildContext context, int index) =>
-                      height20,
+                      height10,
                   itemBuilder: (BuildContext context, int index) => InkWell(
                     onTap: () {
                       Get.to(() => MyPackagesDetailsScreen(
@@ -212,6 +326,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                           ));
                     },
                     child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: duePackages[index]['status'] ==
                                 'Available for Pickup'
@@ -230,7 +345,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: primary.withOpacity(0.2),
                               borderRadius: const BorderRadius.only(
@@ -251,6 +366,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                         const Icon(
                                           Icons.check_circle,
                                           color: primary,
+                                          size: 20,
                                         ),
                                         width5,
                                         Text(
@@ -287,7 +403,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                           ),
                           Container(
                             color: greyColor.withOpacity(0.2),
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(8),
                             child: Row(
                               children: [
                                 width20,
@@ -312,21 +428,21 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                     children: [
                                       Text(
                                         duePackages[index]['pkg_shipging_code'],
-                                        style: regularText14.copyWith(
+                                        style: regularText12.copyWith(
                                           color: primary,
                                         ),
                                       ),
-                                      height10,
+                                      height5,
                                       Column(
                                         children: [
                                           Text(
                                             duePackages[index]['tracking'],
                                             // overflow: TextOverflow.ellipsis,
-                                            style: regularText14.copyWith(),
+                                            style: regularText12.copyWith(),
                                           ),
                                         ],
                                       ),
-                                      height10,
+                                      height5,
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -338,7 +454,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                           ),
                                           const Icon(
                                             Icons.arrow_forward_ios_rounded,
-                                            size: 14,
+                                            size: 12,
                                           ),
                                         ],
                                       ),
@@ -354,7 +470,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                               children: [
                                 Expanded(
                                   child: Container(
-                                    padding: const EdgeInsets.all(12),
+                                    padding: const EdgeInsets.all(8),
                                     decoration: const BoxDecoration(
                                       color: greyColor,
                                       borderRadius: BorderRadius.only(
@@ -386,7 +502,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                           }
                                         : null,
                                     child: Container(
-                                      padding: const EdgeInsets.all(12),
+                                      padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
                                         color: duePackages[index][
                                                     'upload_attachment_flag'] ==

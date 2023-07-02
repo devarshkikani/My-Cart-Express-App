@@ -108,20 +108,20 @@ class HomeScreen extends StatelessWidget {
     return Column(
       children: [
         Obx(
-          () => _.imageList.isNotEmpty
+          () => imageList.isNotEmpty
               ? Stack(
                   alignment: Alignment.center,
                   children: [
                     CarouselSlider.builder(
-                      itemCount: _.imageList.length,
+                      itemCount: imageList.length,
                       carouselController: _.carouselController,
                       options: CarouselOptions(
                         enlargeCenterPage: true,
                         padEnds: true,
                         viewportFraction: 1.0,
                         height: 200,
-                        autoPlay: _.imageList.length > 1,
-                        scrollPhysics: _.imageList.length > 1
+                        autoPlay: imageList.length > 1,
+                        scrollPhysics: imageList.length > 1
                             ? const AlwaysScrollableScrollPhysics()
                             : const NeverScrollableScrollPhysics(),
                         autoPlayInterval: const Duration(seconds: 6),
@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                       itemBuilder: (context, i, id) {
                         return InkWell(
                           onTap: () {
-                            _.redirectHome(i);
+                            redirectHome(i);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -141,7 +141,7 @@ class HomeScreen extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
-                                _.imageList[i]['image_url'],
+                                imageList[i]['image_url'],
                                 width: Get.width,
                                 fit: BoxFit.cover,
                               ),
@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    if (_.imageList.length > 1)
+                    if (imageList.length > 1)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -213,7 +213,7 @@ class HomeScreen extends StatelessWidget {
                 )
               : const SizedBox(),
         ),
-        Obx(() => _.imageList.isNotEmpty ? height15 : const SizedBox()),
+        Obx(() => imageList.isNotEmpty ? height15 : const SizedBox()),
         balanceView(_),
         height15,
         detailsView(_, context),

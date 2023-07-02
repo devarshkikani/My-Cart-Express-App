@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -36,6 +38,8 @@ class MoreScreen extends StatefulWidget {
 }
 
 class MoreScreenState extends State<MoreScreen> {
+  CarouselController carouselController = CarouselController();
+
   GetStorage box = GetStorage();
   static RxMap userDetails = {}.obs;
   final ImagePicker picker = ImagePicker();
@@ -50,7 +54,7 @@ class MoreScreenState extends State<MoreScreen> {
     'Auth Pickup',
   ];
 
-  final List imageList = [
+  final List iconList = [
     calcultorIcon,
     transactionIcon,
     faqsIcon,
@@ -184,7 +188,7 @@ class MoreScreenState extends State<MoreScreen> {
                 centerTitle: true,
                 elevation: 0.0,
                 title: Text(
-                  'MyCartExpress',
+                  'My Account',
                   style: regularText20.copyWith(
                     color: whiteColor,
                   ),
@@ -233,32 +237,120 @@ class MoreScreenState extends State<MoreScreen> {
   }
 
   Widget bodyView(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              'My Account',
-              style: regularText18,
-            ),
-            const Spacer(),
-            GestureDetector(
-              onTap: () {
-                showThreeDotDialog(context);
-              },
-              child: const Icon(
-                Icons.more_vert_outlined,
-              ),
-            ),
-            width15,
-          ],
-        ),
-        height20,
-        profileView(),
-        Expanded(
-          child: categoryView(),
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Obx(
+            () => imageList.isNotEmpty
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CarouselSlider.builder(
+                        itemCount: imageList.length,
+                        carouselController: carouselController,
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          padEnds: true,
+                          viewportFraction: 1.0,
+                          height: 200,
+                          autoPlay: imageList.length > 1,
+                          scrollPhysics: imageList.length > 1
+                              ? const AlwaysScrollableScrollPhysics()
+                              : const NeverScrollableScrollPhysics(),
+                          autoPlayInterval: const Duration(seconds: 6),
+                        ),
+                        itemBuilder: (context, i, id) {
+                          return InkWell(
+                            onTap: () {
+                              redirectHome(i);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  imageList[i]['image_url'],
+                                  width: Get.width,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      if (imageList.length > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              height: 200,
+                              width: 100,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      carouselController.previousPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowLeft,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 200,
+                              width: 100,
+                              padding: const EdgeInsets.only(right: 10),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      carouselController.nextPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowRight,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  )
+                : const SizedBox(),
+          ),
+          Obx(() => imageList.isNotEmpty ? height10 : const SizedBox()),
+          profileView(),
+          categoryView(),
+        ],
+      ),
     );
   }
 
@@ -324,14 +416,15 @@ class MoreScreenState extends State<MoreScreen> {
               ),
             ),
           height10,
-          Text(
-            userDetails.isEmpty ? '' : userDetails['name'].toString(),
-            style: regularText18.copyWith(
-              color: blackColor,
-              letterSpacing: 0.3,
+          if (userDetails.isNotEmpty)
+            Text(
+              userDetails['name'].toString(),
+              style: regularText18.copyWith(
+                color: blackColor,
+                letterSpacing: 0.3,
+              ),
             ),
-          ),
-          height5,
+          if (userDetails.isNotEmpty) height5,
           Text(
             'User Code : ${userDetails.isEmpty ? '' : userDetails['mce_number'] ?? ''}',
             style: lightText16,
@@ -365,6 +458,8 @@ class MoreScreenState extends State<MoreScreen> {
     return GridView.builder(
       itemCount: categoryList.length,
       padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1,
@@ -393,7 +488,7 @@ class MoreScreenState extends State<MoreScreen> {
             child: Column(
               children: [
                 Image.asset(
-                  imageList[index],
+                  iconList[index],
                   height: 40,
                   width: 40,
                 ),

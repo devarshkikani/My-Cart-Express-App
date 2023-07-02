@@ -1,7 +1,7 @@
 const String addIcon = 'assets/images/add_icon.png';
 const String appLogo = 'assets/images/app_logo.png';
 const String scannerIcon = 'assets/images/scanner_icon.png';
-const String availablePackages = 'assets/images/available_packages.png';
+const String availablePackagesIcon = 'assets/images/available_packages.png';
 const String calcultorIcon = 'assets/images/calcultor_icon.png';
 const String deliveryIcon = 'assets/images/delivery_icon.png';
 const String dummyProfileImage = 'assets/images/dummy_profile.png';

@@ -126,10 +126,13 @@ class _ScannerScreenState extends State<ScannerScreen> {
         "counts": response['counts'],
         "due": response['due'],
       };
-      Get.to(ScanSuccessScreen(
-        availablePackages: availablePackages,
-        availablePackagesData: availablePackagesData,
-      ));
+      Get.to(
+        ScanSuccessScreen(
+          barcode: barcode,
+          availablePackages: availablePackages,
+          availablePackagesData: availablePackagesData,
+        ),
+      );
     }
   }
 
