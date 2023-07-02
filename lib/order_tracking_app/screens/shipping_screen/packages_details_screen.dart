@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
+import 'package:my_cart_express/order_tracking_app/models/package_model_detail.dart';
 import 'package:timelines/timelines.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -37,6 +38,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxList categoriesList = [].obs;
+  PackageDetailModel? packageDetailModel;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -44,13 +46,14 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
     getTrackingDetails();
   }
 
-  getTrackingDetails() async {
+  getTrackingDetails({bool? notshow}) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint +
             ApiEndPoints.shippingTracking +
             widget.packagesDetails[widget.isFromAll ? 'package_id' : 'pkg_id'],
-        context: context);
+        context: notshow == true ? null : context);
     if (response != null) {
+      packageDetailModel = PackageDetailModel.fromJson(response);
       getCategoriesList();
       for (int i = 0; i < response['package_tracking'].length; i++) {
         timeline.add(response['package_tracking'][i]['package_status']);
@@ -107,7 +110,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: Get.height,
+        // width: Get.height,
         color: primary,
         child: Column(
           children: [
@@ -130,6 +133,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
             ),
             Expanded(
               child: Container(
+                height: Get.height,
                 padding: const EdgeInsets.all(15),
                 decoration: const BoxDecoration(
                   color: offWhite,
@@ -148,297 +152,374 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   }
 
   Widget bodyView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.10),
-                offset: const Offset(0.0, 2.0),
-                spreadRadius: 1,
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  color: greyColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await getTrackingDetails(notshow: true);
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(.10),
+                    offset: const Offset(0.0, 2.0),
+                    spreadRadius: 1,
+                    blurRadius: 5,
                   ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        widget.packagesDetails['status'],
-                        style: regularText14.copyWith(
-                          color: primary,
-                        ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                      color: greyColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
                       ),
-                      const VerticalDivider(
-                        color: primary,
-                      ),
-                      Row(
+                    ),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            '${widget.packagesDetails[widget.isFromAll ? 'flight_eta_status' : 'ontime_text']} : ',
+                            packageDetailModel?.data.status ?? '',
                             style: regularText14.copyWith(
-                              color: success,
-                            ),
-                          ),
-                          Text(
-                            widget.packagesDetails[widget.isFromAll
-                                ? 'flight_eta_date'
-                                : 'ontime_eta'],
-                            style: const TextStyle(
                               color: primary,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  color: offWhite,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        width10,
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                            height: 60,
-                            width: 60,
-                            child: Image.network(
-                              widget.packagesDetails['package_image'],
-                              fit: BoxFit.cover,
-                            ),
+                          const VerticalDivider(
+                            color: primary,
                           ),
-                        ),
-                        width20,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
                               Text(
-                                '''Package #: ${widget.packagesDetails[widget.isFromAll ? 'shipping_mcecode' : 'pkg_shipging_code']}''',
+                                packageDetailModel?.data.flightEtaStatus ?? '',
                                 style: regularText14.copyWith(
+                                  color: success,
+                                ),
+                              ),
+                              Text(
+                                widget.packagesDetails[widget.isFromAll
+                                    ? 'flight_eta_date'
+                                    : 'ontime_eta'],
+                                style: const TextStyle(
                                   color: primary,
                                 ),
                               ),
-                              height10,
-                              Text(
-                                '''Tracking #: ${widget.packagesDetails['tracking'] ?? ''}''',
-                                // overflow: TextOverflow.ellipsis,
-                                style: regularText14.copyWith(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              height10,
-                              Text(
-                                '''Weight: ${widget.packagesDetails['weight_label'] ?? '00LB'}''',
-                                overflow: TextOverflow.ellipsis,
-                                style: regularText14.copyWith(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              if (widget.packagesDetails['status_id'] == '6')
-                                height10,
-                              if (widget.packagesDetails['status_id'] == '6')
-                                Text(
-                                  '''Storage days: ${widget.packagesDetails['storage_days'] ?? 0}''',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: regularText14.copyWith(
-                                    color: Colors.grey,
-                                  ),
-                                ),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: offWhite,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            width10,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                height: 60,
+                                width: 60,
+                                child: Image.network(
+                                  widget.packagesDetails['package_image'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            width20,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '''Package #: ${widget.packagesDetails[widget.isFromAll ? 'shipping_mcecode' : 'pkg_shipging_code']}''',
+                                    style: regularText14.copyWith(
+                                      color: primary,
+                                    ),
+                                  ),
+                                  height10,
+                                  Text(
+                                    '''Tracking #: ${widget.packagesDetails['tracking'] ?? ''}''',
+                                    // overflow: TextOverflow.ellipsis,
+                                    style: regularText14.copyWith(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  height10,
+                                  Text(
+                                    '''Weight: ${widget.packagesDetails['weight_label'] ?? '00LB'}''',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: regularText14.copyWith(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  if (widget.packagesDetails['status_id'] ==
+                                      '6')
+                                    height10,
+                                  if (widget.packagesDetails['status_id'] ==
+                                      '6')
+                                    Text(
+                                      '''Storage days: ${packageDetailModel?.data.storageDays ?? 0}''',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: regularText14.copyWith(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (widget.packagesDetails['status_id'] == '6' ||
-            widget.packagesDetails['status_id'] == '19')
-          Column(
-            children: [
-              height25,
-              Container(
-                width: Get.width,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: greyColor,
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '''Declared Value: \n\$${widget.packagesDetails['value_cost'] ?? 0.00} USD''',
-                      overflow: TextOverflow.ellipsis,
-                      style: regularText18.copyWith(
-                        color: primary,
+                ],
+              ),
+            ),
+            if (widget.packagesDetails['status_id'] == '6' ||
+                widget.packagesDetails['status_id'] == '19')
+              Column(
+                children: [
+                  height25,
+                  Container(
+                    width: Get.width,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: greyColor,
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: GestureDetector(
-                        onTap:
-                            widget.packagesDetails['upload_attachment_flag'] ==
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '''Declared Value: \n\$${widget.packagesDetails['value_cost'] ?? 0.00} USD''',
+                          overflow: TextOverflow.ellipsis,
+                          style: regularText18.copyWith(
+                            color: primary,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: GestureDetector(
+                            onTap: widget.packagesDetails[
+                                        'upload_attachment_flag'] ==
                                     1
                                 ? () {
                                     uploadInvoice(
                                         widget.packagesDetails['package_id']);
                                   }
                                 : null,
-                        child: Container(
-                          width: 200,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: widget.packagesDetails[
-                                        'upload_attachment_flag'] ==
-                                    1
-                                ? orangeColor
-                                : primary,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                widget.packagesDetails['invoice_type_label'] ??
-                                    'Invoice Uploaded',
-                                style: lightText12.copyWith(
-                                  color: whiteColor,
+                            child: Container(
+                              width: 200,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: widget.packagesDetails[
+                                            'upload_attachment_flag'] ==
+                                        1
+                                    ? orangeColor
+                                    : primary,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10),
                                 ),
                               ),
-                              width10,
-                              widget.packagesDetails[
-                                          'upload_attachment_flag'] ==
-                                      1
-                                  ? Image.asset(
-                                      addIcon,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    widget.packagesDetails[
+                                            'invoice_type_label'] ??
+                                        'Invoice Uploaded',
+                                    style: lightText12.copyWith(
                                       color: whiteColor,
-                                      height: 14,
-                                      width: 14,
-                                    )
-                                  : const SizedBox(),
-                            ],
+                                    ),
+                                  ),
+                                  width10,
+                                  widget.packagesDetails[
+                                              'upload_attachment_flag'] ==
+                                          1
+                                      ? Image.asset(
+                                          addIcon,
+                                          color: whiteColor,
+                                          height: 14,
+                                          width: 14,
+                                        )
+                                      : const SizedBox(),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
+                        )
+                      ],
+                    ),
+                  ),
+                  height10,
+                  Container(
+                    width: Get.width,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (packageDetailModel?.data.freightCharges != '0.00')
+                          Text(
+                            '''Freight Charges : \$${packageDetailModel?.data.freightCharges ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.inlandCharges != '0.00')
+                          height10,
+                        if (packageDetailModel?.data.inlandCharges != '0.00')
+                          Text(
+                            '''Inland Charges : \$${packageDetailModel?.data.inlandCharges ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.storageFee != '0.00')
+                          height10,
+                        if (packageDetailModel?.data.storageFee != '0.00')
+                          Text(
+                            '''Storage Fee : \$${packageDetailModel?.data.storageFee ?? 0.00} (${packageDetailModel?.data.storageDays ?? 0} day)''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.processingFee != '0.00')
+                          height10,
+                        if (packageDetailModel?.data.processingFee != '0.00')
+                          Text(
+                            '''Processing Fee : \$${packageDetailModel?.data.processingFee ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.tax != '0.00') height10,
+                        if (packageDetailModel?.data.tax != '0.00')
+                          Text(
+                            '''Tax : \$${packageDetailModel?.data.tax ?? 0.00} (${packageDetailModel?.data.gctTaxPercentage ?? 0.00}%)''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.dutyTax != '0.00')
+                          height10,
+                        if (packageDetailModel?.data.dutyTax != '0.00')
+                          Text(
+                            '''Duty Tax : \$${packageDetailModel?.data.dutyTax ?? 0.00} (${packageDetailModel?.data.dutyTaxPercentage ?? 0.00}%)''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.deliveryCost != '0.00')
+                          height10,
+                        if (packageDetailModel?.data.deliveryCost != '0.00')
+                          Text(
+                            '''Delivery Cost : \$${packageDetailModel?.data.deliveryCost ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.gct != '0.00') height10,
+                        if (packageDetailModel?.data.gct != '0.00')
+                          Text(
+                            '''GCT : \$${packageDetailModel?.data.gct ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.thirdPartyDeliveryCost !=
+                            '0.00')
+                          height10,
+                        if (packageDetailModel?.data.thirdPartyDeliveryCost !=
+                            '0.00')
+                          Text(
+                            '''Third Party Delivery Cost : \$${packageDetailModel?.data.thirdPartyDeliveryCost ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                        if (packageDetailModel?.data.badAddressFee != '0.00')
+                          height10,
+                        if (packageDetailModel?.data.badAddressFee != '0.00')
+                          Text(
+                            '''Bad Address Fee : \$${packageDetailModel?.data.badAddressFee ?? 0.00}''',
+                            overflow: TextOverflow.ellipsis,
+                            style: lightText14,
+                          ),
+                      ],
+                    ),
+                  ),
+                  height10,
+                  Container(
+                    width: Get.width,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: greyColor,
                       ),
-                    )
-                  ],
-                ),
-              ),
-              height10,
-              Container(
-                width: Get.width,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '''Freight Charges: \$${widget.packagesDetails['freight_cost'] ?? 0.00} JMD''',
-                      overflow: TextOverflow.ellipsis,
-                      style: lightText14,
                     ),
-                    height10,
-                    Text(
-                      '''Processing Fee: ${widget.packagesDetails['processing_fee'] ?? 0.00} JMD''',
+                    child: Text(
+                      '''Estimated Total Due: \n\$${packageDetailModel?.data.amountDue ?? 0.00} JMD''',
                       overflow: TextOverflow.ellipsis,
-                      style: lightText14,
+                      style: regularText18.copyWith(
+                        color: primary,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              height10,
-              Container(
-                width: Get.width,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: greyColor,
-                  ),
-                ),
-                child: Text(
-                  '''Estimated Total Due: \n\$${widget.packagesDetails['amount'] ?? 0.00} JMD''',
-                  overflow: TextOverflow.ellipsis,
-                  style: regularText18.copyWith(
-                    color: primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        height25,
-        Text(
-          'Timeline',
-          style: regularText16,
-        ),
-        height25,
-        Expanded(
-          child: Timeline.tileBuilder(
-            padding: EdgeInsets.zero,
-            theme: TimelineThemeData(nodePosition: 0.25),
-            builder: TimelineTileBuilder.fromStyle(
-              itemCount: timeline.length,
-              contentsAlign: ContentsAlign.basic,
-              oppositeContentsBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(dateTimeline[index]),
-                );
-              },
-              contentsBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    timeline[index],
-                  ),
-                );
-              },
+            height25,
+            Text(
+              'Timeline',
+              style: regularText16,
             ),
-          ),
-        )
-      ],
+            height25,
+            Timeline.tileBuilder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              theme: TimelineThemeData(nodePosition: 0.25),
+              physics: const NeverScrollableScrollPhysics(),
+              builder: TimelineTileBuilder.fromStyle(
+                itemCount: timeline.length,
+                contentsAlign: ContentsAlign.basic,
+                oppositeContentsBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(dateTimeline[index]),
+                  );
+                },
+                contentsBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      timeline[index],
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
