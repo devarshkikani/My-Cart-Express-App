@@ -152,7 +152,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        height10,
+        height15,
         Obx(
           () => imageList.isNotEmpty
               ? Padding(
