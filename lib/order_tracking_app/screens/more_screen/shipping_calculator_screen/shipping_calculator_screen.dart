@@ -186,7 +186,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
           child: Row(
             children: [
               Text(
-                'Estimated Total Due : ',
+                'Estimated STORAGE CHARGES : ',
                 style: regularText16.copyWith(
                   color: primary,
                 ),

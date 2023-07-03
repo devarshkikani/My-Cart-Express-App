@@ -283,7 +283,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    'TOTAL DUE : ${duePackagesData['storage'] ?? 0.00}',
+                    'STORAGE CHARGES : ${duePackagesData['storage'] ?? 0.00}',
                     style: regularText12.copyWith(
                       color: Colors.grey,
                     ),
