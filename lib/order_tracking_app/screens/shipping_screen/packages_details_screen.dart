@@ -478,7 +478,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                       ),
                     ),
                     child: Text(
-                      '''Estimated STORAGE CHARGES: \n\$${packageDetailModel?.data.amountDue ?? 0.00} JMD''',
+                      '''Estimated Storage Charges : \n\$${packageDetailModel?.data.amountDue ?? 0.00} JMD''',
                       overflow: TextOverflow.ellipsis,
                       style: regularText18.copyWith(
                         color: primary,
