@@ -1,10 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -24,6 +27,8 @@ class ScannerScreen extends StatefulWidget {
 Position? currentPosition;
 
 class _ScannerScreenState extends State<ScannerScreen> {
+  CarouselController carouselController = CarouselController();
+
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   RxBool isAPICalling = false.obs;
@@ -156,7 +161,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                 centerTitle: true,
                 elevation: 0.0,
                 title: const Text(
-                  'MyCartExpress',
+                  'Store Check In',
                 ),
               ),
               Expanded(
@@ -182,15 +187,113 @@ class _ScannerScreenState extends State<ScannerScreen> {
   Widget bodyView() {
     return Column(
       children: [
-        Row(
-          children: [
-            Text(
-              'Store Check In',
-              style: regularText18,
-            ),
-          ],
+        Obx(
+          () => imageList.isNotEmpty
+              ? Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CarouselSlider.builder(
+                      itemCount: imageList.length,
+                      carouselController: carouselController,
+                      options: CarouselOptions(
+                        enlargeCenterPage: true,
+                        padEnds: true,
+                        viewportFraction: 1.0,
+                        height: 200,
+                        autoPlay: imageList.length > 1,
+                        scrollPhysics: imageList.length > 1
+                            ? const AlwaysScrollableScrollPhysics()
+                            : const NeverScrollableScrollPhysics(),
+                        autoPlayInterval: const Duration(seconds: 6),
+                      ),
+                      itemBuilder: (context, i, id) {
+                        return InkWell(
+                          onTap: () {
+                            redirectHome(i);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.network(
+                                imageList[i]['image_url'],
+                                width: Get.width,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    if (imageList.length > 1)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            height: 200,
+                            width: 100,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                topLeft: Radius.circular(15),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    carouselController.previousPage();
+                                  },
+                                  child: Image.asset(
+                                    arrowLeft,
+                                    height: 24,
+                                    width: 24,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 200,
+                            width: 100,
+                            padding: const EdgeInsets.only(right: 10),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    carouselController.nextPage();
+                                  },
+                                  child: Image.asset(
+                                    arrowRight,
+                                    height: 24,
+                                    width: 24,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                )
+              : const SizedBox(),
         ),
-        height10,
+        Obx(() => imageList.isNotEmpty ? height10 : const SizedBox()),
         Text(
           'In Store?',
           style: lightText14.copyWith(
@@ -217,15 +320,15 @@ class _ScannerScreenState extends State<ScannerScreen> {
             onQRViewCreated: _onQRViewCreated,
           ),
         ),
-        height10,
-        const Icon(Icons.arrow_drop_up_rounded),
-        height5,
-        Text(
-          'Scan QR code to check in',
-          style: regularText14.copyWith(
-            color: primary,
-          ),
-        ),
+        // height10,
+        // const Icon(Icons.arrow_drop_up_rounded),
+        // height5,
+        // Text(
+        //   'Scan QR code to check in',
+        //   style: regularText14.copyWith(
+        //     color: primary,
+        //   ),
+        // ),
       ],
     );
   }
