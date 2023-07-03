@@ -185,7 +185,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ),
             height5,
             Text(
-              'Membership type : ${userDetails.isEmpty ? '' : userDetails['price_group_name'] ?? ''}',
+              'Membership Type : ${userDetails.isEmpty ? '' : userDetails['price_group_name'] ?? ''}',
               style: lightText16,
             ),
             height5,

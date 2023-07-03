@@ -139,7 +139,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           ),
           height5,
           Text(
-            'Membership type : ${userDetails.isEmpty ? '' : userDetails['price_group_name'] ?? ''}',
+            'Membership Type : ${userDetails.isEmpty ? '' : userDetails['price_group_name'] ?? ''}',
             style: lightText16,
           ),
           height5,
