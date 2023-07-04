@@ -29,6 +29,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
   RxString searchData = ''.obs;
   RxBool isLoading = true.obs;
   RxInt offSet = 0.obs;
+  RxInt selectedIndex = 0.obs;
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
   File? selectedFile;
@@ -59,15 +60,25 @@ class _ShippingScreenState extends State<ShippingScreen> {
     }
   }
 
-  Future<void> getShippments(String? value) async {
+  Future<void> getShippments(
+    String? value, {
+    bool? forceAssign,
+  }) async {
+    if (forceAssign == true) {
+      offSet.value = 0;
+    }
     final data = dio.FormData.fromMap({
       'search_text': value,
       'offset': value == null ? offSet.value : 0,
+      'invoice_nedded': selectedIndex.value == 1 ? 1 : 0,
+      'in_transit': selectedIndex.value == 2 ? 1 : 0,
+      'is_collected': selectedIndex.value == 3 ? 1 : 0,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingList,
         context: context,
         data: data);
+
     if (response != null) {
       isLoading.value = false;
       if (shippmentsList.isEmpty) {
@@ -78,6 +89,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
         for (var i = 0; i < response['list'].length; i++) {
           shippmentsList.add(response['list'][i]);
         }
+      }
+      if (forceAssign == true) {
+        shippmentsList.value = response['list'];
       }
       offSet.value = response['offset'];
     }
@@ -204,6 +218,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
           ],
         ),
         height15,
+        buttonListWidget(),
+        height15,
         Expanded(
           child: Obx(() {
             return isLoading.value
@@ -221,6 +237,90 @@ class _ShippingScreenState extends State<ShippingScreen> {
           }),
         ),
       ],
+    );
+  }
+
+  Widget buttonListWidget() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Obx(
+              () => filterButton(
+                bgcolor: selectedIndex.value == 0 ? primary : Colors.grey,
+                name: 'All',
+                onTap: () async {
+                  selectedIndex.value = 0;
+                  await getShippments(null, forceAssign: true);
+                },
+              ),
+            ),
+            width15,
+            Obx(
+              () => filterButton(
+                bgcolor: selectedIndex.value == 1 ? primary : Colors.grey,
+                name: 'Invoice Nedded',
+                onTap: () async {
+                  selectedIndex.value = 1;
+                  await getShippments(null, forceAssign: true);
+                },
+              ),
+            ),
+          ],
+        ),
+        height5,
+        Row(
+          children: [
+            Obx(
+              () => filterButton(
+                bgcolor: selectedIndex.value == 2 ? primary : Colors.grey,
+                name: 'In Transit',
+                onTap: () async {
+                  selectedIndex.value = 2;
+                  await getShippments(null, forceAssign: true);
+                },
+              ),
+            ),
+            width15,
+            Obx(
+              () => filterButton(
+                bgcolor: selectedIndex.value == 3 ? primary : Colors.grey,
+                name: 'Collected',
+                onTap: () async {
+                  selectedIndex.value = 3;
+                  await getShippments(null, forceAssign: true);
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget filterButton({
+    required String name,
+    required Color bgcolor,
+    required Function() onTap,
+  }) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgcolor,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
+        ),
+        onPressed: onTap,
+        child: Text(
+          name,
+          style: const TextStyle(
+            letterSpacing: 0.5,
+            color: whiteColor,
+          ),
+        ),
+      ),
     );
   }
 

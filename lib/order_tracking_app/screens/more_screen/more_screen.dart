@@ -213,7 +213,16 @@ class MoreScreenState extends State<MoreScreen> {
                       color: whiteColor,
                     ),
                   ),
-                  width15,
+                  width5,
+                  GestureDetector(
+                    onTap: () {
+                      showThreeDotDialog(context);
+                    },
+                    child: const Icon(
+                      Icons.more_vert_outlined,
+                    ),
+                  ),
+                  width5,
                 ],
               ),
               Expanded(
