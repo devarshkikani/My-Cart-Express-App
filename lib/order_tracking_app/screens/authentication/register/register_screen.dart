@@ -446,7 +446,7 @@ class RegisterScreen extends GetView<RegisterController> {
                     controller.branchName.text =
                         '${controller.branchesList[value].parishname} - ${controller.branchesList[value].code}';
                     controller.branchId.value =
-                        controller.branchesList[value].branchId;
+                        controller.branchesList[value].branchId ?? '0';
                   },
                   children: List.generate(
                     controller.branchesList.length,

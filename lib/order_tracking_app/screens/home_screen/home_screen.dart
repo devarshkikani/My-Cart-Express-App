@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,121 +107,123 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget bodyView(HomeScreenController _, BuildContext context) {
-    return Column(
-      children: [
-        Obx(
-          () => imageList.isNotEmpty
-              ? Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CarouselSlider.builder(
-                      itemCount: imageList.length,
-                      carouselController: _.carouselController,
-                      options: CarouselOptions(
-                        enlargeCenterPage: true,
-                        padEnds: true,
-                        viewportFraction: 1.0,
-                        height: 200,
-                        autoPlay: imageList.length > 1,
-                        scrollPhysics: imageList.length > 1
-                            ? const AlwaysScrollableScrollPhysics()
-                            : const NeverScrollableScrollPhysics(),
-                        autoPlayInterval: const Duration(seconds: 6),
-                      ),
-                      itemBuilder: (context, i, id) {
-                        return InkWell(
-                          onTap: () {
-                            redirectHome(i);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.white,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.network(
-                                imageList[i]['image_url'],
-                                width: Get.width,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    if (imageList.length > 1)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 10),
-                            height: 200,
-                            width: 100,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(15),
-                                topLeft: Radius.circular(15),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    _.carouselController.previousPage();
-                                  },
-                                  child: Image.asset(
-                                    arrowLeft,
-                                    height: 24,
-                                    width: 24,
-                                    color: whiteColor,
-                                  ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Obx(
+            () => imageList.isNotEmpty
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CarouselSlider.builder(
+                        itemCount: imageList.length,
+                        carouselController: _.carouselController,
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          padEnds: true,
+                          viewportFraction: 1.0,
+                          height: 200,
+                          autoPlay: imageList.length > 1,
+                          scrollPhysics: imageList.length > 1
+                              ? const AlwaysScrollableScrollPhysics()
+                              : const NeverScrollableScrollPhysics(),
+                          autoPlayInterval: const Duration(seconds: 6),
+                        ),
+                        itemBuilder: (context, i, id) {
+                          return InkWell(
+                            onTap: () {
+                              redirectHome(i);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.white,
                                 ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 200,
-                            width: 100,
-                            padding: const EdgeInsets.only(right: 10),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(15),
-                                topRight: Radius.circular(15),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  imageList[i]['image_url'],
+                                  width: Get.width,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    _.carouselController.nextPage();
-                                  },
-                                  child: Image.asset(
-                                    arrowRight,
-                                    height: 24,
-                                    width: 24,
-                                    color: whiteColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                  ],
-                )
-              : const SizedBox(),
-        ),
-        Obx(() => imageList.isNotEmpty ? height15 : const SizedBox()),
-        balanceView(_),
-        height15,
-        detailsView(_, context),
-        height15,
-        packagesView(_),
-      ],
+                      if (imageList.length > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              height: 200,
+                              width: 100,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  topLeft: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      _.carouselController.previousPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowLeft,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 200,
+                              width: 100,
+                              padding: const EdgeInsets.only(right: 10),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      _.carouselController.nextPage();
+                                    },
+                                    child: Image.asset(
+                                      arrowRight,
+                                      height: 24,
+                                      width: 24,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  )
+                : const SizedBox(),
+          ),
+          Obx(() => imageList.isNotEmpty ? height15 : const SizedBox()),
+          balanceView(_),
+          height15,
+          detailsView(_, context),
+          height15,
+          packagesView(_),
+        ],
+      ),
     );
   }
 
@@ -228,28 +232,67 @@ class HomeScreen extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
+            height: 70,
+            alignment: Alignment.center,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: primary,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'E-Wallet Balance',
-                  style: lightText14.copyWith(
-                    color: whiteColor,
-                  ),
-                ),
-                height5,
-                Obx(
-                  () => Text(
-                    '\$${_.balance.value} JMD',
-                    style: regularText18.copyWith(
-                      color: whiteColor,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'E-Wallet Balance',
+                      style: lightText14.copyWith(
+                        color: whiteColor,
+                      ),
                     ),
-                  ),
+                    height5,
+                    Obx(
+                      () => Text(
+                        '\$${_.balance.value} JMD',
+                        style: regularText18.copyWith(
+                          color: whiteColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Obx(
+                  () => _.mycartBucks.value == 0
+                      ? const SizedBox()
+                      : const VerticalDivider(
+                          color: whiteColor,
+                        ),
+                ),
+                Obx(
+                  () => _.mycartBucks.value == 0
+                      ? const SizedBox()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'MyCart Bucks',
+                              style: lightText14.copyWith(
+                                color: whiteColor,
+                              ),
+                            ),
+                            height5,
+                            Text(
+                              '\$${_.mycartBucks.value} ',
+                              style: regularText18.copyWith(
+                                color: whiteColor,
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ],
             ),
@@ -407,36 +450,76 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Pick-Up Branch',
-                    style: regularText14,
+                  Row(
+                    children: [
+                      Text(
+                        'Pick-Up Branch',
+                        style: regularText14,
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                await _.getBranch(context);
+                                if (_.branchesList.isNotEmpty) {
+                                  selectBranch(context, _);
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 3),
+                                decoration: const BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: const Text(
+                                  'Switch',
+                                  style: TextStyle(
+                                    letterSpacing: 0.5,
+                                    color: whiteColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  height15,
-                  Obx(() => Text(
-                        _.pickuoBranchData.isNotEmpty
-                            ? _.pickuoBranchData['location'] +
-                                ' ' +
-                                _.pickuoBranchData['address'] +
-                                ' ' +
-                                _.pickuoBranchData['city'] +
-                                ', ' +
-                                _.pickuoBranchData['parishname'] +
-                                ', ' +
-                                _.pickuoBranchData['code']
-                            : '',
-                        style: lightText13.copyWith(
-                          color: primary,
-                        ),
-                      )),
+                  height5,
+                  Obx(
+                    () => Text(
+                      _.pickuoBranchData.isNotEmpty
+                          ? _.pickuoBranchData['location'] +
+                              ' ' +
+                              _.pickuoBranchData['address'] +
+                              ' ' +
+                              _.pickuoBranchData['city'] +
+                              ', ' +
+                              _.pickuoBranchData['parishname'] +
+                              ', ' +
+                              _.pickuoBranchData['code']
+                          : '',
+                      style: lightText13.copyWith(
+                        color: primary,
+                      ),
+                    ),
+                  ),
                   height10,
-                  Obx(() => Text(
-                        _.pickuoBranchData.isNotEmpty
-                            ? _.pickuoBranchData['open_hour']
-                            : '',
-                        style: lightText13.copyWith(
-                          color: primary,
-                        ),
-                      )),
+                  Obx(
+                    () => Text(
+                      _.pickuoBranchData.isNotEmpty
+                          ? _.pickuoBranchData['open_hour']
+                          : '',
+                      style: lightText13.copyWith(
+                        color: primary,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -447,147 +530,146 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget packagesView(HomeScreenController _) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.only(
-          left: 15,
-          top: 15,
-          right: 15,
-        ),
-        decoration: BoxDecoration(
-          color: greyColor.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Last 5 Packages',
-                  style: regularText18,
+    return Container(
+      padding: const EdgeInsets.only(
+        left: 15,
+        top: 15,
+        right: 15,
+      ),
+      decoration: BoxDecoration(
+        color: greyColor.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Last 5 Packages',
+                style: regularText18,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(
+                    () => const ShippingScreen(
+                      isFromeHome: true,
+                    ),
+                  );
+                },
+                child: Text(
+                  'View all',
+                  style: lightText16,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(
-                      () => const ShippingScreen(
-                        isFromeHome: true,
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'View all',
-                    style: lightText16,
-                  ),
-                ),
-              ],
-            ),
-            height15,
-            Expanded(
-              child: Obx(
-                () => _.packagesList.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No packages found.',
-                          style: lightText14.copyWith(
-                            color: Colors.grey,
-                          ),
+              ),
+            ],
+          ),
+          height15,
+          Obx(
+            () => _.packagesList.isEmpty
+                ? SizedBox(
+                    height: 300,
+                    child: Center(
+                      child: Text(
+                        'No packages found.',
+                        style: lightText14.copyWith(
+                          color: Colors.grey,
                         ),
-                      )
-                    : ListView.separated(
-                        itemCount: _.packagesList.length,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            height10,
-                        itemBuilder: (BuildContext context, int index) =>
-                            Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 4,
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: _.packagesList.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        height10,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: greyColor,
                           ),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: greyColor,
-                              ),
-                              borderRadius: BorderRadius.circular(12)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _.packagesList[index]['shipping_mcecode'],
-                                      style: lightText13.copyWith(
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                    height10,
-                                    Text(
-                                      _.packagesList[index]['tracking'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: lightText13.copyWith(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: orangeColor,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: _.packagesList[index]
-                                                  ['upload_attachment_flag'] ==
-                                              1
-                                          ? 20
-                                          : 10),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _.packagesList[index]['shipping_mcecode'],
+                                  style: lightText13.copyWith(
+                                    color: blackColor,
                                   ),
                                 ),
-                                onPressed: _.packagesList[index]
+                                height10,
+                                Text(
+                                  _.packagesList[index]['tracking'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: lightText13.copyWith(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: orangeColor,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: _.packagesList[index]
+                                              ['upload_attachment_flag'] ==
+                                          1
+                                      ? 20
+                                      : 10),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                            ),
+                            onPressed: _.packagesList[index]
+                                        ['upload_attachment_flag'] ==
+                                    1
+                                ? () {
+                                    uploadInvoice(
+                                        _.packagesList[index]['package_id'],
+                                        _,
+                                        context);
+                                  }
+                                : null,
+                            child: Row(
+                              children: [
+                                Text(
+                                  _.packagesList[index]['invoice_type_label'],
+                                  style: const TextStyle(
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                                width10,
+                                _.packagesList[index]
                                             ['upload_attachment_flag'] ==
                                         1
-                                    ? () {
-                                        uploadInvoice(
-                                            _.packagesList[index]['package_id'],
-                                            _,
-                                            context);
-                                      }
-                                    : null,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      _.packagesList[index]
-                                          ['invoice_type_label'],
-                                      style: const TextStyle(
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    width10,
-                                    _.packagesList[index]
-                                                ['upload_attachment_flag'] ==
-                                            1
-                                        ? Image.asset(
-                                            addIcon,
-                                            color: whiteColor,
-                                            height: 14,
-                                            width: 14,
-                                          )
-                                        : const SizedBox(),
-                                  ],
-                                ),
-                              ),
-                            ],
+                                    ? Image.asset(
+                                        addIcon,
+                                        color: whiteColor,
+                                        height: 14,
+                                        width: 14,
+                                      )
+                                    : const SizedBox(),
+                              ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-              ),
-            ),
-          ],
-        ),
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
@@ -936,6 +1018,87 @@ class HomeScreen extends StatelessWidget {
               ),
               height10,
             ],
+          ),
+        );
+      },
+    );
+  }
+
+  void selectBranch(
+    BuildContext context,
+    HomeScreenController controller,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: SizedBox(
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: CupertinoPicker(
+                    itemExtent: 40,
+                    magnification: 1.20,
+                    squeeze: 1.2,
+                    useMagnifier: true,
+                    looping: true,
+                    onSelectedItemChanged: (int value) {
+                      controller.selectedPickuoBranch.value =
+                          controller.branchesList[value].toJson();
+                      controller.branchId.value =
+                          controller.branchesList[value].branchId ?? '0';
+                    },
+                    children: List.generate(
+                      controller.branchesList.length,
+                      (index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                '${controller.branchesList[index].parishname} - ${controller.branchesList[index].code}',
+                                style: mediumText14.copyWith(
+                                  color: primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: Size(Get.width, 50),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      await controller.updateBranch(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'SWITCH',
+                      style: TextStyle(
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ),
+                height10,
+              ],
+            ),
           ),
         );
       },

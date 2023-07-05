@@ -11,7 +11,8 @@ class ApiEndPoints {
   static String changePassword = 'user/change_password';
   static String forgotPassword = 'authentication/forgot_password';
   static String resetPassword = 'authentication/reset_password';
-  static String branches = 'branches';
+  static String branches = 'branch_listing';
+  static String switchBranch = 'switch_branch';
   static String location = 'locations';
 
   static String userInfo = 'user/info';
@@ -21,7 +22,7 @@ class ApiEndPoints {
   static String userRewards = 'user/rewards';
   static String uploadProfilePicture = 'user/upload_profile_picture';
 
-  static String balance = 'wallet/balance';
+  static String balance = 'wallet_balance';
   static String howItWorks = 'dashboard/how_it_works';
   static String branchBannerImages = 'branch_banner_images';
   static String dashboardPackageList = 'dashboard/package_list';

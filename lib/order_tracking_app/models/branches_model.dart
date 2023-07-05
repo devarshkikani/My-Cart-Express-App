@@ -26,20 +26,20 @@ class Branches {
     required this.music,
   });
 
-  String branchId;
-  String isStaffOnly;
-  String status;
-  String isFront;
-  String location;
-  String phone;
-  String address;
-  String city;
-  String parishname;
-  String openHour;
-  String code;
-  String colorCode;
-  String branchCodeImage;
-  String music;
+  String? branchId;
+  String? isStaffOnly;
+  String? status;
+  String? isFront;
+  String? location;
+  String? phone;
+  String? address;
+  String? city;
+  String? parishname;
+  String? openHour;
+  String? code;
+  String? colorCode;
+  String? branchCodeImage;
+  String? music;
 
   factory Branches.fromJson(Map<String, dynamic> json) => Branches(
         branchId: json["branch_id"],
