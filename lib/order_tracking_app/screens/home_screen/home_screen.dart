@@ -300,7 +300,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(
-            left: 15.0,
+            left: 10.0,
           ),
           child: FutureBuilder<Uri>(
             future: DynamicRepository().createDynamicLink(
