@@ -462,10 +462,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () async {
-                                await _.getBranch(context);
-                                if (_.branchesList.isNotEmpty) {
-                                  selectBranch(context, _);
-                                }
+                                showAlertDialog(context, _);
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -1019,6 +1016,37 @@ class HomeScreen extends StatelessWidget {
               height10,
             ],
           ),
+        );
+      },
+    );
+  }
+
+  showAlertDialog(BuildContext ctx, HomeScreenController _) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext ctttx) {
+        return AlertDialog(
+          title: const Text("Confirmation"),
+          content: const Text(
+              "Are you sure you want to switch your pick up location?"),
+          actions: [
+            TextButton(
+              child: const Text("No"),
+              onPressed: () {
+                Navigator.pop(ctttx);
+              },
+            ),
+            TextButton(
+              child: const Text("Yes"),
+              onPressed: () async {
+                Navigator.pop(ctttx);
+                await _.getBranch(ctx);
+                if (_.branchesList.isNotEmpty) {
+                  selectBranch(ctx, _);
+                }
+              },
+            ),
+          ],
         );
       },
     );
