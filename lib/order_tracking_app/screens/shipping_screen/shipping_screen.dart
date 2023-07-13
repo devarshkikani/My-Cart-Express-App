@@ -259,7 +259,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
             Obx(
               () => filterButton(
                 bgcolor: selectedIndex.value == 1 ? primary : Colors.grey,
-                name: 'Invoice Nedded',
+                name: 'Invoice Needed',
                 onTap: () async {
                   selectedIndex.value = 1;
                   await getShippments(null, forceAssign: true);
