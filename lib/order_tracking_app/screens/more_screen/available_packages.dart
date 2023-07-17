@@ -466,7 +466,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
-                  'STORAGE CHARGES : ${availablePackagesData['due'] ?? 0.00}',
+                  'TOTAL DUE : ${availablePackagesData['due'] ?? 0.00}',
                   style: regularText12.copyWith(
                     color: Colors.grey,
                   ),

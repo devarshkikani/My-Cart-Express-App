@@ -429,8 +429,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                       Text(
                                         duePackages[index]['pkg_shipging_code'],
                                         style: regularText12.copyWith(
-                                          color: primary,
-                                        ),
+                                            color: whiteColor),
                                       ),
                                       height5,
                                       Column(
@@ -438,7 +437,8 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                           Text(
                                             duePackages[index]['tracking'],
                                             // overflow: TextOverflow.ellipsis,
-                                            style: regularText12.copyWith(),
+                                            style: regularText12.copyWith(
+                                                color: whiteColor),
                                           ),
                                         ],
                                       ),
@@ -450,7 +450,8 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                           Text(
                                             duePackages[index]['weight_label'],
                                             overflow: TextOverflow.ellipsis,
-                                            style: regularText14.copyWith(),
+                                            style: regularText14.copyWith(
+                                                color: whiteColor),
                                           ),
                                           const Icon(
                                             Icons.arrow_forward_ios_rounded,
