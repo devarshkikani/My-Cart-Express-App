@@ -1,3 +1,4 @@
+
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
@@ -526,10 +527,19 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 15),
                             decoration: BoxDecoration(
-                              color: availablePackages[index]['status'] ==
-                                      'Available for Pickup'
-                                  ? Colors.green.shade200
-                                  : Colors.white,
+                              color: Color(
+                                int.parse(
+                                  // ignore: prefer_interpolation_to_compose_strings
+                                  "0xff" +
+                                      (availablePackages[index]['color'])
+                                          .toString()
+                                          .replaceAll('#', ''),
+                                ),
+                              ),
+                              // color: availablePackages[index]['status'] ==
+                              //         'Available for Pickup'
+                              //     ? Colors.green.shade200
+                              //     : Colors.white,
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
