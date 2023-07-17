@@ -295,14 +295,14 @@ class _ScannerScreenState extends State<ScannerScreen> {
         ),
         Obx(() => imageList.isNotEmpty ? height10 : const SizedBox()),
         Text(
-          'In Store?',
+          'Picking up your packages?',
           style: lightText14.copyWith(
             color: primary,
           ),
         ),
         height5,
         Text(
-          'Request your package',
+          'Scan the QR code for Express Checkout',
           style: lightText14.copyWith(
             color: primary,
           ),

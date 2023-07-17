@@ -330,7 +330,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                       decoration: BoxDecoration(
                         color: duePackages[index]['status'] ==
                                 'Available for Pickup'
-                            ? Colors.green.shade200
+                            ? const Color(0xffff4d4d)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
@@ -346,9 +346,9 @@ class _OverdueScreenState extends State<OverdueScreen> {
                         children: [
                           Container(
                             padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: primary.withOpacity(0.2),
-                              borderRadius: const BorderRadius.only(
+                            decoration: const BoxDecoration(
+                              color: greyColor,
+                              borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10),
                               ),
