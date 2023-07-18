@@ -601,6 +601,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: declared,
+              keyboardType: TextInputType.number,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),

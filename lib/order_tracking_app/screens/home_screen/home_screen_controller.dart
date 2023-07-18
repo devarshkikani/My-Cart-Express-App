@@ -207,7 +207,7 @@ class HomeScreenController extends GetxController {
 
   Future<void> pickFile(FilePickerResult? result) async {
     if (result != null) {
-      selectedFile?.value = File(result.files.first.path!);
+      selectedFile = File(result.files.first.path!).obs;
       fileName.value = result.files.first.name;
     }
   }

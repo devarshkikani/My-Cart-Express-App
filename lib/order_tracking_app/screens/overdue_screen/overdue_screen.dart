@@ -603,6 +603,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: declared,
+              keyboardType: TextInputType.number,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),

@@ -571,6 +571,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: declared,
+              keyboardType: TextInputType.number,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),
