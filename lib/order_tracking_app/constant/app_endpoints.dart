@@ -68,4 +68,5 @@ class ApiEndPoints {
   static String accountDelete = 'account/delete';
 
   static String refreshToken = 'refresh_token';
+  static String commonSettings = 'common_settings';
 }

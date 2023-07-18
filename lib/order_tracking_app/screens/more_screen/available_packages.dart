@@ -1,4 +1,3 @@
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
@@ -84,16 +83,20 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
 
   Future<void> getScanPackages(String barcode, {bool? show}) async {
     isLoading.value = true;
+    Map<String, dynamic> mapData = {
+      "offset": 0,
+      "limit": 10,
+      "branch_qr_code": barcode,
+    };
+    if (showLocation.value == '1') {
+      mapData["latitude"] = currentPosition?.latitude;
+      mapData["longitude"] = currentPosition?.longitude;
+    }
+    dio.FormData data = dio.FormData.fromMap(mapData);
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.availableShipping,
       context: context,
-      data: dio.FormData.fromMap({
-        "offset": 0,
-        "limit": 10,
-        "branch_qr_code": barcode,
-        "latitude": currentPosition?.latitude,
-        "longitude": currentPosition?.longitude,
-      }),
+      data: data,
     );
     isLoading.value = false;
     if (response != null) {

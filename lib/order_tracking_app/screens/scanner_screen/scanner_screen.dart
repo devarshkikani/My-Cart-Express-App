@@ -62,19 +62,28 @@ class _ScannerScreenState extends State<ScannerScreen> {
     controller.scannedDataStream.listen((scanData) async {
       if (!Get.isSnackbarOpen && !isAPICalling.value) {
         if (scanData.code != null) {
-          if (currentPosition != null) {
-            if (scanData.code!.contains('BRANCH')) {
-              getAvailablePackages(scanData.code!);
+          if (showLocation.value == '1') {
+            if (currentPosition != null) {
+              if (scanData.code!.contains('BRANCH')) {
+                getAvailablePackages(scanData.code!);
+              } else {
+                NetworkDio.showError(
+                  title: 'Failed',
+                  errorMessage: 'Invalid QR Code',
+                );
+              }
             } else {
               NetworkDio.showError(
-                title: 'Failed',
-                errorMessage: 'Invalid QR Code',
+                title: 'Wait',
+                errorMessage: 'We fetching your current location',
               );
             }
+          } else if (scanData.code!.contains('BRANCH')) {
+            getAvailablePackages(scanData.code!);
           } else {
             NetworkDio.showError(
-              title: 'Wait',
-              errorMessage: 'We fetching your current location',
+              title: 'Failed',
+              errorMessage: 'Invalid QR Code',
             );
           }
         }
@@ -113,16 +122,20 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   Future<void> getAvailablePackages(String barcode) async {
     isAPICalling.value = true;
+    Map<String, dynamic> mapData = {
+      "offset": 0,
+      "limit": 10,
+      "branch_qr_code": barcode,
+    };
+    if (showLocation.value == '1') {
+      mapData["latitude"] = currentPosition?.latitude;
+      mapData["longitude"] = currentPosition?.longitude;
+    }
+    dio.FormData data = dio.FormData.fromMap(mapData);
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.availableShipping,
       context: context,
-      data: dio.FormData.fromMap({
-        "offset": 0,
-        "limit": 10,
-        "branch_qr_code": barcode,
-        "latitude": currentPosition?.latitude,
-        "longitude": currentPosition?.longitude,
-      }),
+      data: data,
     );
     isAPICalling.value = false;
     if (response != null) {

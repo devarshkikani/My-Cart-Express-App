@@ -31,6 +31,7 @@ import 'package:my_cart_express/order_tracking_app/widget/location_permission_sc
 import 'package:url_launcher/url_launcher.dart';
 
 RxList imageList = [].obs;
+RxString showLocation = ''.obs;
 
 class HomeScreenController extends GetxController {
   Rx<File>? selectedFile;
@@ -55,71 +56,82 @@ class HomeScreenController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void getBalance(BuildContext context) async {
-    getCurrentPosition();
-    Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
+    Map<String, dynamic>? commonSettings = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.commonSettings,
       context: context,
     );
-    if (shippingCount != null) {
-      packageCounts.value = shippingCount['package_counts'];
-      availablePackageCounts.value = shippingCount['available_package_counts'];
-      overduePackageCounts.value = shippingCount['overdue_package_counts'];
-      Map<String, dynamic>? packagesResponse =
-          await NetworkDio.getDioHttpMethod(
-        url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
+    if (commonSettings != null) {
+      showLocation.value = commonSettings['show_location'];
+      if (showLocation.value == '1') {
+        getCurrentPosition();
+      }
+      Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
         context: context,
       );
-      if (packagesResponse != null) {
-        packagesList.value = packagesResponse['list'] ?? [];
-
-        Map<String, dynamic>? howItWorksResponse =
+      if (shippingCount != null) {
+        packageCounts.value = shippingCount['package_counts'];
+        availablePackageCounts.value =
+            shippingCount['available_package_counts'];
+        overduePackageCounts.value = shippingCount['overdue_package_counts'];
+        Map<String, dynamic>? packagesResponse =
             await NetworkDio.getDioHttpMethod(
-          url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
+          url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
           context: context,
         );
-        if (howItWorksResponse != null) {
-          howItWorks.value = howItWorksResponse['img_url'];
-          Map<String, dynamic>? shippingPickupAddress =
+        if (packagesResponse != null) {
+          packagesList.value = packagesResponse['list'] ?? [];
+
+          Map<String, dynamic>? howItWorksResponse =
               await NetworkDio.getDioHttpMethod(
-            url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
+            url: ApiEndPoints.apiEndPoint + ApiEndPoints.howItWorks,
             context: context,
           );
-          if (shippingPickupAddress != null) {
-            fullName.value = shippingPickupAddress['package_shipping_data']
-                    ['firstname'] +
-                ' ' +
-                shippingPickupAddress['package_shipping_data']['lastname'] +
-                ' ' +
-                shippingPickupAddress['package_shipping_data']['mce_number'];
-            usaShippingData.value =
-                shippingPickupAddress['package_shipping_data']
-                    ['usa_air_address_details'];
-            pickuoBranchData.value =
-                shippingPickupAddress['package_shipping_data']['branch_data'];
-
-            Map<String, dynamic>? categoriesListResponse =
+          if (howItWorksResponse != null) {
+            howItWorks.value = howItWorksResponse['img_url'];
+            Map<String, dynamic>? shippingPickupAddress =
                 await NetworkDio.getDioHttpMethod(
-              url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
+              url:
+                  ApiEndPoints.apiEndPoint + ApiEndPoints.shippingPickupAddress,
               context: context,
             );
-            if (categoriesListResponse != null) {
-              categoriesList.value = categoriesListResponse['list'];
-              Map<String, dynamic>? response =
+            if (shippingPickupAddress != null) {
+              fullName.value = shippingPickupAddress['package_shipping_data']
+                      ['firstname'] +
+                  ' ' +
+                  shippingPickupAddress['package_shipping_data']['lastname'] +
+                  ' ' +
+                  shippingPickupAddress['package_shipping_data']['mce_number'];
+              usaShippingData.value =
+                  shippingPickupAddress['package_shipping_data']
+                      ['usa_air_address_details'];
+              pickuoBranchData.value =
+                  shippingPickupAddress['package_shipping_data']['branch_data'];
+
+              Map<String, dynamic>? categoriesListResponse =
                   await NetworkDio.getDioHttpMethod(
-                url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
+                url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCategories,
                 context: context,
               );
-              if (response != null) {
-                balance.value = response['data']['ewallet_balance'];
-                mycartBucks.value = response['data']['bucks_balance'];
-                Map<String, dynamic>? images =
+              if (categoriesListResponse != null) {
+                categoriesList.value = categoriesListResponse['list'];
+                Map<String, dynamic>? response =
                     await NetworkDio.getDioHttpMethod(
-                  url: ApiEndPoints.apiEndPoint +
-                      ApiEndPoints.branchBannerImages,
+                  url: ApiEndPoints.apiEndPoint + ApiEndPoints.balance,
                   context: context,
                 );
-                if (images != null) {
-                  imageList.value = images['data'];
+                if (response != null) {
+                  balance.value = response['data']['ewallet_balance'];
+                  mycartBucks.value = response['data']['bucks_balance'];
+                  Map<String, dynamic>? images =
+                      await NetworkDio.getDioHttpMethod(
+                    url: ApiEndPoints.apiEndPoint +
+                        ApiEndPoints.branchBannerImages,
+                    context: context,
+                  );
+                  if (images != null) {
+                    imageList.value = images['data'];
+                  }
                 }
               }
             }

@@ -328,10 +328,12 @@ class _OverdueScreenState extends State<OverdueScreen> {
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
-                        color: duePackages[index]['status'] ==
-                                'Available for Pickup'
-                            ? const Color(0xffff4d4d)
-                            : Colors.white,
+                        color:
+                            // duePackages[index]['status'] ==
+                            //         'Available for Pickup' ?
+                            const Color(0xffff4d4d),
+                        // : Colors.white
+
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -429,7 +431,8 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                       Text(
                                         duePackages[index]['pkg_shipging_code'],
                                         style: regularText12.copyWith(
-                                            color: whiteColor),
+                                          color: primary,
+                                        ),
                                       ),
                                       height5,
                                       Column(
@@ -438,7 +441,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                             duePackages[index]['tracking'],
                                             // overflow: TextOverflow.ellipsis,
                                             style: regularText12.copyWith(
-                                                color: whiteColor),
+                                                color: blackColor),
                                           ),
                                         ],
                                       ),
@@ -451,7 +454,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                                             duePackages[index]['weight_label'],
                                             overflow: TextOverflow.ellipsis,
                                             style: regularText14.copyWith(
-                                                color: whiteColor),
+                                                color: blackColor),
                                           ),
                                           const Icon(
                                             Icons.arrow_forward_ios_rounded,
