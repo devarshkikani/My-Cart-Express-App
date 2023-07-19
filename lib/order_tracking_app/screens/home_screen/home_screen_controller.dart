@@ -232,6 +232,14 @@ class HomeScreenController extends GetxController {
       Get.back();
       NetworkDio.showSuccess(
           title: 'Success', sucessMessage: response['message']);
+      Map<String, dynamic>? packagesResponse =
+          await NetworkDio.getDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.dashboardPackageList,
+        context: context,
+      );
+      if (packagesResponse != null) {
+        packagesList.value = packagesResponse['list'] ?? [];
+      }
     }
   }
 
