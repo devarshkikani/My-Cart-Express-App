@@ -70,7 +70,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
     final data = dio.FormData.fromMap({
       'search_text': value,
       'offset': value == null ? offSet.value : 0,
-      'invoice_nedded': selectedIndex.value == 1 ? 1 : 0,
+      'invoice_needed': selectedIndex.value == 1 ? 1 : 0,
       'in_transit': selectedIndex.value == 2 ? 1 : 0,
       'is_collected': selectedIndex.value == 3 ? 1 : 0,
     });
