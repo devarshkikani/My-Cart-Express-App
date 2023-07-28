@@ -1,15 +1,21 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,6 +26,7 @@ import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/add_feedback_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,8 +42,109 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), redirectScreen);
+    callCommonAPI();
     firebaseNotificationSetup();
+  }
+
+  Future<void> callCommonAPI() async {
+    Map<String, dynamic>? commonSettings = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.commonSettings,
+    );
+    if (commonSettings != null) {
+      showLocation.value = commonSettings['show_location'];
+      if (GlobalSingleton.appVersion != commonSettings['app_version']) {
+        showUpdateApp(context, commonSettings['force_update'] == "0");
+      } else {
+        redirectScreen();
+      }
+    } else {
+      redirectScreen();
+    }
+  }
+
+  void showUpdateApp(BuildContext context, bool showLaterButton) {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) {
+          return CupertinoAlertDialog(
+            title: const Text(
+              'New Update Available',
+            ),
+            content: const Text(
+              'There is newer version of app available please update it now.',
+            ),
+            actions: [
+              if (showLaterButton)
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    redirectScreen();
+                  },
+                  child: const Text(
+                    'Later',
+                  ),
+                ),
+              if (showLaterButton) width10,
+              TextButton(
+                onPressed: () async {
+                  String url =
+                      "https://apps.apple.com/us/app/mycart-express/id1624277416";
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  }
+                },
+                child: const Text(
+                  'Update Now',
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text(
+              'New Update Available',
+            ),
+            content: const Text(
+              'There is newer version of app available please update it now.',
+            ),
+            actions: [
+              if (showLaterButton)
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    redirectScreen();
+                  },
+                  child: const Text(
+                    'Later',
+                  ),
+                ),
+              TextButton(
+                onPressed: () async {
+                  String url =
+                      "https://play.google.com/store/apps/details?id=com.app.MyCartExpress";
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  }
+                },
+                child: const Text(
+                  'Update Now',
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Future<void> redirectScreen() async {
