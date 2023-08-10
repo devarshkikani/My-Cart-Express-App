@@ -450,7 +450,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 15.0),
               child: Text(
-                'How satisfied are you with this trasaction?',
+                'How satisfied are you with this transaction?',
                 style: regularText14,
               ),
             ),
