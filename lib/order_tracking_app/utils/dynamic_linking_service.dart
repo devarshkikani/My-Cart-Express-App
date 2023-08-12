@@ -49,7 +49,7 @@ class DynamicRepository {
   ) async {
     if (dynamicLink != null) {
       String? query = dynamicLink.link.query;
-      if (query.contains('user_id=')) {
+      if (query.contains('Invite=')) {
         String invitationToken = query.split('=')[1];
         getStorage.write('inviteUserId', invitationToken);
       }
