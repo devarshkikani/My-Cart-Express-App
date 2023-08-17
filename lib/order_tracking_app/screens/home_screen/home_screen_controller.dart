@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
 import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.dart';
