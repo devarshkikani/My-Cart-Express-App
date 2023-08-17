@@ -525,17 +525,22 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   void uploadInvoice(String packageId) async {
     showModalBottomSheet(
         context: context,
+        isDismissible: true,
+        isScrollControlled: true,
         builder: (BuildContext ctx) {
-          return Container(
-            padding: const EdgeInsets.all(15),
-            decoration: const BoxDecoration(
-              color: offWhite,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+          return Padding(
+            padding: MediaQuery.of(ctx).viewInsets,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: offWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
+              child: uploadFileBodyView(packageId),
             ),
-            child: uploadFileBodyView(packageId),
           );
         }).then((value) {
       declared.text = '';

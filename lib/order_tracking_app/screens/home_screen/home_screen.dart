@@ -675,17 +675,22 @@ class HomeScreen extends StatelessWidget {
   void uploadInvoice(String packageId, HomeScreenController _, context) async {
     showModalBottomSheet(
         context: context,
+        isDismissible: true,
+        isScrollControlled: true,
         builder: (BuildContext ctx) {
-          return Container(
-            padding: const EdgeInsets.all(15),
-            decoration: const BoxDecoration(
-              color: offWhite,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+          return Padding(
+            padding: MediaQuery.of(ctx).viewInsets,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: offWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
+              child: uploadFileBodyView(packageId, _, context),
             ),
-            child: uploadFileBodyView(packageId, _, context),
           );
         }).then((value) {
       _.declared.text = '';
@@ -722,6 +727,7 @@ class HomeScreen extends StatelessWidget {
               hintText: 'Enter USD Value Here',
               controller: _.declared,
               keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),
