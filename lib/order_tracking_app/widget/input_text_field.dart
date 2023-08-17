@@ -310,6 +310,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.suffixIcon,
     this.onTap,
     this.enabled,
+    this.autoFocus,
     this.readOnly,
     this.onChanged,
     this.onFieldSubmitted,
@@ -332,6 +333,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final Key? fieldKey;
   final String? hintText;
   final String? labelText;
+  final bool? autoFocus;
   final bool? readOnly;
   final FormFieldValidator<String?>? validator;
   final ValueChanged<String?>? onFieldSubmitted;
@@ -362,6 +364,7 @@ class TextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return textFormField(
+      autofocus: autoFocus ?? false,
       fieldKey: fieldKey,
       focusNode: focusNode,
       hintText: hintText,

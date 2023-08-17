@@ -9,6 +9,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
@@ -127,12 +128,10 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
     isLoading.value = false;
   }
 
-  Future<void> pickFile(FilePickerResult? result) async {
-    if (result != null) {
-      selectedFile = File(result.files.first.path!);
-      fileName.value = result.files.first.name;
-      setState(() {});
-    }
+  Future<void> pickFile(String path, String name) async {
+    selectedFile = File(path); //File(result.files.first.path!).obs;
+    fileName.value = name; //result.files.first.name;
+    setState(() {});
   }
 
   Future<void> submitOnTap(String? packageId) async {
@@ -974,14 +973,17 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     Get.back();
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg', 'png', 'jpeg'],
-                    );
-                    await pickFile(
-                      result,
-                    );
+                    XFile? result = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    // FilePickerResult? result =
+                    //     await FilePicker.platform.pickFiles(
+                    //   type: FileType.custom,
+                    //   allowMultiple: true,
+                    //   allowedExtensions: ['jpg', 'png', 'jpeg'],
+                    // );
+                    if (result != null) {
+                      await pickFile(result.path, result.name);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
@@ -1012,9 +1014,10 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                         'doc',
                       ],
                     );
-                    await pickFile(
-                      result,
-                    );
+                    if (result != null) {
+                      await pickFile(
+                          result.files.first.path!, result.files.first.name);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,

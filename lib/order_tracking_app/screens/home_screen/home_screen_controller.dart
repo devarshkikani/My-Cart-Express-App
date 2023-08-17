@@ -196,11 +196,9 @@ class HomeScreenController extends GetxController {
     return true;
   }
 
-  Future<void> pickFile(FilePickerResult? result) async {
-    if (result != null) {
-      selectedFile = File(result.files.first.path!).obs;
-      fileName.value = result.files.first.name;
-    }
+  Future<void> pickFile(String path, String name) async {
+    selectedFile = File(path).obs; //File(result.files.first.path!).obs;
+    fileName.value = name; //result.files.first.name;
   }
 
   Future<void> submitOnTap(String? packageId, BuildContext context) async {

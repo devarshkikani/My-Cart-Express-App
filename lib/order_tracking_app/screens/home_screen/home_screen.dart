@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
@@ -630,7 +631,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: _.packagesList[index]
-                                        ['upload_attachment_flag'] ==
+                                        ['upload_attachment_flag'] !=
                                     1
                                 ? () {
                                     uploadInvoice(
@@ -869,12 +870,11 @@ class HomeScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     Get.back();
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg', 'png', 'jpeg'],
-                    );
-                    await _.pickFile(result);
+                    XFile? result = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (result != null) {
+                      await _.pickFile(result.path, result.name);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
@@ -905,7 +905,10 @@ class HomeScreen extends StatelessWidget {
                         'doc',
                       ],
                     );
-                    await _.pickFile(result);
+                    if (result != null) {
+                      await _.pickFile(
+                          result.files.first.path!, result.files.first.name);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,

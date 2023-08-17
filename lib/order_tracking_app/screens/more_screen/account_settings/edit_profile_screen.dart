@@ -6,6 +6,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
@@ -409,14 +410,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     Get.back();
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg', 'png', 'jpeg'],
-                    );
-                    await pickFile(
-                      result,
-                    );
+                    XFile? result = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    // FilePickerResult? result =
+                    //     await FilePicker.platform.pickFiles(
+                    //   type: FileType.custom,
+                    //   allowMultiple: true,
+                    //   allowedExtensions: ['jpg', 'png', 'jpeg'],
+                    // );
+                    if (result != null) {
+                      await pickFile(result.path, result.name);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
@@ -447,9 +451,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         'doc',
                       ],
                     );
-                    await pickFile(
-                      result,
-                    );
+                    if (result != null) {
+                      await pickFile(
+                          result.files.first.path!, result.files.first.name);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteColor,
@@ -498,11 +503,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Future<void> pickFile(FilePickerResult? result) async {
-    if (result != null) {
-      filePath.value = result.files.first.path!;
-      fileName.value = result.files.first.name;
-    }
+  Future<void> pickFile(String path, String name) async {
+    filePath.value = path; //File(result.files.first.path!).obs;
+    fileName.value = name; //result.files.first.name;
+    setState(() {});
   }
 
   Future<void> saveOnTap() async {
