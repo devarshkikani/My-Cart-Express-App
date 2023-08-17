@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -575,7 +576,8 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: declared,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),

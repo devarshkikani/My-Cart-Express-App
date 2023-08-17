@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:badges/badges.dart' as b;
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -830,8 +831,9 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
             height10,
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               controller: declared,
-              keyboardType: TextInputType.number,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -726,7 +727,8 @@ class HomeScreen extends StatelessWidget {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: _.declared,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               textInputAction: TextInputAction.done,
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -605,7 +606,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: declared,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),
