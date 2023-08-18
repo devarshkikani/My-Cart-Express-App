@@ -632,7 +632,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: _.packagesList[index]
-                                        ['upload_attachment_flag'] !=
+                                        ['upload_attachment_flag'] ==
                                     1
                                 ? () {
                                     uploadInvoice(
