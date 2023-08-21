@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/change_name_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/change_password_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -68,6 +69,41 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         height20,
         profileView(),
         height20,
+        GestureDetector(
+          onTap: () {
+            Get.to(() => const ChangeNameScreen());
+          },
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: greyColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: const Icon(Icons.person, color: whiteColor),
+                ),
+                width10,
+                const Text(
+                  'Change Name',
+                ),
+                const Spacer(),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18,
+                ),
+              ],
+            ),
+          ),
+        ),
+        height10,
         GestureDetector(
           onTap: () {
             Get.to(() => const ChangePasswordScreen());

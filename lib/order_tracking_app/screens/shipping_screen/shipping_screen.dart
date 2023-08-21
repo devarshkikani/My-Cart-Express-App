@@ -69,13 +69,14 @@ class _ShippingScreenState extends State<ShippingScreen> {
     if (forceAssign == true) {
       offSet.value = 0;
     }
-    final data = dio.FormData.fromMap({
+    Map<String, dynamic> map = {
       'search_text': value,
       'offset': value == null ? offSet.value : 0,
       'invoice_needed': selectedIndex.value == 1 ? 1 : 0,
       'in_transit': selectedIndex.value == 2 ? 1 : 0,
       'is_collected': selectedIndex.value == 3 ? 1 : 0,
-    });
+    };
+    final data = dio.FormData.fromMap(map);
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingList,
         context: context,

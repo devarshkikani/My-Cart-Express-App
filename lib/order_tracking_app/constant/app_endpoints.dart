@@ -9,6 +9,7 @@ class ApiEndPoints {
   static String resendVerificationEmail = 'resend_verification_email';
   static String signUp = 'authentication/registration';
   static String changePassword = 'user/change_password';
+  static String editName = 'user/edit_name';
   static String forgotPassword = 'authentication/forgot_password';
   static String resetPassword = 'authentication/reset_password';
   static String branches = 'branch_listing';
