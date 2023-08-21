@@ -100,7 +100,6 @@ class _ChangeNumberScreenState extends State<ChangeNumberScreen> {
                   minWidth: 24,
                 ),
                 maxLength: 14,
-                labelText: 'Phone Number',
                 hintText: 'Enter phone number',
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.next,
@@ -135,7 +134,7 @@ class _ChangeNumberScreenState extends State<ChangeNumberScreen> {
                   }
                 },
                 child: Obx(() => Text(
-                      isEditing.value ? 'SAVE NUMBER' : 'EDIT NAME',
+                      isEditing.value ? 'SAVE NUMBER' : 'EDIT NUMBER',
                       style: const TextStyle(
                         letterSpacing: 0.5,
                       ),
