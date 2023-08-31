@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -35,6 +36,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   RxList availablePackages = [].obs;
   RxMap availablePackagesData = {}.obs;
   RxBool showPermissionDialog = true.obs;
+  final player = AudioPlayer();
   @override
   void initState() {
     super.initState();
@@ -137,8 +139,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
       context: context,
       data: data,
     );
-    isAPICalling.value = false;
     if (response != null) {
+      await player.setUrl(response['scan_success_music']);
+      player.play();
       availablePackages.value = response['list'];
       availablePackagesData.value = {
         "counts": response['counts'],
@@ -152,6 +155,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         ),
       );
     }
+    isAPICalling.value = false;
   }
 
   @override
