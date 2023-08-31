@@ -161,6 +161,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   @override
   void dispose() {
     controller?.dispose();
+    player.dispose();
     super.dispose();
   }
 
