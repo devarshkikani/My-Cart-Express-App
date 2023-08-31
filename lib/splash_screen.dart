@@ -226,6 +226,10 @@ class _SplashScreenState extends State<SplashScreen> {
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
+        defaultPresentAlert: true,
+        defaultPresentBadge: true,
+        defaultPresentSound: true,
+        requestCriticalPermission: true,
         onDidReceiveLocalNotification:
             (int id, String? title, String? body, String? payload) async {},
       ),
@@ -294,7 +298,12 @@ class _SplashScreenState extends State<SplashScreen> {
       title,
       message,
       const NotificationDetails(
-        iOS: DarwinNotificationDetails(),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          sound: 'default',
+          presentSound: true,
+        ),
         android: AndroidNotificationDetails(
           'channel id',
           'channel NAME',
