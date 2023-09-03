@@ -154,14 +154,14 @@ class _ScannerScreenState extends State<ScannerScreen> {
           availablePackages: availablePackages,
           availablePackagesData: availablePackagesData,
         ),
-      );
+      )!
+          .then((value) {
+        setState(() {
+          controller!.resumeCamera();
+        });
+      });
     }
     isAPICalling.value = false;
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        controller!.resumeCamera();
-      });
-    });
   }
 
   @override
