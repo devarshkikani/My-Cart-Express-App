@@ -123,6 +123,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 
   Future<void> getAvailablePackages(String barcode) async {
+    controller!.pauseCamera();
     isAPICalling.value = true;
     Map<String, dynamic> mapData = {
       "offset": 0,
@@ -156,6 +157,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
       );
     }
     isAPICalling.value = false;
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        controller!.resumeCamera();
+      });
+    });
   }
 
   @override
