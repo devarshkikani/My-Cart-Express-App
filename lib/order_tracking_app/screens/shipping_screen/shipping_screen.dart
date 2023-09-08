@@ -384,7 +384,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                               'Value : ',
                             ),
                             Text(
-                              shippmentsList[index]['value_cost'],
+                              shippmentsList[index]['value_cost'].toString(),
                               style: const TextStyle(
                                 color: primary,
                               ),
