@@ -26,7 +26,6 @@ class _ChangeNameScreenState extends State<ChangeNameScreen> {
   TextEditingController firstName = TextEditingController();
   TextEditingController middleName = TextEditingController();
   TextEditingController lastName = TextEditingController();
-  RxBool isEditing = false.obs;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -95,45 +94,42 @@ class _ChangeNameScreenState extends State<ChangeNameScreen> {
               style: regularText14,
             ),
             height10,
-            Obx(() => TextFormFieldWidget(
-                  hintText: 'Change First Name',
-                  controller: firstName,
-                  enabled: isEditing.value,
-                  validator: (value) => Validators.validateText(
-                    value.toString(),
-                    'Change first name',
-                  ),
-                )),
+            TextFormFieldWidget(
+              hintText: 'Change First Name',
+              controller: firstName,
+              validator: (value) => Validators.validateText(
+                value.toString(),
+                'Change first name',
+              ),
+            ),
             height10,
             Text(
               'CHANGE MIDDLE NAME',
               style: regularText14,
             ),
             height10,
-            Obx(() => TextFormFieldWidget(
-                  hintText: 'Change Middle Name',
-                  controller: middleName,
-                  enabled: isEditing.value,
-                  validator: (value) => Validators.validateText(
-                    value.toString(),
-                    'Change middle name',
-                  ),
-                )),
+            TextFormFieldWidget(
+              hintText: 'Change Middle Name',
+              controller: middleName,
+              validator: (value) => Validators.validateText(
+                value.toString(),
+                'Change middle name',
+              ),
+            ),
             height20,
             Text(
               'CHANGE LAST NAME',
               style: regularText14,
             ),
             height10,
-            Obx(() => TextFormFieldWidget(
-                  hintText: 'Change Last Name',
-                  controller: lastName,
-                  enabled: isEditing.value,
-                  validator: (value) => Validators.validateText(
-                    value.toString(),
-                    'Change last name',
-                  ),
-                )),
+            TextFormFieldWidget(
+              hintText: 'Change Last Name',
+              controller: lastName,
+              validator: (value) => Validators.validateText(
+                value.toString(),
+                'Change last name',
+              ),
+            ),
             height20,
             Center(
               child: ElevatedButton(
@@ -145,20 +141,16 @@ class _ChangeNameScreenState extends State<ChangeNameScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  if (isEditing.value) {
-                    if (_formKey.currentState!.validate()) {
-                      await submitButton();
-                    }
-                  } else {
-                    isEditing.value = true;
+                  if (_formKey.currentState!.validate()) {
+                    await submitButton();
                   }
                 },
-                child: Obx(() => Text(
-                      isEditing.value ? 'SAVE NAME' : 'EDIT NAME',
-                      style: const TextStyle(
-                        letterSpacing: 0.5,
-                      ),
-                    )),
+                child: const Text(
+                  'EDIT NAME',
+                  style: TextStyle(
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
             ),
           ],

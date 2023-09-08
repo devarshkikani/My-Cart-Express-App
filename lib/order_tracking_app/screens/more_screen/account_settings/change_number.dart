@@ -25,7 +25,6 @@ class _ChangeNumberScreenState extends State<ChangeNumberScreen> {
   RxMap userDetails = {}.obs;
 
   TextEditingController phoneNumber = TextEditingController();
-  RxBool isEditing = false.obs;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -84,35 +83,32 @@ class _ChangeNumberScreenState extends State<ChangeNumberScreen> {
               style: regularText14,
             ),
             height10,
-            Obx(
-              () => TextFormFieldWidget(
-                enabled: isEditing.value,
-                prefixIcon: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '+1',
-                      style: regularText16,
-                    ),
-                  ],
-                ),
-                prefixIconConstraints: const BoxConstraints(
-                  minWidth: 24,
-                ),
-                maxLength: 14,
-                hintText: 'Enter phone number',
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.next,
-                controller: phoneNumber,
-                validator: (value) =>
-                    Validators.validateText(value, 'Phone Number'),
-                inputFormatters: [
-                  PhoneInputFormatter(
-                    defaultCountryCode: 'US',
-                    allowEndlessPhone: true,
-                  )
+            TextFormFieldWidget(
+              prefixIcon: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '+1',
+                    style: regularText16,
+                  ),
                 ],
               ),
+              prefixIconConstraints: const BoxConstraints(
+                minWidth: 24,
+              ),
+              maxLength: 14,
+              hintText: 'Enter phone number',
+              keyboardType: TextInputType.phone,
+              textInputAction: TextInputAction.next,
+              controller: phoneNumber,
+              validator: (value) =>
+                  Validators.validateText(value, 'Phone Number'),
+              inputFormatters: [
+                PhoneInputFormatter(
+                  defaultCountryCode: 'US',
+                  allowEndlessPhone: true,
+                )
+              ],
             ),
             height20,
             Center(
@@ -125,20 +121,16 @@ class _ChangeNumberScreenState extends State<ChangeNumberScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  if (isEditing.value) {
-                    if (_formKey.currentState!.validate()) {
-                      await submitButton();
-                    }
-                  } else {
-                    isEditing.value = true;
+                  if (_formKey.currentState!.validate()) {
+                    await submitButton();
                   }
                 },
-                child: Obx(() => Text(
-                      isEditing.value ? 'SAVE NUMBER' : 'EDIT NUMBER',
-                      style: const TextStyle(
-                        letterSpacing: 0.5,
-                      ),
-                    )),
+                child: const Text(
+                  'EDIT NUMBER',
+                  style: TextStyle(
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ),
             ),
           ],
