@@ -19,6 +19,9 @@ import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify
 class RegisterController extends GetxController {
   GetStorage box = GetStorage();
   RxList<Branches> branchesList = <Branches>[].obs;
+  RxInt aboutMeIndex = 0.obs;
+  RxInt locatedIndex = 0.obs;
+  RxInt branchIndex = 0.obs;
   RxList locationList = [].obs;
   List<String> aboutMeList = <String>[
     "I've Shipped Before",

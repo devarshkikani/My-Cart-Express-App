@@ -31,6 +31,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   RxString locationID = ''.obs;
   RxString filePath = ''.obs;
   RxString fileName = ''.obs;
+  RxInt categorySelectIndex = 0.obs;
+
   TextEditingController pickUpLocation = TextEditingController();
   TextEditingController date = TextEditingController();
   TextEditingController month = TextEditingController();
@@ -576,8 +578,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    pickUpLocation.text = locationList[i]['parish_name'];
-                    locationID.value = locationList[i]['id'];
+                    categorySelectIndex.value = i;
                   },
                   children: List.generate(
                     locationList.length,
@@ -605,6 +606,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   onPressed: () {
+                    pickUpLocation.text =
+                        locationList[categorySelectIndex.value]['parish_name'];
+                    locationID.value =
+                        locationList[categorySelectIndex.value]['id'];
                     Navigator.pop(context);
                   },
                   child: const Text(

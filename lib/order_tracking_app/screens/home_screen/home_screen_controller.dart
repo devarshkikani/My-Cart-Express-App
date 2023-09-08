@@ -48,7 +48,8 @@ class HomeScreenController extends GetxController {
   RxString branchId = ''.obs;
   RxMap selectedPickuoBranch = {}.obs;
   RxList<Branches> branchesList = <Branches>[].obs;
-
+  RxInt categorySelectIndex = 0.obs;
+  RxInt selectedPickuoBranchIndex = 0.obs;
   CarouselController carouselController = CarouselController();
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();

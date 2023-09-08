@@ -40,6 +40,8 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxList categoriesList = [].obs;
+  RxInt categorySelectIndex = 0.obs;
+
   PackageDetailModel? packageDetailModel;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -837,8 +839,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    type.text = categoriesList[i]['cat_name'];
-                    catId.value = categoriesList[i]['id'];
+                    categorySelectIndex.value = i;
                   },
                   children: List.generate(
                     categoriesList.length,
@@ -866,6 +867,10 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                     ),
                   ),
                   onPressed: () {
+                    type.text =
+                        categoriesList[categorySelectIndex.value]['cat_name'];
+                    catId.value =
+                        categoriesList[categorySelectIndex.value]['id'];
                     Navigator.pop(ctx);
                   },
                   child: const Text(

@@ -30,6 +30,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxList categoriesList = [].obs;
+  RxInt categorySelectIndex = 0.obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -373,8 +374,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    type.text = categoriesList[i]['cat_name'];
-                    catId.value = categoriesList[i]['id'];
+                    categorySelectIndex.value = i;
                   },
                   children: List.generate(
                     categoriesList.length,
@@ -402,6 +402,11 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                     ),
                   ),
                   onPressed: () {
+                    type.text =
+                        categoriesList[categorySelectIndex.value]['cat_name'];
+                    catId.value =
+                        categoriesList[categorySelectIndex.value]['id'];
+
                     Navigator.pop(context);
                   },
                   child: const Text(

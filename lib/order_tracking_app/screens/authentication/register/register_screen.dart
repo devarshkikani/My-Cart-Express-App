@@ -373,8 +373,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int value) {
-                    controller.location.text =
-                        controller.locationList[value]['parish_name'];
+                    controller.locatedIndex.value = value;
                   },
                   children: List.generate(
                     controller.locationList.length,
@@ -402,6 +401,10 @@ class RegisterScreen extends GetView<RegisterController> {
                     ),
                   ),
                   onPressed: () {
+                    controller.location.text =
+                        controller.locationList[controller.locatedIndex.value]
+                            ['parish_name'];
+
                     Navigator.pop(context);
                   },
                   child: const Text(
@@ -443,10 +446,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int value) {
-                    controller.branchName.text =
-                        '${controller.branchesList[value].parishname} - ${controller.branchesList[value].code}';
-                    controller.branchId.value =
-                        controller.branchesList[value].branchId ?? '0';
+                    controller.branchIndex.value = value;
                   },
                   children: List.generate(
                     controller.branchesList.length,
@@ -480,6 +480,12 @@ class RegisterScreen extends GetView<RegisterController> {
                     ),
                   ),
                   onPressed: () {
+                    controller.branchName.text =
+                        '${controller.branchesList[controller.branchIndex.value].parishname} - ${controller.branchesList[controller.branchIndex.value].code}';
+                    controller.branchId.value = controller
+                            .branchesList[controller.branchIndex.value]
+                            .branchId ??
+                        '0';
                     Navigator.pop(context);
                   },
                   child: const Text(
@@ -521,7 +527,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   useMagnifier: true,
                   looping: false,
                   onSelectedItemChanged: (int value) {
-                    controller.aboutme.text = controller.aboutMeList[value];
+                    controller.aboutMeIndex.value = value;
                   },
                   children: List.generate(
                     controller.aboutMeList.length,
@@ -549,6 +555,9 @@ class RegisterScreen extends GetView<RegisterController> {
                     ),
                   ),
                   onPressed: () {
+                    controller.aboutme.text =
+                        controller.aboutMeList[controller.aboutMeIndex.value];
+
                     Navigator.pop(context);
                   },
                   child: const Text(

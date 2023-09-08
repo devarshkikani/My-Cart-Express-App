@@ -986,8 +986,7 @@ class HomeScreen extends StatelessWidget {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    _.type.text = _.categoriesList[i]['cat_name'];
-                    _.catId.value = _.categoriesList[i]['id'];
+                    _.categorySelectIndex.value = i;
                   },
                   children: List.generate(
                     _.categoriesList.length,
@@ -1015,6 +1014,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
+                    _.type.text = _.categoriesList[_.categorySelectIndex.value]
+                        ['cat_name'];
+                    _.catId.value =
+                        _.categoriesList[_.categorySelectIndex.value]['id'];
                     Navigator.pop(ctx);
                   },
                   child: const Text(
@@ -1088,10 +1091,7 @@ class HomeScreen extends StatelessWidget {
                     useMagnifier: true,
                     looping: true,
                     onSelectedItemChanged: (int value) {
-                      controller.selectedPickuoBranch.value =
-                          controller.branchesList[value].toJson();
-                      controller.branchId.value =
-                          controller.branchesList[value].branchId ?? '0';
+                      controller.selectedPickuoBranchIndex.value = value;
                     },
                     children: List.generate(
                       controller.branchesList.length,
@@ -1125,6 +1125,15 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
+                      controller.selectedPickuoBranch.value = controller
+                          .branchesList[
+                              controller.selectedPickuoBranchIndex.value]
+                          .toJson();
+                      controller.branchId.value = controller
+                              .branchesList[
+                                  controller.selectedPickuoBranchIndex.value]
+                              .branchId ??
+                          '0';
                       await controller.updateBranch(context);
                       Navigator.pop(context);
                     },

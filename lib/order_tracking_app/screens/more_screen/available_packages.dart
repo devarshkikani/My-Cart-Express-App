@@ -52,6 +52,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
   File? selectedFile;
+  RxInt categorySelectedIndex = 0.obs;
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxList categoriesList = [].obs;
@@ -1093,8 +1094,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    type.text = categoriesList[i]['cat_name'];
-                    catId.value = categoriesList[i]['id'];
+                    categorySelectedIndex.value = i;
                   },
                   children: List.generate(
                     categoriesList.length,
@@ -1122,6 +1122,10 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                     ),
                   ),
                   onPressed: () {
+                    type.text =
+                        categoriesList[categorySelectedIndex.value]['cat_name'];
+                    catId.value =
+                        categoriesList[categorySelectedIndex.value]['id'];
                     Navigator.pop(ctx);
                   },
                   child: const Text(

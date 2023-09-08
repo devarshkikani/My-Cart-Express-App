@@ -39,6 +39,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
   RxList categoriesList = [].obs;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   CarouselController carouselController = CarouselController();
+  RxInt categorySelectIndex = 0.obs;
 
   RxMap duePackagesData = {}.obs;
   @override
@@ -869,8 +870,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    type.text = categoriesList[i]['cat_name'];
-                    catId.value = categoriesList[i]['id'];
+                    categorySelectIndex.value = i;
                   },
                   children: List.generate(
                     categoriesList.length,
@@ -898,6 +898,10 @@ class _OverdueScreenState extends State<OverdueScreen> {
                     ),
                   ),
                   onPressed: () {
+                    type.text =
+                        categoriesList[categorySelectIndex.value]['cat_name'];
+                    catId.value =
+                        categoriesList[categorySelectIndex.value]['id'];
                     Navigator.pop(ctx);
                   },
                   child: const Text(

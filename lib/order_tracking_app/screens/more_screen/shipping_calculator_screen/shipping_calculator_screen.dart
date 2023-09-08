@@ -311,8 +311,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    controller.category.text = categoriesList[i]['cat_name'];
-                    controller.catId.value = categoriesList[i]['id'];
+                    controller.categoryIndex.value = i;
                   },
                   children: List.generate(
                     categoriesList.length,
@@ -340,6 +339,11 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                     ),
                   ),
                   onPressed: () {
+                    controller.category.text =
+                        categoriesList[controller.categoryIndex.value]
+                            ['cat_name'];
+                    controller.catId.value =
+                        categoriesList[controller.categoryIndex.value]['id'];
                     Navigator.pop(context);
                   },
                   child: const Text(

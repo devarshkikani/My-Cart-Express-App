@@ -13,6 +13,7 @@ class ShippingCalculatorController extends GetxController {
   TextEditingController estimated = TextEditingController();
   RxString catId = ''.obs;
   RxMap resultData = {}.obs;
+  RxInt categoryIndex = 0.obs;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<void> getGropDetails(context) async {
