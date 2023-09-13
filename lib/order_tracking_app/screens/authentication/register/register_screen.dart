@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -44,6 +45,9 @@ class RegisterScreen extends GetView<RegisterController> {
                     hintText: 'Enter first name here',
                     controller: controller.firstName,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                    ],
                     validator: (value) =>
                         Validators.validateText(value, 'First Name'),
                   ),
@@ -54,6 +58,9 @@ class RegisterScreen extends GetView<RegisterController> {
                     controller: controller.middleName,
                     maxLength: 1,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                    ],
                     validator: (value) =>
                         Validators.validateText(value, 'Middle Name'),
                   ),
@@ -63,6 +70,9 @@ class RegisterScreen extends GetView<RegisterController> {
                     hintText: 'Enter last name here',
                     controller: controller.lastName,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                    ],
                     validator: (value) =>
                         Validators.validateText(value, 'Last Name'),
                   ),

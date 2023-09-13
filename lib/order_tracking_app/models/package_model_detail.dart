@@ -173,7 +173,7 @@ class Data {
         packageRank: json["package_rank"],
         manifestId: json["manifest_id"],
         amount: json["amount"],
-        valueCost: json["value_cost"],
+        valueCost: json["value_cost"].toString(),
         freightCost: json["freight_cost"],
         freightCharges: json["freight_charges"],
         inlandCharges: json["inland_charges"],

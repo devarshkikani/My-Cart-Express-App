@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -97,6 +98,9 @@ class _ChangeNameScreenState extends State<ChangeNameScreen> {
             TextFormFieldWidget(
               hintText: 'Change First Name',
               controller: firstName,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+              ],
               validator: (value) => Validators.validateText(
                 value.toString(),
                 'Change first name',
@@ -111,6 +115,10 @@ class _ChangeNameScreenState extends State<ChangeNameScreen> {
             TextFormFieldWidget(
               hintText: 'Change Middle Name',
               controller: middleName,
+              maxLength: 1,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+              ],
               validator: (value) => Validators.validateText(
                 value.toString(),
                 'Change middle name',
@@ -125,6 +133,9 @@ class _ChangeNameScreenState extends State<ChangeNameScreen> {
             TextFormFieldWidget(
               hintText: 'Change Last Name',
               controller: lastName,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+              ],
               validator: (value) => Validators.validateText(
                 value.toString(),
                 'Change last name',
