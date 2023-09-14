@@ -56,6 +56,8 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
             ApiEndPoints.shippingTracking +
             widget.packagesDetails[widget.isFromAll ? 'package_id' : 'pkg_id'],
         context: notshow == true ? null : context);
+    timeline = [];
+    dateTimeline = [];
     if (response != null) {
       packageDetailModel = PackageDetailModel.fromJson(response);
       getCategoriesList();
