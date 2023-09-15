@@ -43,8 +43,6 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs sound access for success message of after scan QR code</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to scan QR codes</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -55,6 +53,8 @@
 	<string>Older devices need location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need location when in use</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs sound access for success message of after scan QR code</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>My Cart Express would like to access your photos for messaging other users.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
