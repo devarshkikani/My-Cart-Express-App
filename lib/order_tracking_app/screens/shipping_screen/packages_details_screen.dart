@@ -575,8 +575,12 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
             TextFormFieldWidget(
               hintText: 'Enter USD Value Here',
               controller: declared,
-              keyboardType: const TextInputType.numberWithOptions(signed: true),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+.?[0-9]*'))
+              ],
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),
             ),
@@ -679,7 +683,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   if (selectedFile != null) {
-                    await submitOnTap(packageId);
+                    await showConformatonDialog(packageId, context);
                   } else {
                     NetworkDio.showError(
                       title: 'Warning',
@@ -699,6 +703,46 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  showConformatonDialog(String packageId, BuildContext ctx) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext ctttx) {
+        return AlertDialog(
+          title: const Text("Confirm"),
+          content: Text(
+              "Your invoice value for this package is ${declared.text} US dollars?"),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: primary,
+              ),
+              child: const Text(
+                "No",
+                style: TextStyle(color: whiteColor),
+              ),
+              onPressed: () {
+                Navigator.pop(ctttx);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: primary,
+              ),
+              child: const Text(
+                "Yes",
+                style: TextStyle(color: whiteColor),
+              ),
+              onPressed: () async {
+                Navigator.pop(ctttx);
+                await submitOnTap(packageId);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
