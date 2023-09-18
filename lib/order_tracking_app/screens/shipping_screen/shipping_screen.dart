@@ -613,7 +613,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                 decimal: true,
               ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+.?[0-9]*'))
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
               ],
               validator: (value) =>
                   Validators.validateText(value, 'Declared Value in USD'),

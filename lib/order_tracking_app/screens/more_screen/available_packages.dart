@@ -836,7 +836,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                 decimal: true,
               ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+.?[0-9]*'))
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
               ],
               controller: declared,
               validator: (value) =>
