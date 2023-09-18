@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
+import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -41,6 +43,22 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
 
     if (response != null) {
       userDetails.value = response['data'];
+    }
+  }
+
+  Future<void> onRefresh() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+    );
+
+    if (response != null) {
+      userDetails.value = response['data'];
+      if (response['data']['verify_email'] != '0') {
+        box.write(StorageKey.isRegister, true);
+        Get.offAll(
+          () => MainHomeScreen(selectedIndex: 0.obs),
+        );
+      }
     }
   }
 
@@ -103,76 +121,85 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
   }
 
   Widget bodyView(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return RefreshIndicator(
+      onRefresh: () async {
+        await onRefresh();
+      },
+      child: Stack(
         children: [
-          profileView(),
-          height10,
-          Text(
-            'Congratulations,',
-            style: mediumText24.copyWith(
-              color: error,
-            ),
-          ),
-          height10,
-          Text(
-            'You are one step closer to start \nshipping with us!',
-            textAlign: TextAlign.center,
-            style: regularText18.copyWith(
-              color: Colors.grey.shade700,
-            ),
-          ),
-          height30,
-          Text(
-            'Verify your email for your free USA shipping Address',
-            textAlign: TextAlign.center,
-            style: regularText20.copyWith(
-                // color: Colors.grey.shade700,
-                ),
-          ),
-          height30,
-          Text(
-            'Visit your mail inbox',
-            textAlign: TextAlign.center,
-            style: regularText18.copyWith(
-              color: Colors.grey.shade700,
-            ),
-          ),
-          height10,
-          Obx(
-            () => Text(
-              userDetails.isEmpty ? '' : userDetails['email'].toString(),
-              textAlign: TextAlign.center,
-              style: regularText18,
-            ),
-          ),
-          height30,
-          Text(
-            'Email Verification needed',
-            textAlign: TextAlign.center,
-            style: regularText18.copyWith(
-              color: secondary,
-            ),
-          ),
-          height10,
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(Get.width / 2, 50),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
+          ListView(),
+          ListView(
+            children: [
+              profileView(),
+              height10,
+              Text(
+                'Congratulations,',
+                textAlign: TextAlign.center,
+                style: mediumText24.copyWith(
+                  color: error,
                 ),
               ),
-            ),
-            onPressed: () async {
-              await resendVerificationEmail();
-            },
-            child: const Text(
-              'Resend Verification Email',
-              style: TextStyle(
-                letterSpacing: 1,
+              height10,
+              Text(
+                'You are one step closer to start \nshipping with us!',
+                textAlign: TextAlign.center,
+                style: regularText18.copyWith(
+                  color: Colors.grey.shade700,
+                ),
               ),
-            ),
+              height30,
+              Text(
+                'Verify your email for your free USA shipping Address',
+                textAlign: TextAlign.center,
+                style: regularText20.copyWith(
+                    // color: Colors.grey.shade700,
+                    ),
+              ),
+              height30,
+              Text(
+                'Visit your mail inbox',
+                textAlign: TextAlign.center,
+                style: regularText18.copyWith(
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              height10,
+              Obx(
+                () => Text(
+                  userDetails.isEmpty ? '' : userDetails['email'].toString(),
+                  textAlign: TextAlign.center,
+                  style: regularText18,
+                ),
+              ),
+              height30,
+              Text(
+                'Email Verification needed',
+                textAlign: TextAlign.center,
+                style: regularText18.copyWith(
+                  color: secondary,
+                ),
+              ),
+              height10,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(Get.width / 2, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  await resendVerificationEmail();
+                },
+                child: const Text(
+                  'Resend Verification Email',
+                  style: TextStyle(
+                    letterSpacing: 1,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
