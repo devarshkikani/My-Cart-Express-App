@@ -745,7 +745,10 @@ class _OverdueScreenState extends State<OverdueScreen> {
       context: ctx,
       builder: (BuildContext ctttx) {
         return AlertDialog(
-          title: const Text("Confirm"),
+          title: const Text(
+            "All Invoice Values must be in US Dollars",
+            style: TextStyle(color: error, fontWeight: FontWeight.bold),
+          ),
           content: Text(
               "Your invoice value for this package is ${declared.text} US dollars?"),
           actions: [
