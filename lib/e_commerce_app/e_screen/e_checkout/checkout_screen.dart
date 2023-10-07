@@ -220,9 +220,9 @@ class ECheckoutScreen extends GetView<ECheckoutScreenController> {
             context: context,
           ),
           dividers(10),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const <Widget>[
+            children: <Widget>[
               Text(
                 'Total Amount',
                 style: lightText16,

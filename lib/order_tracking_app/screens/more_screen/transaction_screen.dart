@@ -234,8 +234,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget transactionsListView() {
     return Obx(
       () => isLoading.value
-          ? Row(
-              children: const [
+          ? const Row(
+              children: [
                 SizedBox(),
               ],
             )

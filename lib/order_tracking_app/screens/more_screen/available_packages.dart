@@ -488,8 +488,8 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
   Widget shippingList() {
     return Obx(
       () => isLoading.value
-          ? Row(
-              children: const <Widget>[
+          ? const Row(
+              children: <Widget>[
                 SizedBox(),
               ],
             )

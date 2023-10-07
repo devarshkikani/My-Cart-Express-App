@@ -300,8 +300,8 @@ class _OverdueScreenState extends State<OverdueScreen> {
   Widget duePackagesView() {
     return Obx(
       () => isLoading.value
-          ? Row(
-              children: const <Widget>[
+          ? const Row(
+              children: <Widget>[
                 SizedBox(),
               ],
             )
