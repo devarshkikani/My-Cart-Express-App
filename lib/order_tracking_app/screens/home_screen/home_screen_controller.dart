@@ -10,6 +10,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
 import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
@@ -59,6 +60,7 @@ class HomeScreenController extends GetxController {
     if (showLocation.value == '1') {
       getCurrentPosition();
     }
+    await getUserDetails(context);
     Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
       context: context,
@@ -127,6 +129,23 @@ class HomeScreenController extends GetxController {
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  Future<void> getUserDetails(context) async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      context: context,
+    );
+
+    if (response != null) {
+      if (response['data']['show_rating_popup'] == 1) {
+        final InAppReview inAppReview = InAppReview.instance;
+
+        if (await inAppReview.isAvailable()) {
+          await inAppReview.requestReview();
         }
       }
     }
