@@ -23,6 +23,7 @@ class ApiEndPoints {
   static String userEditInfo = 'user/edit_info';
   static String userRewards = 'user/rewards';
   static String uploadProfilePicture = 'user/upload_profile_picture';
+  static String uploadMissingPackage = 'user/upload_missing_package';
 
   static String balance = 'wallet_balance';
   static String howItWorks = 'dashboard/how_it_works';

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_cart_express/order_tracking_app/screens/missing_packages/warning_missing_packages_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
@@ -222,6 +223,27 @@ class HomeScreen extends StatelessWidget {
           balanceView(_),
           height15,
           detailsView(_, context),
+          height15,
+          InkWell(
+            onTap: () {
+              Get.to(() => const WarningMissingPackagesScreen());
+            },
+            child: Container(
+              height: 50,
+              width: Get.width,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: orangeColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: Text(
+                'Report a missing packages',
+                style: regularText16.copyWith(color: whiteColor),
+              ),
+            ),
+          ),
           height15,
           packagesView(_),
         ],
