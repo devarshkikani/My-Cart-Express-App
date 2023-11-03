@@ -8,7 +8,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
@@ -25,6 +24,7 @@ import 'package:my_cart_express/order_tracking_app/screens/more_screen/shipping_
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_index_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/transaction_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
+import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
@@ -147,6 +147,31 @@ class HomeScreenController extends GetxController {
         if (await inAppReview.isAvailable()) {
           await inAppReview.requestReview();
         }
+      }
+      if (response['data']['show_unopened_support_message'] == 1) {
+        showDialog(
+          context: context,
+          builder: (BuildContext ctttx) {
+            return AlertDialog(
+              content: const Text('You have an unread support message'),
+              actions: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: primary,
+                  ),
+                  child: const Text(
+                    "Open",
+                    style: TextStyle(color: whiteColor),
+                  ),
+                  onPressed: () async {
+                    Navigator.pop(ctttx);
+                    Get.to(() => const SupportIndexScreen());
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   }

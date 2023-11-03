@@ -133,7 +133,9 @@ class NetworkDio {
         if (response != null) {
           showError(
               title: 'Error',
-              errorMessage: response.data['message'].toString());
+              errorMessage: response.data == ''
+                  ? response.statusMessage.toString()
+                  : response.data['message'].toString());
         } else {
           showError(
               title: 'Error',
