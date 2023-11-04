@@ -7,11 +7,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
-import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/splash_video_screen.dart';
 
 class NotVerifyScreen extends StatefulWidget {
   NotVerifyScreen({super.key, required this.userDetails});
@@ -55,10 +55,23 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
       userDetails.value = response['data'];
       if (response['data']['verify_email'] != '0') {
         box.write(StorageKey.isRegister, true);
-        Get.offAll(
-          () => MainHomeScreen(selectedIndex: 0.obs),
-        );
+        showSplashScreenVideo();
       }
+    }
+  }
+
+  Future<void> showSplashScreenVideo() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.splashScreenVideo,
+    );
+
+    if (response != null) {
+      Get.to(
+        () => SplashVideoScreen(
+          videoTitle: response['data']['title'],
+          videoLink: response['data']['splash_screen_video_url'],
+        ),
+      );
     }
   }
 
