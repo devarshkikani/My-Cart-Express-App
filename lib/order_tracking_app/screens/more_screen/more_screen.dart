@@ -11,6 +11,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/upload_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -52,6 +53,7 @@ class MoreScreenState extends State<MoreScreen> {
     'Feedback',
     'My Rewards',
     'Auth Pickup',
+    'Upload File',
   ];
 
   final List iconList = [
@@ -62,6 +64,7 @@ class MoreScreenState extends State<MoreScreen> {
     feedbackIcon,
     myRewardIcon,
     pickupIcon,
+    shippingIcon,
   ];
 
   void categoryOntap(int index) {
@@ -81,6 +84,8 @@ class MoreScreenState extends State<MoreScreen> {
       Get.to(() => const MyRewardsScreen());
     } else if (index == 6) {
       Get.to(() => const AuthPickUpScreen());
+    } else if (index == 7) {
+      Get.to(() => const UploadFileScreen());
     }
   }
 

@@ -18,7 +18,8 @@ class ApiEndPoints {
   static String location = 'locations';
 
   static String userInfo = 'user/info';
-  static String userUploadFile = 'user/upload_file';
+  // static String userUploadFile = 'user/upload_file';
+  static String uploadFileAttachment = 'user/upload_file_attachment';
   static String userLocation = 'user/location';
   static String userEditInfo = 'user/edit_info';
   static String userRewards = 'user/rewards';
