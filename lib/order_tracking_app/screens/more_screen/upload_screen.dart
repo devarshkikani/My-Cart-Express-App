@@ -117,25 +117,6 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
           ],
         ),
         height20,
-        // Text(
-        //   'SELECT YOUR FILE TYPE',
-        //   style: regularText14,
-        // ),
-        // height10,
-        // TextFormFieldWidget(
-        //   hintText: 'Select Product',
-        //   controller: type,
-        //   readOnly: true,
-        //   onTap: () {
-        //     showBottomSheet(context, 1);
-        //   },
-        //   suffixIcon: const Icon(
-        //     Icons.keyboard_arrow_down_rounded,
-        //     color: primary,
-        //   ),
-        //   validator: (value) => Validators.validateText(value, 'File Type'),
-        // ),
-        // height15,
         Row(
           children: [
             Text(
@@ -143,7 +124,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
               style: lightText14,
             ),
             Text(
-              ' (PDF/JPEG/PNG/TIFF)',
+              ' (JPG,JPEG,PNG)',
               style: lightText14.copyWith(
                 color: Colors.grey,
               ),
@@ -151,74 +132,44 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
           ],
         ),
         height15,
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 20,
+        Obx(
+          () => fileName.value != ''
+              ? Text(
+                  fileName.value,
+                  style: lightText14.copyWith(
+                    color: primary,
+                  ),
+                )
+              : const SizedBox(),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: greyColor,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
           ),
-          decoration: BoxDecoration(
-            color: greyColor.withOpacity(.5),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Invoice file',
-                    ),
-                    Obx(() => Text(
-                          fileName.value != ''
-                              ? fileName.value
-                              : '(filename.txt)',
-                          style: lightText14.copyWith(
-                            color: primary,
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: greyColor,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                      ),
-                      onPressed: () async {
-                        // XFile? result = await ImagePicker()
-                        //     .pickImage(source: ImageSource.gallery);
-                        FilePickerResult? result =
-                            await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowMultiple: true,
-                          allowedExtensions: ['jpg', 'png', 'jpeg', 'tiff'],
-                        );
-                        if (result != null) {
-                          await pickFile(
-                            result.files.first.path!,
-                            result.files.first.name,
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Click to select file...',
-                        style: TextStyle(
-                          letterSpacing: 0.5,
-                          color: primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          onPressed: () async {
+            // XFile? result = await ImagePicker()
+            //     .pickImage(source: ImageSource.gallery);
+            FilePickerResult? result = await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowMultiple: true,
+              allowedExtensions: ['jpg', 'png', 'jpeg', 'tiff'],
+            );
+            if (result != null) {
+              await pickFile(
+                result.files.first.path!,
+                result.files.first.name,
+              );
+            }
+          },
+          child: const Text(
+            'Select /Upload File',
+            style: TextStyle(
+              letterSpacing: 0.5,
+              color: primary,
+            ),
           ),
         ),
         height15,
