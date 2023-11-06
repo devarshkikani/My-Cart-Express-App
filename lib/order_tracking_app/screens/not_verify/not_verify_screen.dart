@@ -10,6 +10,7 @@ import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/splash_video_screen.dart';
 
@@ -43,6 +44,9 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
 
     if (response != null) {
       userDetails.value = response['data'];
+      GlobalSingleton.showRatingPopup = response['data']['show_rating_popup'];
+      GlobalSingleton.showUnopenedSupportmessage =
+          response['data']['show_unopened_support_message'];
     }
   }
 
@@ -63,6 +67,7 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
   Future<void> showSplashScreenVideo() async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.splashScreenVideo,
+      context: context,
     );
 
     if (response != null) {
@@ -70,6 +75,7 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
         () => SplashVideoScreen(
           videoTitle: response['data']['title'],
           videoLink: response['data']['splash_screen_video_url'],
+          userId: widget.userDetails['user_id'],
         ),
       );
     }

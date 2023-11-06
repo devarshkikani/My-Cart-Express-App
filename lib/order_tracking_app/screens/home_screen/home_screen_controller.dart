@@ -25,6 +25,7 @@ import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/s
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/transaction_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
@@ -135,44 +136,37 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> getUserDetails(context) async {
-    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
-      context: context,
-    );
+    if (GlobalSingleton.showUnopenedSupportmessage == 1) {
+      final InAppReview inAppReview = InAppReview.instance;
 
-    if (response != null) {
-      if (response['data']['show_rating_popup'] == 1) {
-        final InAppReview inAppReview = InAppReview.instance;
-
-        if (await inAppReview.isAvailable()) {
-          await inAppReview.requestReview();
-        }
+      if (await inAppReview.isAvailable()) {
+        await inAppReview.requestReview();
       }
-      if (response['data']['show_unopened_support_message'] == 1) {
-        showDialog(
-          context: context,
-          builder: (BuildContext ctttx) {
-            return AlertDialog(
-              content: const Text('You have an unread support message'),
-              actions: [
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: primary,
-                  ),
-                  child: const Text(
-                    "Open",
-                    style: TextStyle(color: whiteColor),
-                  ),
-                  onPressed: () async {
-                    Navigator.pop(ctttx);
-                    Get.to(() => const SupportIndexScreen());
-                  },
+    }
+    if (GlobalSingleton.showUnopenedSupportmessage == 1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext ctttx) {
+          return AlertDialog(
+            content: const Text('You have an unread support message'),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: primary,
                 ),
-              ],
-            );
-          },
-        );
-      }
+                child: const Text(
+                  "Open",
+                  style: TextStyle(color: whiteColor),
+                ),
+                onPressed: () async {
+                  Navigator.pop(ctttx);
+                  Get.to(() => const SupportIndexScreen());
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
