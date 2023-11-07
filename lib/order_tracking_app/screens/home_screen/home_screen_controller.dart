@@ -13,6 +13,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
 import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
+import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/models/branches_model.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
@@ -25,11 +26,13 @@ import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/s
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/transaction_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
+import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
 
 RxList imageList = [].obs;
 RxString showLocation = ''.obs;
@@ -42,6 +45,10 @@ class HomeScreenController extends GetxController {
   RxString fileName = ''.obs;
   RxString fullName = ''.obs;
   RxString howItWorks = ''.obs;
+  RxString videoTitle = ''.obs;
+  RxString videoLink = ''.obs;
+  RxInt countDown = 0.obs;
+  RxBool isApiCalling = false.obs;
   RxList packagesList = [].obs;
   RxList categoriesList = [].obs;
   RxMap usaShippingData = {}.obs;
@@ -55,13 +62,14 @@ class HomeScreenController extends GetxController {
   CarouselController carouselController = CarouselController();
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
+  late VideoPlayerController controller;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void getBalance(BuildContext context) async {
     if (showLocation.value == '1') {
       getCurrentPosition();
     }
-    await getUserDetails(context);
     Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
       context: context,
@@ -133,17 +141,18 @@ class HomeScreenController extends GetxController {
         }
       }
     }
+    await getUserDetails(context);
   }
 
   Future<void> getUserDetails(context) async {
-    if (GlobalSingleton.showUnopenedSupportmessage == 1) {
+    if (GlobalSingleton.userDetails['show_rating_popup'] == 1) {
       final InAppReview inAppReview = InAppReview.instance;
 
       if (await inAppReview.isAvailable()) {
         await inAppReview.requestReview();
       }
     }
-    if (GlobalSingleton.showUnopenedSupportmessage == 1) {
+    if (GlobalSingleton.userDetails['show_unopened_support_message'] == 1) {
       showDialog(
         context: context,
         builder: (BuildContext ctttx) {
@@ -167,6 +176,9 @@ class HomeScreenController extends GetxController {
           );
         },
       );
+    }
+    if (GlobalSingleton.userDetails['show_splash_screen'] == 1) {
+      await showSplashScreenVideo(context);
     }
   }
 
@@ -278,6 +290,135 @@ class HomeScreenController extends GetxController {
     } else {
       Get.offAllNamed(ERoutes.firstOnboarding);
     }
+  }
+
+  Future<void> showSplashScreenVideo(context) async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.splashScreenVideo,
+    );
+
+    if (response != null) {
+      videoLink.value = response['data']['splash_screen_video_url'];
+      videoTitle.value = response['data']['title'];
+      controller = VideoPlayerController.networkUrl(Uri.parse(videoLink.value))
+        ..initialize().then((_) {
+          controller.play();
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            barrierColor: blackColor.withOpacity(.8),
+            builder: (BuildContext ctttx) {
+              return dialogDesign(ctttx);
+            },
+          );
+        });
+      controller.addListener(() async {
+        countDown.value = controller.value.duration.inSeconds -
+            controller.value.position.inSeconds;
+        if (controller.value.isCompleted) {
+          if (!isApiCalling.value) {
+            isApiCalling.value = true;
+            controller.dispose();
+            await saveSplashScreenUserFunction(context);
+          }
+        }
+      });
+    }
+  }
+
+  Widget dialogDesign(BuildContext ctttx) {
+    return WillPopScope(
+      onWillPop: () async {
+        return isApiCalling.value;
+      },
+      child: AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        insetPadding: const EdgeInsets.all(18),
+        content: Container(
+          color: whiteColor,
+          child: Stack(
+            children: [
+              Center(
+                child: controller.value.isInitialized
+                    ? AspectRatio(
+                        aspectRatio: controller.value.aspectRatio,
+                        child: VideoPlayer(controller),
+                      )
+                    : Container(),
+              ),
+              Container(
+                height: 100,
+                margin: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 20,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                ),
+                width: Get.width,
+                decoration: BoxDecoration(
+                  color: Theme.of(ctttx).colorScheme.secondary.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Welcome to',
+                      style: mediumText14,
+                    ),
+                    Image.asset(
+                      appLogo,
+                      height: 40,
+                    ),
+                  ],
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: Get.height * .4,
+                  ),
+                  child: Obx(
+                    () => Text(
+                      videoTitle.value,
+                      style: mediumText16.copyWith(
+                        color: blackColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Obx(
+                    () => Text(
+                      'Countinue to dashbord in ${countDown.value} seconds',
+                      style: mediumText16.copyWith(color: error),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> saveSplashScreenUserFunction(context) async {
+    await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.saveSplashScreenUser,
+      context: context,
+      data: dio.FormData.fromMap({
+        'user_id': GlobalSingleton.userDetails['userId'],
+      }),
+    );
+    Get.back();
   }
 }
 
