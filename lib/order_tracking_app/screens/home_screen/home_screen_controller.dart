@@ -300,13 +300,14 @@ class HomeScreenController extends GetxController {
     if (response != null) {
       videoLink.value = response['data']['splash_screen_video_url'];
       videoTitle.value = response['data']['title'];
+      double? opacity = response['data']['splash_screen_video_opacity'];
       controller = VideoPlayerController.networkUrl(Uri.parse(videoLink.value))
         ..initialize().then((_) {
           controller.play();
           showDialog(
             context: context,
             barrierDismissible: false,
-            barrierColor: blackColor.withOpacity(.8),
+            barrierColor: blackColor.withOpacity(opacity ?? .8),
             builder: (BuildContext ctttx) {
               return dialogDesign(ctttx);
             },
@@ -358,7 +359,7 @@ class HomeScreenController extends GetxController {
                 ),
                 width: Get.width,
                 decoration: BoxDecoration(
-                  color: Theme.of(ctttx).colorScheme.secondary.withOpacity(0.5),
+                  color: offWhite,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -368,7 +369,7 @@ class HomeScreenController extends GetxController {
                       style: mediumText14,
                     ),
                     Image.asset(
-                      appLogo,
+                      appLogoColorfull,
                       height: 40,
                     ),
                   ],
