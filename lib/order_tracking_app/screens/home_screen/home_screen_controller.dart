@@ -177,9 +177,9 @@ class HomeScreenController extends GetxController {
         },
       );
     }
-    if (GlobalSingleton.userDetails['show_splash_screen'] == 1) {
-      await showSplashScreenVideo(context);
-    }
+    // if (GlobalSingleton.userDetails['show_splash_screen'] == 1) {
+    await showSplashScreenVideo(context);
+    // }
   }
 
   Future<void> getBranch(BuildContext context) async {
@@ -317,11 +317,12 @@ class HomeScreenController extends GetxController {
         countDown.value = controller.value.duration.inSeconds -
             controller.value.position.inSeconds;
         if (controller.value.isCompleted) {
-          if (!isApiCalling.value) {
-            isApiCalling.value = true;
-            controller.dispose();
-            await saveSplashScreenUserFunction(context);
-          }
+          controller.dispose();
+          Get.back();
+        }
+        if (!isApiCalling.value) {
+          isApiCalling.value = true;
+          await saveSplashScreenUserFunction(context);
         }
       });
     }
@@ -419,7 +420,6 @@ class HomeScreenController extends GetxController {
         'user_id': GlobalSingleton.userDetails['userId'],
       }),
     );
-    Get.back();
   }
 }
 

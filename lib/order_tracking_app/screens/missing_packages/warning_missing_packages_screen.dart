@@ -97,7 +97,7 @@ class WarningMissingPackagesScreen extends StatelessWidget {
         ),
         height10,
         Text(
-          "Please ensure all packages are addressed corectly and your MCE# is placed on all future packages.",
+          "Please ensure all packages are addressed correctly and your MCE# is placed on all future packages.",
           style: regularText16.copyWith(color: error),
         ),
         height30,

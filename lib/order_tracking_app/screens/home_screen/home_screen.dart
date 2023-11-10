@@ -239,7 +239,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Report a missing packages',
+                'Report Missing Package',
                 style: regularText16.copyWith(color: whiteColor),
               ),
             ),

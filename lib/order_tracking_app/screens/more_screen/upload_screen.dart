@@ -7,6 +7,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 // import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
@@ -149,20 +150,8 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
           ),
-          onPressed: () async {
-            // XFile? result = await ImagePicker()
-            //     .pickImage(source: ImageSource.gallery);
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              allowMultiple: true,
-              allowedExtensions: ['jpg', 'png', 'jpeg', 'tiff'],
-            );
-            if (result != null) {
-              await pickFile(
-                result.files.first.path!,
-                result.files.first.name,
-              );
-            }
+          onPressed: () {
+            selectFileType(context);
           },
           child: const Text(
             'Select /Upload File',
@@ -205,119 +194,119 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
     );
   }
 
-  // void selectFileType(
-  //   BuildContext context,
-  // ) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(10.0),
-  //     ),
-  //     backgroundColor: offWhite,
-  //     builder: (BuildContext context) {
-  //       return SizedBox(
-  //         height: 250,
-  //         child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.stretch,
-  //             children: [
-  //               height20,
-  //               ElevatedButton(
-  //                 onPressed: () async {
-  //                   Get.back();
-  //                   XFile? result = await ImagePicker()
-  //                       .pickImage(source: ImageSource.gallery);
-  //                   // FilePickerResult? result =
-  //                   //     await FilePicker.platform.pickFiles(
-  //                   //   type: FileType.custom,
-  //                   //   allowMultiple: true,
-  //                   //   allowedExtensions: ['jpg', 'png', 'jpeg'],
-  //                   // );
-  //                   if (result != null) {
-  //                     await pickFile(result.path, result.name);
-  //                   }
-  //                 },
-  //                 style: ElevatedButton.styleFrom(
-  //                   backgroundColor: whiteColor,
-  //                   textStyle: const TextStyle(color: blackColor),
-  //                   shape: RoundedRectangleBorder(
-  //                     side: const BorderSide(
-  //                       color: blackColor,
-  //                     ),
-  //                     borderRadius: BorderRadius.circular(10.0),
-  //                   ),
-  //                 ),
-  //                 child: const Text(
-  //                   "CHOOSE IMAGE FROM GALLERY",
-  //                   style: TextStyle(
-  //                     color: blackColor,
-  //                   ),
-  //                 ),
-  //               ),
-  //               height10,
-  //               ElevatedButton(
-  //                 onPressed: () async {
-  //                   Get.back();
-  //                   FilePickerResult? result =
-  //                       await FilePicker.platform.pickFiles(
-  //                     type: FileType.custom,
-  //                     allowedExtensions: [
-  //                       'pdf',
-  //                       'doc',
-  //                     ],
-  //                   );
-  //                   if (result != null) {
-  //                     await pickFile(
-  //                         result.files.first.path!, result.files.first.name);
-  //                   }
-  //                 },
-  //                 style: ElevatedButton.styleFrom(
-  //                   backgroundColor: whiteColor,
-  //                   textStyle: const TextStyle(color: blackColor),
-  //                   shape: RoundedRectangleBorder(
-  //                     side: const BorderSide(
-  //                       color: blackColor,
-  //                     ),
-  //                     borderRadius: BorderRadius.circular(10.0),
-  //                   ),
-  //                 ),
-  //                 child: const Text(
-  //                   "CHOOSE DOCUMENT",
-  //                   style: TextStyle(
-  //                     color: blackColor,
-  //                   ),
-  //                 ),
-  //               ),
-  //               height10,
-  //               ElevatedButton(
-  //                 style: ElevatedButton.styleFrom(
-  //                   backgroundColor: blackColor,
-  //                   padding: const EdgeInsets.symmetric(horizontal: 20),
-  //                   shape: const RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.all(
-  //                       Radius.circular(5),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 onPressed: () {
-  //                   Get.back();
-  //                 },
-  //                 child: const Text(
-  //                   'CANCEL',
-  //                   style: TextStyle(
-  //                     letterSpacing: 0.5,
-  //                   ),
-  //                 ),
-  //               ),
-  //               height20,
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  void selectFileType(
+    BuildContext context,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      backgroundColor: offWhite,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 250,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                height20,
+                ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                    // XFile? result = await ImagePicker()
+                    //     .pickImage(source: ImageSource.gallery);
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowMultiple: true,
+                      allowedExtensions: ['jpg', 'png', 'jpeg', 'tiff'],
+                    );
+                    if (result != null) {
+                      await pickFile(
+                        result.files.first.path!,
+                        result.files.first.name,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: whiteColor,
+                    textStyle: const TextStyle(color: blackColor),
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        color: blackColor,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    "CHOOSE IMAGE FROM GALLERY",
+                    style: TextStyle(
+                      color: blackColor,
+                    ),
+                  ),
+                ),
+                height10,
+                ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                    XFile? result = await ImagePicker()
+                        .pickImage(source: ImageSource.camera);
+                    if (result != null) {
+                      await pickFile(
+                        result.path,
+                        result.name,
+                      );
+                      setState(() {});
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: whiteColor,
+                    textStyle: const TextStyle(color: blackColor),
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        color: blackColor,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    "TAKE PHOTO",
+                    style: TextStyle(
+                      color: blackColor,
+                    ),
+                  ),
+                ),
+                height10,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: blackColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                height20,
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   // void showBottomSheet(BuildContext context, int index) {
   //   showModalBottomSheet(
