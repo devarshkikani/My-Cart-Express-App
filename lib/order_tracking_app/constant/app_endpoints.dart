@@ -26,6 +26,7 @@ class ApiEndPoints {
   static String saveSplashScreenUser = 'user/save_splash_screen_user';
   static String uploadProfilePicture = 'user/upload_profile_picture';
   static String uploadMissingPackage = 'user/upload_missing_package';
+  static String missingPackageMessage = 'user/missing_package_message';
 
   static String balance = 'wallet_balance';
   static String howItWorks = 'dashboard/how_it_works';
