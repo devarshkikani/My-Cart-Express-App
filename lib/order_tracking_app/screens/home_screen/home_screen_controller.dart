@@ -177,9 +177,9 @@ class HomeScreenController extends GetxController {
         },
       );
     }
-    // if (GlobalSingleton.userDetails['show_splash_screen'] == 1) {
-    await showSplashScreenVideo(context);
-    // }
+    if (GlobalSingleton.userDetails['show_splash_screen'] == 1) {
+      await showSplashScreenVideo(context);
+    }
   }
 
   Future<void> getBranch(BuildContext context) async {
