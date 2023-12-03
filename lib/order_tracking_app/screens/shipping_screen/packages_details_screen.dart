@@ -87,7 +87,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
     setState(() {});
   }
 
-  Future<void> submitOnTap(String? packageId) async {
+  Future<void> submitOnTap(String? packageId, int editFlag) async {
     final data = dio.FormData.fromMap({
       'files': await dio.MultipartFile.fromFile(
         selectedFile!.path,
@@ -95,6 +95,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
       ),
       'attachment_package_id': packageId,
       'attach_for': 'invoice',
+      'edit_flag': editFlag,
       'customer_input_value': declared.text,
       'category_id': catId.value,
     });
@@ -329,7 +330,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                                   1
                               ? () {
                                   uploadInvoice(
-                                      widget.packagesDetails['package_id']);
+                                      widget.packagesDetails['package_id'], 0);
                                 }
                               : null,
                           child: Container(
@@ -488,6 +489,45 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
               ],
             ),
           height25,
+          if (widget.packagesDetails['edit_invoice'] == 1)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Obx(
+                  () => fileName.value != ''
+                      ? Text(
+                          fileName.value,
+                          style: lightText14.copyWith(
+                            color: primary,
+                          ),
+                        )
+                      : const SizedBox(),
+                ),
+                Obx(
+                  () =>
+                      fileName.value != '' ? const Spacer() : const SizedBox(),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    uploadInvoice(widget.packagesDetails['package_id'], 1);
+                  },
+                  child: const Text(
+                    'Edit Invoice',
+                    style: TextStyle(
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          if (widget.packagesDetails['edit_invoice'] == 1) height25,
           Text(
             'Timeline',
             style: regularText16,
@@ -522,7 +562,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
     );
   }
 
-  void uploadInvoice(String packageId) async {
+  void uploadInvoice(String packageId, int editFlag) async {
     showModalBottomSheet(
         context: context,
         isDismissible: true,
@@ -539,7 +579,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: uploadFileBodyView(packageId),
+              child: uploadFileBodyView(packageId, editFlag),
             ),
           );
         }).then((value) {
@@ -551,7 +591,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
     });
   }
 
-  Widget uploadFileBodyView(String packageId) {
+  Widget uploadFileBodyView(String packageId, int editFlag) {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -683,7 +723,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   if (selectedFile != null) {
-                    await showConformatonDialog(packageId, context);
+                    await showConformatonDialog(packageId, context, editFlag);
                   } else {
                     NetworkDio.showError(
                       title: 'Warning',
@@ -706,7 +746,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
     );
   }
 
-  showConformatonDialog(String packageId, BuildContext ctx) {
+  showConformatonDialog(String packageId, BuildContext ctx, int editFlag) {
     showDialog(
       context: ctx,
       builder: (BuildContext ctttx) {
@@ -740,7 +780,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
               ),
               onPressed: () async {
                 Navigator.pop(ctttx);
-                await submitOnTap(packageId);
+                await submitOnTap(packageId, editFlag);
               },
             ),
           ],
