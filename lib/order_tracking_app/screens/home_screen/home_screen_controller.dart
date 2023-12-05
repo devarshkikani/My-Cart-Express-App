@@ -332,6 +332,7 @@ class HomeScreenController extends GetxController {
         }
         if (!isApiCalling.value) {
           isApiCalling.value = true;
+          GlobalSingleton.userDetails['show_splash_screen'] = 0;
           await saveSplashScreenUserFunction(context);
         }
       });
