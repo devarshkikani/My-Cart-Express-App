@@ -439,15 +439,35 @@ class HomeScreen extends StatelessWidget {
                       style: lightText13,
                     ),
                   ),
-                  height10,
                   Obx(
                     () => Text(
                       _.usaShippingData.isNotEmpty
                           ? _.usaShippingData['address_1'] +
                               ' ' +
                               _.usaShippingData['address_2'] +
-                              ' ' +
-                              _.usaShippingData['city'] +
+                              ' '
+                          : '',
+                      style: lightText13,
+                    ),
+                  ),
+                  Obx(
+                    () => Text(
+                      _.usaShippingData.isNotEmpty
+                          ? _.usaShippingData['address_2'] +
+                              (_.packageShippingData[
+                                              'usa_address_setting_details']
+                                          ['air_enable'] ==
+                                      '1'
+                                  ? ' ${_.packageShippingData['mce_number']}'
+                                  : '')
+                          : '',
+                      style: lightText13,
+                    ),
+                  ),
+                  Obx(
+                    () => Text(
+                      _.usaShippingData.isNotEmpty
+                          ? _.usaShippingData['city'] +
                               ', ' +
                               _.usaShippingData['state'] +
                               ', ' +

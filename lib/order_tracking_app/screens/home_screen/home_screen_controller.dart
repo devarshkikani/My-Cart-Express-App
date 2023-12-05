@@ -44,6 +44,7 @@ class HomeScreenController extends GetxController {
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
   RxString fullName = ''.obs;
+  RxString mce = ''.obs;
   RxString howItWorks = ''.obs;
   RxString videoTitle = ''.obs;
   RxString videoLink = ''.obs;
@@ -53,6 +54,7 @@ class HomeScreenController extends GetxController {
   RxList categoriesList = [].obs;
   RxMap usaShippingData = {}.obs;
   RxMap pickuoBranchData = {}.obs;
+  RxMap packageShippingData = {}.obs;
   GetStorage box = GetStorage();
   RxString branchId = ''.obs;
   RxMap selectedPickuoBranch = {}.obs;
@@ -99,11 +101,19 @@ class HomeScreenController extends GetxController {
             context: context,
           );
           if (shippingPickupAddress != null) {
+            packageShippingData.value =
+                shippingPickupAddress['package_shipping_data'];
             fullName.value = shippingPickupAddress['package_shipping_data']
                     ['firstname'] +
                 ' ' +
-                shippingPickupAddress['package_shipping_data']['lastname'] +
-                ' ' +
+                shippingPickupAddress['package_shipping_data']['lastname'];
+            if (shippingPickupAddress['package_shipping_data']
+                    ['usa_address_setting_details']['name_line'] ==
+                '1') {
+              fullName.value +=
+                  ' ${shippingPickupAddress['package_shipping_data']['mce_number']}';
+            }
+            mce.value =
                 shippingPickupAddress['package_shipping_data']['mce_number'];
             usaShippingData.value =
                 shippingPickupAddress['package_shipping_data']
