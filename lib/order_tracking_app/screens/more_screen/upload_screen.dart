@@ -31,14 +31,16 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   // RxString catId = ''.obs;
   RxString fileName = ''.obs;
   // RxList categoriesList = [].obs;
+  RxList filesList = [].obs;
   // RxInt categorySelectIndex = 0.obs;
   // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // getShippingCategories();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // getShippingCategories();
+    getUserUploadFiles();
+  }
 
   // Future<void> getShippingCategories() async {
   //   Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
@@ -49,6 +51,17 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   //     categoriesList.value = response['list'];
   //   }
   // }
+  Future<void> getUserUploadFiles() async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userUploadFiles,
+      context: context,
+      data: {},
+    );
+    if (response != null) {
+      filesList.value = response['data'];
+      filesList.value = filesList.reversed.toList();
+    }
+  }
 
   Future<void> pickFile(String path, String name) async {
     selectedFile = File(path); //File(result.files.first.path!).obs;
@@ -190,7 +203,82 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
           ),
         ),
         height20,
+        Expanded(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Uploaded Files',
+                  style: regularText18,
+                ),
+              ),
+              height20,
+              Obx(() => filesList.isEmpty
+                  ? SizedBox(
+                      height: 100,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: Text(
+                          'Data not found',
+                        ),
+                      ),
+                    )
+                  : listOfUploadedFiles()),
+            ],
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget listOfUploadedFiles() {
+    return Expanded(
+      child: ListView.separated(
+        itemCount: filesList.length,
+        separatorBuilder: ((context, index) {
+          return const SizedBox(
+            height: 10,
+          );
+        }),
+        padding: EdgeInsets.zero,
+        itemBuilder: ((context, index) {
+          return Row(
+            children: [
+              Image.network(
+                filesList[index]['file_url'],
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  filesList[index]['file_title'],
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text(filesList[index]['file_title']),
+                      content: Image.network(
+                        filesList[index]['file_url'],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.preview_rounded),
+              ),
+            ],
+          );
+        }),
+      ),
     );
   }
 
