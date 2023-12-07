@@ -39,7 +39,7 @@ RxString showLocation = ''.obs;
 
 class HomeScreenController extends GetxController {
   Rx<File>? selectedFile;
-  RxInt balance = 0.obs;
+  Rx<num> balance = Rx<num>(0);
   RxInt mycartBucks = 0.obs;
   RxString catId = ''.obs;
   RxString fileName = ''.obs;
