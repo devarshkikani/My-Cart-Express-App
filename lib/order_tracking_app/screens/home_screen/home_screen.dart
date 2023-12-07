@@ -442,10 +442,7 @@ class HomeScreen extends StatelessWidget {
                   Obx(
                     () => Text(
                       _.usaShippingData.isNotEmpty
-                          ? _.usaShippingData['address_1'] +
-                              ' ' +
-                              _.usaShippingData['address_2'] +
-                              ' '
+                          ? _.usaShippingData['address_1']
                           : '',
                       style: lightText13,
                     ),
