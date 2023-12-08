@@ -93,7 +93,6 @@ class _PackagesMissingListScreenState extends State<PackagesMissingListScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Id', style: regularText16),
                             Text('Date Submitted', style: regularText16),
                             Text('Delivery Date', style: regularText16),
                             Text('Addition Info', style: regularText16),
@@ -105,17 +104,12 @@ class _PackagesMissingListScreenState extends State<PackagesMissingListScreen> {
                             Text(' : ', style: regularText16),
                             Text(' : ', style: regularText16),
                             Text(' : ', style: regularText16),
-                            Text(' : ', style: regularText16),
                           ],
                         ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${openMissingPackages[index]['package_id']}',
-                                style: regularText16,
-                              ),
                               Text(
                                 DateFormat('dd MMM yyyy').format(DateTime.parse(
                                     openMissingPackages[index]
