@@ -51,10 +51,18 @@ class _SplashScreenState extends State<SplashScreen> {
     );
     if (commonSettings != null) {
       showLocation.value = commonSettings['show_location'];
-      if (GlobalSingleton.appVersion != commonSettings['app_version']) {
-        showUpdateApp(context, commonSettings['force_update'] == "0");
+      if (Platform.isAndroid) {
+        if (GlobalSingleton.appVersion != commonSettings['android_version']) {
+          showUpdateApp(context, commonSettings['force_update'] == "0");
+        } else {
+          redirectScreen();
+        }
       } else {
-        redirectScreen();
+        if (GlobalSingleton.appVersion != commonSettings['app_version']) {
+          showUpdateApp(context, commonSettings['force_update'] == "0");
+        } else {
+          redirectScreen();
+        }
       }
     } else {
       redirectScreen();
