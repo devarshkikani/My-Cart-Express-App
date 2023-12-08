@@ -329,7 +329,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                     ),
                   ),
                   child: const Text(
-                    "CHOOSE IMAGE FROM GALLERY",
+                    "CHOOSE IMAGE FROM PHOTOS/GALLERY",
                     style: TextStyle(
                       color: blackColor,
                     ),
