@@ -27,6 +27,7 @@ class ApiEndPoints {
   static String uploadProfilePicture = 'user/upload_profile_picture';
   static String uploadMissingPackage = 'user/upload_missing_package';
   static String missingPackageMessage = 'user/missing_package_message';
+  static String openMissingPackages = 'user/open_missing_packages';
 
   static String balance = 'wallet_balance';
   static String howItWorks = 'dashboard/how_it_works';
