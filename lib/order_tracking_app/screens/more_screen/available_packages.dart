@@ -621,27 +621,42 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                                   child: Row(
                                     children: [
                                       width20,
-                                      Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: SizedBox(
-                                            height: 60,
-                                            width: 60,
-                                            child: Image.network(
-                                              availablePackages[index]
-                                                  ['package_image'],
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      width20,
+                                      // Center(
+                                      //   child: ClipRRect(
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10),
+                                      //     child: SizedBox(
+                                      //       height: 60,
+                                      //       width: 60,
+                                      //       child: Image.network(
+                                      //         availablePackages[index]
+                                      //             ['package_image'],
+                                      //         fit: BoxFit.cover,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      // width20,
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            availablePackages[index]
+                                                        ['sender_other_name'] ==
+                                                    ""
+                                                ? const SizedBox()
+                                                : Text(
+                                                    availablePackages[index]
+                                                        ['sender_other_name'],
+                                                    style: boldText14.copyWith(
+                                                      color: blackColor,
+                                                    ),
+                                                  ),
+                                            if (availablePackages[index]
+                                                    ['sender_other_name'] !=
+                                                "")
+                                              height5,
                                             Text(
                                               availablePackages[index]
                                                   ['pkg_shipging_code'],

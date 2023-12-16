@@ -238,22 +238,35 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                       Row(
                         children: [
                           width10,
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: SizedBox(
-                              height: 60,
-                              width: 60,
-                              child: Image.network(
-                                widget.packagesDetails['package_image'],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          width20,
+                          // ClipRRect(
+                          //   borderRadius: BorderRadius.circular(10),
+                          //   child: SizedBox(
+                          //     height: 60,
+                          //     width: 60,
+                          //     child: Image.network(
+                          //       widget.packagesDetails['package_image'],
+                          //       fit: BoxFit.cover,
+                          //     ),
+                          //   ),
+                          // ),
+                          // width20,
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                widget.packagesDetails['sender_other_name'] ==
+                                        ""
+                                    ? const SizedBox()
+                                    : Text(
+                                        '''Sender Name : ${widget.packagesDetails['sender_other_name']}''',
+                                        style: boldText16.copyWith(
+                                          color: blackColor,
+                                        ),
+                                      ),
+                                if (widget
+                                        .packagesDetails['sender_other_name'] !=
+                                    "")
+                                  height10,
                                 Text(
                                   '''Package #: ${widget.packagesDetails[widget.isFromAll ? 'shipping_mcecode' : 'pkg_shipging_code']}''',
                                   style: regularText14.copyWith(

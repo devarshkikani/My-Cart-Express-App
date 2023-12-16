@@ -23,6 +23,17 @@ TextStyle boldText16 = const TextStyle(
   fontWeight: FontWeight.w700,
   color: Colors.black,
 );
+TextStyle boldText14 = const TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w700,
+  color: Colors.black,
+);
+
+TextStyle boldText12 = const TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w700,
+  color: Colors.black,
+);
 
 TextStyle mediumText24 = const TextStyle(
   fontSize: 24,

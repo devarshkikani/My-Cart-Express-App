@@ -403,24 +403,35 @@ class _ShippingScreenState extends State<ShippingScreen> {
                   child: Row(
                     children: [
                       width20,
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                            height: 60,
-                            width: 60,
-                            child: Image.network(
-                              shippmentsList[index]['package_image'],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      width20,
+                      // Center(
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     child: SizedBox(
+                      //       height: 60,
+                      //       width: 60,
+                      //       child: Image.network(
+                      //         shippmentsList[index]['package_image'],
+                      //         fit: BoxFit.cover,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // width20,
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            shippmentsList[index]['sender_other_name'] == ""
+                                ? const SizedBox()
+                                : Text(
+                                    shippmentsList[index]['sender_other_name'],
+                                    style: boldText16.copyWith(
+                                      color: blackColor,
+                                    ),
+                                  ),
+                            if (shippmentsList[index]['sender_other_name'] !=
+                                "")
+                              height10,
                             Text(
                               shippmentsList[index]['shipping_mcecode'],
                               style: regularText14.copyWith(

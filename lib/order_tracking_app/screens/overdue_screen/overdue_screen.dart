@@ -410,25 +410,39 @@ class _OverdueScreenState extends State<OverdueScreen> {
                             child: Row(
                               children: [
                                 width20,
-                                Center(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: SizedBox(
-                                      height: 60,
-                                      width: 60,
-                                      child: Image.network(
-                                        duePackages[index]['package_image'],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                width20,
+                                // Center(
+                                //   child: ClipRRect(
+                                //     borderRadius: BorderRadius.circular(10),
+                                //     child: SizedBox(
+                                //       height: 60,
+                                //       width: 60,
+                                //       child: Image.network(
+                                //         duePackages[index]['package_image'],
+                                //         fit: BoxFit.cover,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                // width20,
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      duePackages[index]['sender_other_name'] ==
+                                              ""
+                                          ? const SizedBox()
+                                          : Text(
+                                              duePackages[index]
+                                                  ['sender_other_name'],
+                                              style: boldText14.copyWith(
+                                                color: blackColor,
+                                              ),
+                                            ),
+                                      if (duePackages[index]
+                                              ['sender_other_name'] !=
+                                          "")
+                                        height5,
                                       Text(
                                         duePackages[index]['pkg_shipging_code'],
                                         style: regularText12.copyWith(

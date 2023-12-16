@@ -639,13 +639,26 @@ class HomeScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                _.packagesList[index]['sender_other_name'] == ""
+                                    ? const SizedBox()
+                                    : Text(
+                                        _.packagesList[index]
+                                            ['sender_other_name'],
+                                        style: boldText14.copyWith(
+                                          color: blackColor,
+                                        ),
+                                      ),
+                                if (_.packagesList[index]
+                                        ['sender_other_name'] !=
+                                    "")
+                                  height5,
                                 Text(
                                   _.packagesList[index]['shipping_mcecode'],
                                   style: lightText13.copyWith(
                                     color: blackColor,
                                   ),
                                 ),
-                                height10,
+                                // height5,
                                 Text(
                                   _.packagesList[index]['tracking'],
                                   overflow: TextOverflow.ellipsis,
