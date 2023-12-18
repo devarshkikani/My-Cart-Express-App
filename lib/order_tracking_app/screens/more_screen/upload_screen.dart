@@ -5,18 +5,17 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
-// import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
+import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/widget/app_bar_widget.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
-// import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
+import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
 
 class UploadFileScreen extends StatefulWidget {
   const UploadFileScreen({super.key});
@@ -30,10 +29,15 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   File? selectedFile;
   // RxString catId = ''.obs;
   RxString fileName = ''.obs;
-  // RxList categoriesList = [].obs;
+  List categoriesList = [
+    'Delivery confirmation',
+    'Order details/invoice',
+    'Package information',
+    'Other Documents',
+  ];
   RxList filesList = [].obs;
-  // RxInt categorySelectIndex = 0.obs;
-  // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  RxInt categorySelectIndex = 0.obs;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -51,6 +55,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   //     categoriesList.value = response['list'];
   //   }
   // }
+
   Future<void> getUserUploadFiles() async {
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.userUploadFiles,
@@ -76,6 +81,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
         filename: fileName.value,
       ),
       'file_name': fileName.value,
+      'uploaded_file_type': type.text.trim(),
       // 'file_type_id': catId.value,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
@@ -119,116 +125,140 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   }
 
   Widget bodyView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Upload File',
-              style: regularText18,
-            ),
-          ],
-        ),
-        height20,
-        Row(
-          children: [
-            Text(
-              'UPLOAD ID',
-              style: lightText14,
-            ),
-            Text(
-              ' (JPG,JPEG,PNG)',
-              style: lightText14.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-        height15,
-        Obx(
-          () => fileName.value != ''
-              ? Text(
-                  fileName.value,
-                  style: lightText14.copyWith(
-                    color: primary,
-                  ),
-                )
-              : const SizedBox(),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: greyColor,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-            ),
-          ),
-          onPressed: () {
-            selectFileType(context);
-          },
-          child: const Text(
-            'Select /Upload File',
-            style: TextStyle(
-              letterSpacing: 0.5,
-              color: primary,
-            ),
-          ),
-        ),
-        height15,
-        const Text(
-          'Upload File to Your Account \nDO NOT UPLOAD Shipping Invoice Here',
-        ),
-        height20,
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: primary,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-            ),
-          ),
-          onPressed: () async {
-            if (fileName.value != '') {
-              await submitOnTap();
-            } else {
-              NetworkDio.showError(
-                  title: 'Warning', errorMessage: 'Select file first');
-            }
-          },
-          child: const Text(
-            'SUBMIT',
-            style: TextStyle(
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-        height20,
-        Expanded(
-          child: Column(
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Uploaded Files',
-                  style: regularText18,
-                ),
+              Text(
+                'Upload File',
+                style: regularText18,
               ),
-              height20,
-              Obx(() => filesList.isEmpty
-                  ? SizedBox(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: Text(
-                          'Data not found',
-                        ),
-                      ),
-                    )
-                  : listOfUploadedFiles()),
             ],
           ),
-        ),
-      ],
+          height20,
+          Text(
+            'SELECT YOUR FILE TYPE',
+            style: regularText14,
+          ),
+          height10,
+          TextFormFieldWidget(
+            hintText: 'Select Product',
+            controller: type,
+            readOnly: true,
+            onTap: () {
+              showBottomSheet(context, 1);
+            },
+            suffixIcon: const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: primary,
+            ),
+            validator: (value) => Validators.validateText(value, 'File Type'),
+          ),
+          height15,
+          Row(
+            children: [
+              Text(
+                'UPLOAD ID',
+                style: lightText14,
+              ),
+              Text(
+                ' (JPG,JPEG,PNG)',
+                style: lightText14.copyWith(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          height15,
+          Obx(
+            () => fileName.value != ''
+                ? Text(
+                    fileName.value,
+                    style: lightText14.copyWith(
+                      color: primary,
+                    ),
+                  )
+                : const SizedBox(),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: greyColor,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+            ),
+            onPressed: () {
+              selectFileType(context);
+            },
+            child: const Text(
+              'Select /Upload File',
+              style: TextStyle(
+                letterSpacing: 0.5,
+                color: primary,
+              ),
+            ),
+          ),
+          height15,
+          const Text(
+            'Upload File to Your Account \nDO NOT UPLOAD Shipping Invoice Here',
+          ),
+          height20,
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primary,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+            ),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                if (fileName.value != '') {
+                  await submitOnTap();
+                } else {
+                  NetworkDio.showError(
+                      title: 'Warning', errorMessage: 'Select file first');
+                }
+              }
+            },
+            child: const Text(
+              'SUBMIT',
+              style: TextStyle(
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          height20,
+          Expanded(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Uploaded Files',
+                    style: regularText18,
+                  ),
+                ),
+                height20,
+                Obx(() => filesList.isEmpty
+                    ? SizedBox(
+                        height: 100,
+                        width: MediaQuery.of(context).size.width,
+                        child: const Center(
+                          child: Text(
+                            'Data not found',
+                          ),
+                        ),
+                      )
+                    : listOfUploadedFiles()),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -396,74 +426,73 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
     );
   }
 
-  // void showBottomSheet(BuildContext context, int index) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(10.0),
-  //     ),
-  //     builder: (BuildContext context) {
-  //       return SizedBox(
-  //         height: 250,
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.stretch,
-  //           children: [
-  //             Expanded(
-  //               child: CupertinoPicker(
-  //                 itemExtent: 40,
-  //                 magnification: 1.33,
-  //                 squeeze: 1.2,
-  //                 useMagnifier: true,
-  //                 looping: true,
-  //                 onSelectedItemChanged: (int i) {
-  //                   categorySelectIndex.value = i;
-  //                 },
-  //                 children: List.generate(
-  //                   categoriesList.length,
-  //                   (index) => Padding(
-  //                     padding: const EdgeInsets.only(top: 8.0),
-  //                     child: Text(
-  //                       categoriesList[index]['cat_name'],
-  //                       style: mediumText18.copyWith(
-  //                         color: primary,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             Padding(
-  //               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-  //               child: ElevatedButton(
-  //                 style: ElevatedButton.styleFrom(
-  //                   maximumSize: Size(Get.width, 50),
-  //                   shape: const RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.all(
-  //                       Radius.circular(5),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 onPressed: () {
-  //                   type.text =
-  //                       categoriesList[categorySelectIndex.value]['cat_name'];
-  //                   catId.value =
-  //                       categoriesList[categorySelectIndex.value]['id'];
+  void showBottomSheet(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 250,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 40,
+                  magnification: 1.33,
+                  squeeze: 1.2,
+                  useMagnifier: true,
+                  looping: true,
+                  onSelectedItemChanged: (int i) {
+                    categorySelectIndex.value = i;
+                  },
+                  children: List.generate(
+                    categoriesList.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        categoriesList[index],
+                        style: mediumText18.copyWith(
+                          color: primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    maximumSize: Size(Get.width, 50),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    type.text = categoriesList[categorySelectIndex.value];
 
-  //                   Navigator.pop(context);
-  //                 },
-  //                 child: const Text(
-  //                   'SELECT',
-  //                   style: TextStyle(
-  //                     letterSpacing: 1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             height10,
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+                    // catId.value =
+                    //     categoriesList[categorySelectIndex.value]['id'];
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'SELECT',
+                    style: TextStyle(
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+              height10,
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
