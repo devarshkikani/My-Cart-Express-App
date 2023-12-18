@@ -17,7 +17,7 @@ class PackagesMissingListScreen extends StatefulWidget {
 }
 
 class _PackagesMissingListScreenState extends State<PackagesMissingListScreen> {
-  List openMissingPackages = [];
+  List? openMissingPackages;
 
   @override
   void initState() {
@@ -30,10 +30,11 @@ class _PackagesMissingListScreenState extends State<PackagesMissingListScreen> {
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.openMissingPackages,
       context: context,
     );
+    openMissingPackages = [];
     if (packagesResponse != null) {
       openMissingPackages = packagesResponse['data'];
-      setState(() {});
     }
+    setState(() {});
   }
 
   @override
@@ -71,115 +72,136 @@ class _PackagesMissingListScreenState extends State<PackagesMissingListScreen> {
     return Column(
       children: [
         Expanded(
-          child: ListView.separated(
-            itemCount: openMissingPackages.length,
-            separatorBuilder: (context, index) {
-              return const SizedBox(
-                height: 10,
-              );
-            },
-            itemBuilder: (context, index) {
-              return Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: greyColor.withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Date Submitted', style: regularText16),
-                            Text('Delivery Date', style: regularText16),
-                            Text('Addition Info', style: regularText16),
-                          ],
+          child: openMissingPackages == null
+              ? const SizedBox()
+              : openMissingPackages!.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No missing packages found',
+                        style: regularText16.copyWith(
+                          color: Colors.grey,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(' : ', style: regularText16),
-                            Text(' : ', style: regularText16),
-                            Text(' : ', style: regularText16),
-                          ],
-                        ),
-                        Expanded(
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: openMissingPackages!.length,
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 10,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: greyColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                DateFormat('dd MMM yyyy').format(DateTime.parse(
-                                    openMissingPackages[index]
-                                        ['insert_timestamp'])),
-                                style: regularText16,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Date Submitted',
+                                          style: regularText16),
+                                      Text('Delivery Date',
+                                          style: regularText16),
+                                      Text('Addition Info',
+                                          style: regularText16),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(' : ', style: regularText16),
+                                      Text(' : ', style: regularText16),
+                                      Text(' : ', style: regularText16),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          DateFormat('dd MMM yyyy').format(
+                                              DateTime.parse(
+                                                  openMissingPackages![index]
+                                                      ['insert_timestamp'])),
+                                          style: regularText16,
+                                        ),
+                                        Text(
+                                          DateFormat('dd MMM yyyy').format(
+                                              DateTime.parse(
+                                                  openMissingPackages![index]
+                                                      ['delivery_date'])),
+                                          style: regularText16,
+                                        ),
+                                        Text(
+                                          '${openMissingPackages![index]['additional_info']}',
+                                          style: regularText16,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                DateFormat('dd MMM yyyy').format(DateTime.parse(
-                                    openMissingPackages[index]
-                                        ['delivery_date'])),
-                                style: regularText16,
+                              height10,
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Attachments     :',
+                                  style: regularText16,
+                                ),
                               ),
-                              Text(
-                                '${openMissingPackages[index]['additional_info']}',
-                                style: regularText16,
+                              height5,
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      textButton(
+                                        title: 'Delivery Address',
+                                        img: openMissingPackages![index][
+                                            'proof_delivery_address_used_file'],
+                                      ),
+                                      width10,
+                                      textButton(
+                                        title: 'Proof Of Delivery',
+                                        img: openMissingPackages![index][
+                                            'proof_of_successful_delivery_file'],
+                                      ),
+                                    ],
+                                  ),
+                                  height5,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      textButton(
+                                        title: 'Tracking #',
+                                        img: openMissingPackages![index]
+                                            ['tracking_file'],
+                                      ),
+                                      width10,
+                                      textButton(
+                                        title: 'Invoice/Order Details',
+                                        img: openMissingPackages![index][
+                                            'package_invoice_order_details_file'],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                    height10,
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Attachments     :',
-                        style: regularText16,
-                      ),
-                    ),
-                    height5,
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            textButton(
-                              title: 'Delivery Address',
-                              img: openMissingPackages[index]
-                                  ['proof_delivery_address_used_file'],
-                            ),
-                            width10,
-                            textButton(
-                              title: 'Proof Of Delivery',
-                              img: openMissingPackages[index]
-                                  ['proof_of_successful_delivery_file'],
-                            ),
-                          ],
-                        ),
-                        height5,
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            textButton(
-                              title: 'Tracking #',
-                              img: openMissingPackages[index]['tracking_file'],
-                            ),
-                            width10,
-                            textButton(
-                              title: 'Invoice/Order Details',
-                              img: openMissingPackages[index]
-                                  ['package_invoice_order_details_file'],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
         )
       ],
     );
