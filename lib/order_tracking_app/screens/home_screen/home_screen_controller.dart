@@ -463,7 +463,7 @@ class HomeScreenController extends GetxController {
             children: [
               const Center(
                 child: Text(
-                  "MyCart Express",
+                  "Rate Your Experience",
                   style:
                       TextStyle(color: blackColor, fontWeight: FontWeight.bold),
                 ),
