@@ -78,6 +78,9 @@ class ApiEndPoints {
 
   static String splashScreenVideo = 'splash_screen_video';
 
+  static String saveAppRating = 'customer/save_app_rating';
+  static String getBranchReviewDetails = 'get_branch_review_settings_details';
+
   static String commonSettings = 'common_settings';
   static String apiVersion = 'common_settings/api_version';
 }

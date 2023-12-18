@@ -13,7 +13,9 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
 import 'package:my_cart_express/e_commerce_app/e_controller/e_theme_controller.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
+import 'package:my_cart_express/e_commerce_app/e_widget/rating_bar/c_rating_bar.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
+import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/models/branches_model.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
@@ -157,10 +159,12 @@ class HomeScreenController extends GetxController {
   Future<void> getUserDetails(context) async {
     if (GlobalSingleton.userDetails['show_rating_popup'] == 1) {
       final InAppReview inAppReview = InAppReview.instance;
-
       if (await inAppReview.isAvailable()) {
         await inAppReview.requestReview();
       }
+    }
+    if (GlobalSingleton.userDetails['is_app_rated'] == 0) {
+      getBranchReviewDetailsCall(context);
     }
     if (GlobalSingleton.userDetails['show_unopened_support_message'] == 1) {
       showDialog(
@@ -431,6 +435,169 @@ class HomeScreenController extends GetxController {
         'user_id': GlobalSingleton.userDetails['userId'],
       }),
     );
+  }
+
+  Future<void> getBranchReviewDetailsCall(BuildContext context) async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.getBranchReviewDetails,
+      context: context,
+      data: dio.FormData.fromMap({
+        'branch_id': GlobalSingleton.userDetails['branch_id'],
+      }),
+    );
+    if (response != null) {
+      if (response['data']['is_enable_google_review'] == '1') {
+        showRatingPopUp(context, response['data']['google_review_link']);
+      }
+    }
+  }
+
+  void showRatingPopUp(BuildContext ctx, String googleReviewLink) {
+    RxDouble ratingValue = 0.0.obs;
+    showDialog(
+      context: ctx,
+      builder: (BuildContext ctttx) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Center(
+                child: Text(
+                  "MyCart Express",
+                  style:
+                      TextStyle(color: blackColor, fontWeight: FontWeight.bold),
+                ),
+              ),
+              height20,
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(60),
+                    child: GlobalSingleton.userDetails['image']
+                                .toString()
+                                .isEmpty ||
+                            GlobalSingleton.userDetails['image'] == null
+                        ? Image.asset(
+                            dummyProfileImage,
+                            height: 60,
+                            width: 60,
+                          )
+                        : Image.network(
+                            GlobalSingleton.userDetails['image'].toString(),
+                            fit: BoxFit.cover,
+                            height: 60,
+                            width: 60,
+                          ),
+                  ),
+                  width10,
+                  Text(
+                    '${GlobalSingleton.userDetails['name']}',
+                  ),
+                ],
+              ),
+              height10,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RatingBar.builder(
+                    unratedColor: greyColor,
+                    glow: false,
+                    minRating: 1,
+                    maxRating: 5,
+                    initialRating: 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      return const Row(
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: Color(0xFFFFD700),
+                          ),
+                          SizedBox(
+                            width: 4.0,
+                          ),
+                        ],
+                      );
+                    },
+                    onRatingUpdate: (double rating) {
+                      ratingValue.value = rating;
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: whiteColor,
+                side: const BorderSide(
+                  color: greyColor,
+                ),
+              ),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: secondary),
+              ),
+              onPressed: () {
+                Navigator.pop(ctttx);
+              },
+            ),
+            Obx(
+              () => TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: ratingValue.value == 0.0
+                      ? secondary.withOpacity(0.1)
+                      : secondary,
+                ),
+                onPressed: () async {
+                  if (ratingValue.value != 0.0) {
+                    await saveAppRating(
+                      context: ctx,
+                      rating: ratingValue.value,
+                      link: googleReviewLink,
+                    );
+                    Navigator.pop(ctttx);
+                  }
+                },
+                child: Text(
+                  "Post",
+                  style: TextStyle(
+                      color: ratingValue.value == 0.0 ? greyColor : whiteColor),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> saveAppRating(
+      {required BuildContext context,
+      required double rating,
+      required String link}) async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.saveAppRating,
+      context: context,
+      data: dio.FormData.fromMap({
+        'branch_id': GlobalSingleton.userDetails['branch_id'],
+        'user_id': GlobalSingleton.userDetails['userId'],
+        'rating': '$rating',
+      }),
+    );
+    if (response != null) {
+      if (rating == 5.0) {
+        launchUrl(
+          Uri.parse(link),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        NetworkDio.showSuccess(
+          title: 'Success',
+          sucessMessage: response['message'],
+        );
+      }
+    }
   }
 }
 
