@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -275,7 +276,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
         itemBuilder: ((context, index) {
           return Row(
             children: [
-              Image.network(
+              networkImage(
                 filesList[index]['file_url'],
                 height: 50,
                 width: 50,
@@ -296,7 +297,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                     context: context,
                     builder: (_) => AlertDialog(
                       title: Text(filesList[index]['file_title']),
-                      content: Image.network(
+                      content: networkImage(
                         filesList[index]['file_url'],
                         fit: BoxFit.cover,
                       ),

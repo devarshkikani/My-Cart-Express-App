@@ -33,6 +33,7 @@ import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/location_permission_screen.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -482,7 +483,7 @@ class HomeScreenController extends GetxController {
                             height: 60,
                             width: 60,
                           )
-                        : Image.network(
+                        : networkImage(
                             GlobalSingleton.userDetails['image'].toString(),
                             fit: BoxFit.cover,
                             height: 60,

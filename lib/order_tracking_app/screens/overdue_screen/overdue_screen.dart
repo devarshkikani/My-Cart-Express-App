@@ -19,6 +19,7 @@ import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 
 class OverdueScreen extends StatefulWidget {
@@ -182,6 +183,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
+                                color: greyColor.withOpacity(.2),
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                   color: Colors.white,
@@ -189,7 +191,7 @@ class _OverdueScreenState extends State<OverdueScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.network(
+                                child: networkImage(
                                   imageList[i]['image_url'],
                                   width: Get.width,
                                   fit: BoxFit.cover,

@@ -30,6 +30,7 @@ import 'package:my_cart_express/order_tracking_app/screens/notification_screen/n
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/auth_pickup/auth_pickup_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/account_settings_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/shipping_calculator_screen/shipping_calculator_screen.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -285,6 +286,7 @@ class MoreScreenState extends State<MoreScreen> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
+                                color: greyColor.withOpacity(.2),
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                   color: Colors.white,
@@ -292,7 +294,7 @@ class MoreScreenState extends State<MoreScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.network(
+                                child: networkImage(
                                   imageList[i]['image_url'],
                                   width: Get.width,
                                   fit: BoxFit.cover,
@@ -391,7 +393,7 @@ class MoreScreenState extends State<MoreScreen> {
                           height: 100,
                           width: 100,
                         )
-                      : Image.network(
+                      : networkImage(
                           userDetails['image'].toString(),
                           fit: BoxFit.cover,
                           height: 100,

@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -237,6 +238,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
+                              color: greyColor.withOpacity(.2),
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
                                 color: Colors.white,
@@ -244,7 +246,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.network(
+                              child: networkImage(
                                 imageList[i]['image_url'],
                                 width: Get.width,
                                 fit: BoxFit.cover,

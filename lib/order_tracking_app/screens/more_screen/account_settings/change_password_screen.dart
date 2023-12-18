@@ -10,6 +10,7 @@ import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/widget/app_bar_widget.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -159,7 +160,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: userDetails['image'].toString() != ''
-                  ? Image.network(
+                  ? networkImage(
                       userDetails['image'].toString(),
                       height: 100,
                       width: 100,

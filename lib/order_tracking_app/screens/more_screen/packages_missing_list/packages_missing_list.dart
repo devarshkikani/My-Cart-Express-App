@@ -7,6 +7,7 @@ import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/widget/app_bar_widget.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 
 class PackagesMissingListScreen extends StatefulWidget {
   const PackagesMissingListScreen({super.key});
@@ -217,7 +218,7 @@ class _PackagesMissingListScreenState extends State<PackagesMissingListScreen> {
           context: context,
           builder: (_) => AlertDialog(
             title: Text(title),
-            content: Image.network(
+            content: networkImage(
               img,
               fit: BoxFit.cover,
             ),

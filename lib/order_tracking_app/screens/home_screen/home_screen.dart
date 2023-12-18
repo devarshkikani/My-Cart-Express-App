@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/screens/missing_packages/warning_missing_packages_screen.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_storage/get_storage.dart';
@@ -139,6 +140,7 @@ class HomeScreen extends StatelessWidget {
                             },
                             child: Container(
                               decoration: BoxDecoration(
+                                color: greyColor.withOpacity(.2),
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                   color: Colors.white,
@@ -146,7 +148,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.network(
+                                child: networkImage(
                                   imageList[i]['image_url'],
                                   width: Get.width,
                                   fit: BoxFit.cover,
@@ -400,7 +402,7 @@ class HomeScreen extends StatelessWidget {
                                 child: Center(
                                   child: Stack(
                                     children: [
-                                      Image.network(_.howItWorks.value),
+                                      networkImage(_.howItWorks.value),
                                       GestureDetector(
                                         onTap: () {
                                           Navigator.pop(ctx);

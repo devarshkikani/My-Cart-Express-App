@@ -8,6 +8,7 @@ import 'package:my_cart_express/order_tracking_app/screens/notification_screen/n
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 
 class WarningMissingPackagesScreen extends StatefulWidget {
   const WarningMissingPackagesScreen({super.key});
@@ -134,7 +135,7 @@ class _WarningMissingPackagesScreenState
               style: regularText16.copyWith(color: error),
             ),
           height30,
-          if (imageUrl != null) Image.network(imageUrl.toString()),
+          if (imageUrl != null) networkImage(imageUrl.toString()),
           height30,
           ElevatedButton(
             style: ElevatedButton.styleFrom(

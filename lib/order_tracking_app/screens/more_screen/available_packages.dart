@@ -16,6 +16,7 @@ import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_scre
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
@@ -372,6 +373,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
+                                color: greyColor.withOpacity(.2),
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                   color: Colors.white,
@@ -379,7 +381,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.network(
+                                child: networkImage(
                                   imageList[i]['image_url'],
                                   width: Get.width,
                                   fit: BoxFit.cover,

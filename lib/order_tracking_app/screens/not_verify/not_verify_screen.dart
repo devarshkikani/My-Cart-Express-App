@@ -13,6 +13,7 @@ import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 
 class NotVerifyScreen extends StatefulWidget {
   NotVerifyScreen({super.key, required this.userDetails});
@@ -210,7 +211,7 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
                     height: 100,
                     width: 100,
                   )
-                : Image.network(
+                : networkImage(
                     userDetails['image'].toString(),
                     fit: BoxFit.cover,
                     height: 100,

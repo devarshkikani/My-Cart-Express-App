@@ -10,6 +10,7 @@ import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -81,7 +82,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       ),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
-                                        child: Image.network(
+                                        child: networkImage(
                                           imagesList[i]['image_url'],
                                           width: Get.width,
                                           fit: BoxFit.cover,
