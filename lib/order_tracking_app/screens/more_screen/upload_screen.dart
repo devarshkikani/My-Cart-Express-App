@@ -146,7 +146,7 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
           ),
           height10,
           TextFormFieldWidget(
-            hintText: 'Select Product',
+            hintText: 'Select Type',
             controller: type,
             readOnly: true,
             onTap: () {
