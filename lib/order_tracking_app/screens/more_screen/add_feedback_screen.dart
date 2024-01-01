@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +11,18 @@ import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
 import 'package:my_cart_express/e_commerce_app/e_widget/rating_bar/c_rating_bar.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 
 class AddFeedbackScreen extends StatefulWidget {
   final String id;
-  const AddFeedbackScreen({super.key, required this.id});
+  final String staffFirstname;
+  final String staffImage;
+  const AddFeedbackScreen({
+    super.key,
+    required this.id,
+    required this.staffFirstname,
+    required this.staffImage,
+  });
 
   @override
   State<AddFeedbackScreen> createState() => _AddFeedbackScreenState();
@@ -20,22 +30,13 @@ class AddFeedbackScreen extends StatefulWidget {
 
 class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
   String? emojiStatus;
-
+  bool thanksShow = false;
   String? ratingStatus;
 
   TextEditingController feedbackController = TextEditingController();
 
-  Future<void> saveFeedBack(String id) async {
-    if (emojiStatus == null) {
-      Get.showSnackbar(
-        const GetSnackBar(
-          message: 'Add how satisfied are you with this transaction?',
-          duration: Duration(
-            seconds: 3,
-          ),
-        ),
-      );
-    } else if (ratingStatus == null) {
+  Future<void> saveFeedBack(String id, BuildContext ctx) async {
+    if (ratingStatus == null) {
       Get.showSnackbar(
         const GetSnackBar(
           message: 'Add how do you rate your Driver/Cashier interraction?',
@@ -69,13 +70,11 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
         emojiStatus = null;
         ratingStatus = null;
         feedbackController = TextEditingController();
-        Get.offAll(
-          () => MainHomeScreen(
-            selectedIndex: 4.obs,
-          ),
-        );
         NetworkDio.showSuccess(
             title: 'Suceess', sucessMessage: response['message']);
+        Get.offAll(
+          () => MainHomeScreen(selectedIndex: 0.obs),
+        );
       }
     }
   }
@@ -84,164 +83,197 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            height15,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'Leave Feedback',
-                style: mediumText18,
-              ),
-            ),
-            const Divider(),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'How satisfied are you with this transaction?',
-                style: regularText14,
-              ),
-            ),
-            height10,
-            emojiRating(),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'How do you rate your Driver/Cashier interraction?',
-                style: regularText14,
-              ),
-            ),
-            height10,
-            starRating(),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'Write your feedback',
-                style: regularText14,
-              ),
-            ),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 280,
-                    height: 90,
-                    child: TextFormFieldWidget(
-                      maxLines: 3,
-                      controller: feedbackController,
-                      contentPadding: const EdgeInsets.all(10),
+        child: thanksShow
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  height15,
+                  Text(
+                    'Thank You for choosing us!',
+                    style: mediumText18,
+                  ),
+                  const Divider(),
+                  height10,
+                  Text(
+                    "I'm ${widget.staffFirstname}",
+                    style: regularText14,
+                  ),
+                  height10,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: networkImage(
+                      widget.staffImage.toString(),
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 100,
                     ),
+                  ),
+                  height10,
+                  Text(
+                    'How way my service?',
+                    style: regularText14,
+                  ),
+                  height10,
+                  starRating(),
+                  height10,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          saveFeedBack(widget.id, context);
+                        },
+                        child: const Text(
+                          'Submit',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  height15,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      'Leave Feedback',
+                      style: mediumText18,
+                    ),
+                  ),
+                  const Divider(),
+                  height10,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      'How was your latest transcation with us?',
+                      style: regularText14,
+                    ),
+                  ),
+                  height10,
+                  ratingButton(),
+                  height10,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      'Write your feedback (Optional)',
+                      style: regularText14,
+                    ),
+                  ),
+                  height10,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 280,
+                          height: 90,
+                          child: TextFormFieldWidget(
+                            maxLines: 3,
+                            controller: feedbackController,
+                            contentPadding: const EdgeInsets.all(10),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          if (emojiStatus == null) {
+                            Get.showSnackbar(
+                              const GetSnackBar(
+                                message:
+                                    'Add how satisfied are you with this transaction?',
+                                duration: Duration(
+                                  seconds: 3,
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+                          setState(() {
+                            thanksShow = true;
+                          });
+                        },
+                        child: const Text(
+                          'Send Feedback',
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: secondary,
-                  ),
-                  onPressed: () {
-                    emojiStatus = null;
-                    ratingStatus = null;
-                    feedbackController = TextEditingController();
-                    Get.offAll(
-                      () => MainHomeScreen(
-                        selectedIndex: 4.obs,
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'Close',
-                  ),
-                ),
-                width15,
-                ElevatedButton(
-                  onPressed: () {
-                    saveFeedBack(widget.id);
-                  },
-                  child: const Text(
-                    'Send Feedback',
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
 
-  Widget emojiRating() {
+  Widget ratingButton() {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0),
-      child: RatingBar.builder(
-        itemCount: 5,
-        unratedColor: Colors.grey,
-        itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-        itemBuilder: (context, index) {
-          switch (index) {
-            case 0:
-              return Icon(
-                Icons.sentiment_very_dissatisfied,
-                color: emojiStatus == 'Very unsatisfied'
-                    ? Colors.red
-                    : Colors.grey,
-              );
-            case 1:
-              return Icon(
-                Icons.sentiment_dissatisfied,
-                color: emojiStatus == 'Unsatisfied'
-                    ? Colors.redAccent
-                    : Colors.grey,
-              );
-            case 2:
-              return Icon(
-                Icons.sentiment_neutral,
-                color: emojiStatus == 'Neutral' ? Colors.amber : Colors.grey,
-              );
-            case 3:
-              return Icon(
-                Icons.sentiment_satisfied,
-                color: emojiStatus == 'Satisfied'
-                    ? Colors.lightGreen
-                    : Colors.grey,
-              );
-            case 4:
-              return Icon(
-                Icons.sentiment_very_satisfied,
-                color: emojiStatus == 'Very Satisfied'
-                    ? Colors.green
-                    : Colors.grey,
-              );
-            default:
-              return Container();
-          }
-        },
-        onRatingUpdate: (rating) {
-          setState(() {
-            if (rating == 1.0) {
-              emojiStatus = 'Very unsatisfied';
-            } else if (rating == 2.0) {
-              emojiStatus = 'Unsatisfied';
-            } else if (rating == 3.0) {
-              emojiStatus = 'Neutral';
-            } else if (rating == 4.0) {
-              emojiStatus = 'Satisfied';
-            } else if (rating == 5.0) {
-              emojiStatus = 'Very Satisfied';
-            }
-          });
-        },
-        updateOnDrag: true,
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  emojiStatus = 'Satisfied';
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: emojiStatus == 'Satisfied'
+                    ? success
+                    : secondary.withOpacity(.2),
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              child: Text(
+                'Satisfied',
+                style: TextStyle(
+                  letterSpacing: 0.5,
+                  color: emojiStatus == 'Satisfied' ? whiteColor : blackColor,
+                ),
+              ),
+            ),
+          ),
+          width10,
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  emojiStatus = 'Unsatisfied';
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: emojiStatus == 'Unsatisfied'
+                    ? error
+                    : secondary.withOpacity(.2),
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              child: Text(
+                'Unsatisfied',
+                style: TextStyle(
+                  letterSpacing: 0.5,
+                  color: emojiStatus == 'Unsatisfied' ? whiteColor : blackColor,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

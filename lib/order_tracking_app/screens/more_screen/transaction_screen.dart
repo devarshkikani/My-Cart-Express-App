@@ -1,10 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'dart:io';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
+import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -16,7 +18,6 @@ import 'package:my_cart_express/order_tracking_app/widget/app_bar_widget.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
-import 'package:my_cart_express/e_commerce_app/e_widget/rating_bar/c_rating_bar.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -127,17 +128,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
     }
   }
 
-  Future<void> saveFeedBack(String id) async {
-    if (emojiStatus == null) {
-      Get.showSnackbar(
-        const GetSnackBar(
-          message: 'Add how satisfied are you with this transaction?',
-          duration: Duration(
-            seconds: 3,
-          ),
-        ),
-      );
-    } else if (ratingStatus == null) {
+  Future<void> saveFeedBack(String id, BuildContext ctx) async {
+    if (ratingStatus == null) {
       Get.showSnackbar(
         const GetSnackBar(
           message: 'Add how do you rate your Driver/Cashier interraction?',
@@ -171,7 +163,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         emojiStatus = null;
         ratingStatus = null;
         feedbackController = TextEditingController();
-        Navigator.pop(context);
+        Navigator.pop(ctx);
         getTransaction();
         NetworkDio.showSuccess(
             title: 'Suceess', sucessMessage: response['message']);
@@ -341,8 +333,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                         0
                                     ? () {}
                                     : () {
-                                        feedBackDialoag(context,
-                                            transactionList[index]['id']);
+                                        feedBackDialoag(context, index);
                                       },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: transactionList[index]
@@ -427,166 +418,228 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  void feedBackDialoag(BuildContext context, String id) {
+  void feedBackDialoag(BuildContext context, int index) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            height15,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'Leave Feedback',
-                style: mediumText18,
-              ),
-            ),
-            const Divider(),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'How satisfied are you with this transaction?',
-                style: regularText14,
-              ),
-            ),
-            height10,
-            emojiRating(),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'How do you rate your Driver/Cashier interraction?',
-                style: regularText14,
-              ),
-            ),
-            height10,
-            starRating(),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Text(
-                'Write your feedback',
-                style: regularText14,
-              ),
-            ),
-            height10,
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 280,
-                    height: 90,
-                    child: TextFormFieldWidget(
-                      maxLines: 3,
-                      controller: feedbackController,
-                      contentPadding: const EdgeInsets.all(10),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: StatefulBuilder(builder: (ctx, set) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: secondary,
-                  ),
-                  onPressed: () {
-                    emojiStatus = null;
-                    ratingStatus = null;
-                    feedbackController = TextEditingController();
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Close',
+                height15,
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    'Leave Feedback',
+                    style: mediumText18,
                   ),
                 ),
-                width15,
-                ElevatedButton(
-                  onPressed: () {
-                    saveFeedBack(id);
-                  },
-                  child: const Text(
-                    'Send Feedback',
+                const Divider(),
+                height10,
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    'How was your latest transcation with us?',
+                    style: regularText14,
                   ),
+                ),
+                height10,
+                ratingButton(set),
+                height10,
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    'Write your feedback (Optional)',
+                    style: regularText14,
+                  ),
+                ),
+                height10,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 280,
+                        height: 90,
+                        child: TextFormFieldWidget(
+                          maxLines: 3,
+                          controller: feedbackController,
+                          contentPadding: const EdgeInsets.all(10),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (emojiStatus == null) {
+                          Get.showSnackbar(
+                            const GetSnackBar(
+                              message:
+                                  'Add how satisfied are you with this transaction?',
+                              duration: Duration(
+                                seconds: 3,
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        Navigator.pop(ctx);
+                        thankYouDialogWithPhoto(context, index);
+                      },
+                      child: const Text(
+                        'Send Feedback',
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
 
-  Widget emojiRating() {
+  void thankYouDialogWithPhoto(
+    BuildContext context,
+    int index,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: StatefulBuilder(builder: (context, set) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                height15,
+                Text(
+                  'Thank You for choosing us!',
+                  style: mediumText18,
+                ),
+                const Divider(),
+                height10,
+                Text(
+                  "I'm ${transactionList[index]['staff_firstname']}",
+                  style: regularText14,
+                ),
+                height10,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: networkImage(
+                    transactionList[index]['staff_image'].toString(),
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: 100,
+                  ),
+                ),
+                height10,
+                Text(
+                  'How way my service?',
+                  style: regularText14,
+                ),
+                height10,
+                starRating(),
+                height10,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        saveFeedBack(transactionList[index]['id'], ctx);
+                      },
+                      child: const Text(
+                        'Submit',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget ratingButton(void Function(void Function()) set) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0),
-      child: RatingBar.builder(
-        itemCount: 5,
-        unratedColor: Colors.grey,
-        itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-        itemBuilder: (context, index) {
-          switch (index) {
-            case 0:
-              return Icon(
-                Icons.sentiment_very_dissatisfied,
-                color: emojiStatus == 'Very unsatisfied'
-                    ? Colors.red
-                    : Colors.grey,
-              );
-            case 1:
-              return Icon(
-                Icons.sentiment_dissatisfied,
-                color: emojiStatus == 'Unsatisfied'
-                    ? Colors.redAccent
-                    : Colors.grey,
-              );
-            case 2:
-              return Icon(
-                Icons.sentiment_neutral,
-                color: emojiStatus == 'Neutral' ? Colors.amber : Colors.grey,
-              );
-            case 3:
-              return Icon(
-                Icons.sentiment_satisfied,
-                color: emojiStatus == 'Satisfied'
-                    ? Colors.lightGreen
-                    : Colors.grey,
-              );
-            case 4:
-              return Icon(
-                Icons.sentiment_very_satisfied,
-                color: emojiStatus == 'Very Satisfied'
-                    ? Colors.green
-                    : Colors.grey,
-              );
-            default:
-              return Container();
-          }
-        },
-        onRatingUpdate: (rating) {
-          setState(() {
-            if (rating == 1.0) {
-              emojiStatus = 'Very unsatisfied';
-            } else if (rating == 2.0) {
-              emojiStatus = 'Unsatisfied';
-            } else if (rating == 3.0) {
-              emojiStatus = 'Neutral';
-            } else if (rating == 4.0) {
-              emojiStatus = 'Satisfied';
-            } else if (rating == 5.0) {
-              emojiStatus = 'Very Satisfied';
-            }
-          });
-        },
-        updateOnDrag: true,
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                set(() {
+                  emojiStatus = 'Satisfied';
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: emojiStatus == 'Satisfied'
+                    ? success
+                    : secondary.withOpacity(.2),
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              child: Text(
+                'Satisfied',
+                style: TextStyle(
+                  letterSpacing: 0.5,
+                  color: emojiStatus == 'Satisfied' ? whiteColor : blackColor,
+                ),
+              ),
+            ),
+          ),
+          width10,
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                set(() {
+                  emojiStatus = 'Unsatisfied';
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: emojiStatus == 'Unsatisfied'
+                    ? error
+                    : secondary.withOpacity(.2),
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              child: Text(
+                'Unsatisfied',
+                style: TextStyle(
+                  letterSpacing: 0.5,
+                  color: emojiStatus == 'Unsatisfied' ? whiteColor : blackColor,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

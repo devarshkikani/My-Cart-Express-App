@@ -330,6 +330,8 @@ class _SplashScreenState extends State<SplashScreen> {
           Get.offAll(
             () => AddFeedbackScreen(
               id: payloadData['ref_id'],
+              staffFirstname: payloadData['staff_firstname'],
+              staffImage: payloadData['staff_image'],
             ),
           );
         } else if (payloadData['page_id'] == '3') {
