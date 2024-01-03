@@ -138,15 +138,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         ),
       );
-    } else if (feedbackController.text == '') {
-      Get.showSnackbar(
-        const GetSnackBar(
-          message: 'Add your feedback first',
-          duration: Duration(
-            seconds: 3,
-          ),
-        ),
-      );
     } else {
       final data = dio.FormData.fromMap({
         'transaction_id': id,
