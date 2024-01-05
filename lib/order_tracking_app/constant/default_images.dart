@@ -5,6 +5,7 @@ const String scannerIcon = 'assets/images/scanner_icon.png';
 const String availablePackagesIcon = 'assets/images/available_packages.png';
 const String calcultorIcon = 'assets/images/calcultor_icon.png';
 const String deliveryIcon = 'assets/images/delivery_icon.png';
+const String questionIcon = 'assets/images/question_icon.png';
 const String dummyProfileImage = 'assets/images/dummy_profile.png';
 const String faqsIcon = 'assets/images/faqs_icon.png';
 const String feedbackIcon = 'assets/images/feedback_icon.png';
