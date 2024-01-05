@@ -528,7 +528,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 const Divider(),
                 height10,
                 Text(
-                  "I'm ${transactionList[index]['staff_firstname']}",
+                  "You were you assisted by ${transactionList[index]['staff_firstname']}.",
                   style: regularText14,
                 ),
                 height10,
@@ -543,7 +543,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 ),
                 height10,
                 Text(
-                  'How way my service?',
+                  'How was my service?',
                   style: regularText14,
                 ),
                 height10,

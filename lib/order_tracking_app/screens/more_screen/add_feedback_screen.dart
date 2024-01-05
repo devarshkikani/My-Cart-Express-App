@@ -87,7 +87,7 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                   const Divider(),
                   height10,
                   Text(
-                    "I'm ${widget.staffFirstname}",
+                    "You were you assisted by ${widget.staffFirstname}.",
                     style: regularText14,
                   ),
                   height10,
@@ -102,7 +102,7 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                   ),
                   height10,
                   Text(
-                    'How way my service?',
+                    'How was my service?',
                     style: regularText14,
                   ),
                   height10,
