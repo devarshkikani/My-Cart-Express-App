@@ -464,7 +464,7 @@ class HomeScreenController extends GetxController {
             children: [
               const Center(
                 child: Text(
-                  "Rate Your Experience",
+                  "Rate Your First Experience",
                   style:
                       TextStyle(color: blackColor, fontWeight: FontWeight.bold),
                 ),
