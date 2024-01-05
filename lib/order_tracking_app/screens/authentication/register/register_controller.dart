@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
@@ -135,13 +136,22 @@ class RegisterController extends GetxController {
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
-      if (model.verifyEmail == '0') {
+      await getUserDetails(context);
+    }
+  }
+
+  Future<void> getUserDetails(BuildContext context) async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+        context: context);
+
+    if (response != null) {
+      GlobalSingleton.userDetails = response['data'];
+      if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
-        Get.offAll(
-          () => NotVerifyScreen(
-            userDetails: const {},
-          ),
-        );
+        Get.offAll(() => NotVerifyScreen(
+              userDetails: response['data'],
+            ));
       } else {
         box.write(StorageKey.isRegister, true);
         Get.offAll(
