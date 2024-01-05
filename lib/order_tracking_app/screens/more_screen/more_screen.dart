@@ -68,7 +68,7 @@ class MoreScreenState extends State<MoreScreen> {
     myRewardIcon,
     pickupIcon,
     shippingIcon,
-    deliveryIcon,
+    questionIcon,
   ];
 
   void categoryOntap(int index) {
