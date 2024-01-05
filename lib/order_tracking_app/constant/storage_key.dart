@@ -6,4 +6,5 @@ class StorageKey {
   static String isRegister = 'is_register';
   static String inviteUserId = 'invite_user_id';
   static String isECommerce = 'is_e_commerce';
+  static String notificationResponse = 'notification_response';
 }

@@ -35,6 +35,19 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  GetStorage boxx = GetStorage();
+  boxx.write(StorageKey.notificationResponse, message.data);
+  log('${message.data}++++++++++++');
+  await _SplashScreenState.showNotification(
+    message.notification!.title.toString(),
+    message.notification!.body.toString(),
+    json.encode(message.data),
+  );
+  log("Handling a background message ${message.notification?.title}");
+}
+
 class _SplashScreenState extends State<SplashScreen> {
   static GetStorage box = GetStorage();
 
@@ -43,6 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     callCommonAPI();
     firebaseNotificationSetup();
+    box.remove(StorageKey.notificationResponse);
   }
 
   Future<void> callCommonAPI() async {
