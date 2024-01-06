@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
@@ -334,19 +333,11 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     Get.back();
-                    // XFile? result = await ImagePicker()
-                    //     .pickImage(source: ImageSource.gallery);
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowMultiple: true,
-                      allowedExtensions: ['jpg', 'png', 'jpeg', 'tiff'],
-                    );
+                    XFile? result = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+
                     if (result != null) {
-                      await pickFile(
-                        result.files.first.path!,
-                        result.files.first.name,
-                      );
+                      await pickFile(result.path, result.name);
                     }
                   },
                   style: ElevatedButton.styleFrom(
