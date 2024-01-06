@@ -139,6 +139,18 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                   height10,
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Transaction # ${widget.id}',
+                          style: regularText14,
+                        ),
+                      ],
+                    ),
+                  ),
+                  height10,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
                       'How was your latest transcation with us?',
                       style: regularText14,
