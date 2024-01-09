@@ -85,4 +85,5 @@ class ApiEndPoints {
   static String apiVersion = 'common_settings/api_version';
 
   static String getFeedbackNotAdded = 'transaction/get_feedback_not_added';
+  static String saveUserFeedbackPopup = 'transaction/save_user_feedback_popup';
 }

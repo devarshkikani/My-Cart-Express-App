@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
@@ -34,6 +35,14 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
   String? ratingStatus;
 
   TextEditingController feedbackController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    saveUserFeedbackPopup(
+      id: widget.id,
+    );
+  }
 
   Future<void> saveFeedBack(String id, BuildContext ctx) async {
     if (ratingStatus == null) {
@@ -68,6 +77,21 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
         );
       }
     }
+  }
+
+  Future<void> saveUserFeedbackPopup({
+    required String id,
+  }) async {
+    await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      context: context,
+      data: dio.FormData.fromMap(
+        {
+          'transaction_id': id,
+          'customer_id': GlobalSingleton.userDetails['userId'],
+        },
+      ),
+    );
   }
 
   @override

@@ -207,7 +207,7 @@ class _SplashScreenState extends State<SplashScreen> {
     box.write(StorageKey.isRegister, true);
 
     if (response != null) {
-      if (response['data'] != {}) {
+      if (response['data'].isNotEmpty) {
         Get.offAll(
           () => AddFeedbackScreen(
             id: response['data']['ref_id'],

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/widget/network_image_handle.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -320,17 +321,24 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               ),
                               ElevatedButton(
                                 onPressed: transactionList[index]
-                                            ['hide_leave_feedback'] >
+                                            ['hide_leave_feedback'] !=
                                         0
                                     ? () {}
                                     : () {
+                                        saveUserFeedbackPopup(
+                                          id: transactionList[index]['id'],
+                                        );
                                         feedBackDialoag(context, index);
                                       },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: transactionList[index]
-                                              ['hide_leave_feedback'] >
+                                              ['hide_leave_feedback'] !=
                                           0
-                                      ? Colors.grey
+                                      ? transactionList[index]
+                                                  ['hide_leave_feedback'] !=
+                                              1
+                                          ? Colors.white
+                                          : Colors.grey
                                       : secondary,
                                   fixedSize: const Size(130, 30),
                                   minimumSize: const Size(130, 30),
@@ -338,12 +346,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 ),
                                 child: Text(
                                   transactionList[index]
-                                              ['hide_leave_feedback'] >
+                                              ['hide_leave_feedback'] !=
                                           0
-                                      ? 'Feedback Left'
+                                      ? transactionList[index]
+                                                  ['hide_leave_feedback'] !=
+                                              1
+                                          ? 'Expired'
+                                          : 'Feedback Left'
                                       : 'Leave Feedback',
                                   style: lightText12.copyWith(
-                                    color: whiteColor,
+                                    color: transactionList[index]
+                                                ['hide_leave_feedback'] ==
+                                            2
+                                        ? blackColor
+                                        : whiteColor,
                                   ),
                                 ),
                               ),
@@ -380,6 +396,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     ),
                   ),
                 ),
+    );
+  }
+
+  Future<void> saveUserFeedbackPopup({
+    required String id,
+  }) async {
+    await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      context: context,
+      data: dio.FormData.fromMap(
+        {
+          'transaction_id': id,
+          'customer_id': GlobalSingleton.userDetails['userId'],
+        },
+      ),
     );
   }
 
