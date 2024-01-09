@@ -13,6 +13,7 @@ import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/add_feedback_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
@@ -79,11 +80,35 @@ class LoginController extends GetxController {
               userDetails: response['data'],
             ));
       } else {
-        box.write(StorageKey.isRegister, true);
+        getFeedbackNotAdded();
+      }
+    }
+  }
+
+  Future<void> getFeedbackNotAdded() async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.getFeedbackNotAdded,
+    );
+    box.write(StorageKey.isRegister, true);
+
+    if (response != null) {
+      if (response['data'].isNotEmpty) {
+        Get.offAll(
+          () => AddFeedbackScreen(
+            id: response['data']['ref_id'],
+            staffFirstname: response['data']['staff_firstname'],
+            staffImage: response['data']['staff_image'],
+          ),
+        );
+      } else {
         Get.offAll(
           () => MainHomeScreen(selectedIndex: 0.obs),
         );
       }
+    } else {
+      Get.offAll(
+        () => MainHomeScreen(selectedIndex: 0.obs),
+      );
     }
   }
 }
