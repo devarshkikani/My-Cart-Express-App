@@ -403,7 +403,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     required String id,
   }) async {
     await NetworkDio.postDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.saveUserFeedbackPopup,
       context: context,
       data: dio.FormData.fromMap(
         {

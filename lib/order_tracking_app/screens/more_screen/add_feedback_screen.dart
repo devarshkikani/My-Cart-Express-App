@@ -83,7 +83,7 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
     required String id,
   }) async {
     await NetworkDio.postDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.saveUserFeedbackPopup,
       context: context,
       data: dio.FormData.fromMap(
         {
