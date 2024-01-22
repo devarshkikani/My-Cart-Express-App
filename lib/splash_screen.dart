@@ -195,35 +195,11 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         );
       } else {
-        getFeedbackNotAdded();
-      }
-    }
-  }
-
-  Future<void> getFeedbackNotAdded() async {
-    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
-      url: ApiEndPoints.apiEndPoint + ApiEndPoints.getFeedbackNotAdded,
-    );
-    box.write(StorageKey.isRegister, true);
-
-    if (response != null) {
-      if (response['data'].isNotEmpty) {
-        Get.offAll(
-          () => AddFeedbackScreen(
-            id: response['data']['ref_id'],
-            staffFirstname: response['data']['staff_firstname'],
-            staffImage: response['data']['staff_image'],
-          ),
-        );
-      } else {
+        box.write(StorageKey.isRegister, true);
         Get.offAll(
           () => MainHomeScreen(selectedIndex: 0.obs),
         );
       }
-    } else {
-      Get.offAll(
-        () => MainHomeScreen(selectedIndex: 0.obs),
-      );
     }
   }
 
