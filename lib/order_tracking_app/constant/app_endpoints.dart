@@ -23,6 +23,7 @@ class ApiEndPoints {
   static String userLocation = 'user/location';
   static String userEditInfo = 'user/edit_info';
   static String userRewards = 'user/rewards';
+  static String updateAppVersion = 'user/edit_user_app_version_info';
   static String saveSplashScreenUser = 'user/save_splash_screen_user';
   static String uploadProfilePicture = 'user/upload_profile_picture';
   static String uploadMissingPackage = 'user/upload_missing_package';

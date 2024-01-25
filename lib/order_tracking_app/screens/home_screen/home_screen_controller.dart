@@ -79,6 +79,7 @@ class HomeScreenController extends GetxController {
     if (showLocation.value == '1') {
       getCurrentPosition();
     }
+    await updateAppVersionFunction(context);
     Map<String, dynamic>? shippingCount = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.shippingCount,
       context: context,
@@ -160,6 +161,17 @@ class HomeScreenController extends GetxController {
     }
     await getFeedbackNotAdded(context);
     await getUserDetails(context);
+  }
+
+  Future<void> updateAppVersionFunction(context) async {
+    await NetworkDio.postDioHttpMethod(
+      context: context,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.updateAppVersion,
+      data: dio.FormData.fromMap({
+        'platform': Platform.isAndroid ? 'Android' : 'IOS',
+        'app_version': GlobalSingleton.appVersion,
+      }),
+    );
   }
 
   Future<void> getUserDetails(context) async {
