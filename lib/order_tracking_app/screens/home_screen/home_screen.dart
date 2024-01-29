@@ -25,16 +25,26 @@ import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/shipp
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/screens/notification_screen/notifications_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+bool callInitState = false;
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  HomeScreenController controller =
+      Get.put<HomeScreenController>(HomeScreenController());
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeScreenController>(
-      init: HomeScreenController(),
-      initState: (_) {},
       builder: (_) {
-        _.getBalance(context);
+        if (!callInitState) {
+          _.getBalance(context);
+          callInitState = true;
+        }
         return Scaffold(
           body: Container(
             width: Get.height,
