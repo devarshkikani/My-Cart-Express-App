@@ -5,6 +5,6 @@ class GlobalSingleton {
   GlobalSingleton._internal();
   static final GlobalSingleton globalSingleton = GlobalSingleton._internal();
 
-  static String appVersion = '3.0.24';
+  static String appVersion = '3.0.23';
   static Map userDetails = {};
 }
