@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/packages_missing_list/packages_missing_list.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/upload_screen.dart';
@@ -108,6 +109,7 @@ class MoreScreenState extends State<MoreScreen> {
 
   Future<void> logOutOnTap() async {
     box.erase();
+    callInitState = false;
     Get.offAll(
       () => const WelcomeScreen(),
     );
@@ -124,6 +126,7 @@ class MoreScreenState extends State<MoreScreen> {
     );
     if (response != null) {
       box.erase();
+      callInitState = false;
       Get.offAll(
         () => const WelcomeScreen(),
       );

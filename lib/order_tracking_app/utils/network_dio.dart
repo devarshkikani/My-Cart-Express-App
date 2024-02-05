@@ -13,6 +13,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/internet_error.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/utils/progress_indicator.dart';
@@ -256,6 +257,7 @@ class NetworkDio {
       return response;
     } else {
       box.erase();
+      callInitState = false;
       Get.offAll(
         () => const WelcomeScreen(),
       );
