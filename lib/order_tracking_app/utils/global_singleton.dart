@@ -1,3 +1,5 @@
+import 'package:package_info_plus/package_info_plus.dart';
+
 class GlobalSingleton {
   factory GlobalSingleton() {
     return globalSingleton;
@@ -5,6 +7,6 @@ class GlobalSingleton {
   GlobalSingleton._internal();
   static final GlobalSingleton globalSingleton = GlobalSingleton._internal();
 
-  static String appVersion = '3.0.23';
+  static PackageInfo? packageInfo;
   static Map userDetails = {};
 }
