@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as b;
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_sizedbox.dart';
 import 'package:my_cart_express/e_commerce_app/e_theme/e_app_text_theme.dart';
@@ -75,6 +76,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
             children: [
               GestureDetector(
                 onTap: () {
+                  callInitState = false;
                   Get.offAll(
                     () => MainHomeScreen(selectedIndex: 0.obs),
                   );
@@ -88,6 +90,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
               ),
               GestureDetector(
                 onTap: () {
+                  callInitState = false;
                   Get.offAll(
                     () => MainHomeScreen(selectedIndex: 1.obs),
                   );
@@ -101,6 +104,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
               ),
               GestureDetector(
                 onTap: () {
+                  callInitState = false;
                   Get.offAll(
                     () => MainHomeScreen(selectedIndex: 2.obs),
                   );
@@ -126,6 +130,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
               ),
               GestureDetector(
                 onTap: () {
+                  callInitState = false;
                   Get.offAll(
                     () => MainHomeScreen(selectedIndex: 3.obs),
                   );
@@ -151,6 +156,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
               ),
               GestureDetector(
                 onTap: () {
+                  callInitState = false;
                   Get.offAll(
                     () => MainHomeScreen(selectedIndex: 4.obs),
                   );
@@ -176,6 +182,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
               ),
               GestureDetector(
                 onTap: () {
+                  callInitState = false;
                   Get.offAll(
                     () => MainHomeScreen(selectedIndex: 5.obs),
                   );

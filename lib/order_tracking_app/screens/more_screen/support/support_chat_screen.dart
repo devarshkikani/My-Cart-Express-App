@@ -10,6 +10,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
@@ -138,6 +139,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         if (widget.isFromHome) {
           Get.back();
         } else {
+          callInitState = false;
           Get.offAll(
             () => MainHomeScreen(selectedIndex: 4.obs),
           );
@@ -151,6 +153,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               if (widget.isFromHome) {
                 Get.back();
               } else {
+                callInitState = false;
                 Get.offAll(
                   () => MainHomeScreen(selectedIndex: 4.obs),
                 );

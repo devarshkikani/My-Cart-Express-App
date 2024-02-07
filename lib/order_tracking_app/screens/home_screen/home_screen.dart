@@ -28,7 +28,15 @@ import 'package:my_cart_express/order_tracking_app/screens/notification_screen/n
 bool callInitState = false;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    this.id,
+    this.staffFirstname,
+    this.staffImage,
+  });
+  final String? id;
+  final String? staffFirstname;
+  final String? staffImage;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -42,7 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return GetBuilder<HomeScreenController>(
       builder: (_) {
         if (!callInitState) {
-          _.getBalance(context);
+          _.getBalance(
+            context: context,
+            id: widget.id,
+            staffFirstname: widget.staffFirstname,
+            staffImage: widget.staffImage,
+          );
           callInitState = true;
         }
         return Scaffold(

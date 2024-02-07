@@ -41,12 +41,11 @@ class _OverdueScreenState extends State<OverdueScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   CarouselController carouselController = CarouselController();
   RxInt categorySelectIndex = 0.obs;
-
   RxMap duePackagesData = {}.obs;
   @override
   void initState() {
-    getCategoriesList();
     super.initState();
+    getCategoriesList();
   }
 
   Future<void> getShippingOverdue() async {

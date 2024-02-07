@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanner_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
@@ -218,6 +219,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          callInitState = false;
                           Get.offAll(
                             () => MainHomeScreen(selectedIndex: 0.obs),
                           );
@@ -231,6 +233,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          callInitState = false;
                           Get.offAll(
                             () => MainHomeScreen(selectedIndex: 1.obs),
                           );
@@ -244,6 +247,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          callInitState = false;
                           Get.offAll(
                             () => MainHomeScreen(selectedIndex: 2.obs),
                           );
@@ -270,6 +274,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          callInitState = false;
                           Get.offAll(
                             () => MainHomeScreen(selectedIndex: 3.obs),
                           );
@@ -296,6 +301,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          callInitState = false;
                           Get.offAll(
                             () => MainHomeScreen(selectedIndex: 4.obs),
                           );
@@ -322,6 +328,7 @@ class _AvailablePackagesScreenState extends State<AvailablePackagesScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          callInitState = false;
                           Get.offAll(
                             () => MainHomeScreen(selectedIndex: 5.obs),
                           );

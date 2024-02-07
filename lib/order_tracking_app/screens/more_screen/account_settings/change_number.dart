@@ -6,6 +6,7 @@ import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/more_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
@@ -203,6 +204,7 @@ class _ChangeNumberScreenState extends State<ChangeNumberScreen> {
       context: context,
     );
     if (response != null) {
+      callInitState = false;
       Get.offAll(
         () => MainHomeScreen(
           selectedIndex: 5.obs,

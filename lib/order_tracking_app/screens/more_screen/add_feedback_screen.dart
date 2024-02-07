@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
@@ -72,6 +73,7 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
         feedbackController = TextEditingController();
         NetworkDio.showSuccess(
             title: 'Suceess', sucessMessage: response['message']);
+        callInitState = false;
         Get.offAll(
           () => MainHomeScreen(selectedIndex: 0.obs),
         );

@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
 import 'package:badges/badges.dart' as b;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,34 +14,87 @@ import 'package:my_cart_express/order_tracking_app/screens/scanner_screen/scanne
 import 'package:my_cart_express/order_tracking_app/screens/shipping_screen/shipping_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/widget/show_feedback_popup.dart';
 
 RxInt packageCounts = 0.obs;
 RxInt availablePackageCounts = 0.obs;
 RxInt overduePackageCounts = 0.obs;
 
-class MainHomeScreen extends GetView {
+class MainHomeScreen extends StatefulWidget {
   MainHomeScreen({
     super.key,
     required this.selectedIndex,
+    this.id,
+    this.staffFirstname,
+    this.staffImage,
   });
 
+  final String? id;
+  final String? staffFirstname;
+  final String? staffImage;
+
   RxInt selectedIndex;
-  final pages = [
-    const HomeScreen(),
-    const ScannerScreen(),
-    const ShippingScreen(
-      isFromeHome: false,
-    ),
-    const AvailablePackagesScreen(fromHome: true),
-    const OverdueScreen(),
-    const MoreScreen(),
-  ];
+
+  @override
+  State<MainHomeScreen> createState() => _MainHomeScreenState();
+}
+
+class _MainHomeScreenState extends State<MainHomeScreen> {
+  late Timer _timer;
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 15), (Timer t) async {
+      if (!isPopShown.value) {
+        ShowFeedBackPopup feedBackPopup = ShowFeedBackPopup();
+        await feedBackPopup.callApi(context: context);
+      }
+    });
+  }
+
+  void showADialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                isPopShown.value = false;
+                Navigator.pop(ctx);
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        body: pages[selectedIndex.value],
+        body: [
+          HomeScreen(
+            id: widget.id,
+            staffFirstname: widget.staffFirstname,
+            staffImage: widget.staffImage,
+          ),
+          const ScannerScreen(),
+          const ShippingScreen(
+            isFromeHome: false,
+          ),
+          const AvailablePackagesScreen(fromHome: true),
+          const OverdueScreen(),
+          const MoreScreen(),
+        ][widget.selectedIndex.value],
         bottomNavigationBar: Container(
           height: 80,
           padding: const EdgeInsets.only(top: 10),
@@ -56,29 +111,29 @@ class MainHomeScreen extends GetView {
               children: [
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 0;
+                    widget.selectedIndex.value = 0;
                   },
                   child: Image.asset(
                     homeIcon,
-                    color: selectedIndex.value == 0 ? null : Colors.grey,
+                    color: widget.selectedIndex.value == 0 ? null : Colors.grey,
                     height: 24,
                     width: 24,
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 1;
+                    widget.selectedIndex.value = 1;
                   },
                   child: Image.asset(
                     scannerIcon,
-                    color: selectedIndex.value == 1 ? null : Colors.grey,
+                    color: widget.selectedIndex.value == 1 ? null : Colors.grey,
                     height: 24,
                     width: 24,
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 2;
+                    widget.selectedIndex.value = 2;
                   },
                   child: b.Badge(
                     showBadge: packageCounts.value > 0,
@@ -93,7 +148,8 @@ class MainHomeScreen extends GetView {
                     ),
                     child: Image.asset(
                       shippingIcon,
-                      color: selectedIndex.value == 2 ? null : Colors.grey,
+                      color:
+                          widget.selectedIndex.value == 2 ? null : Colors.grey,
                       height: 24,
                       width: 24,
                     ),
@@ -101,7 +157,7 @@ class MainHomeScreen extends GetView {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 3;
+                    widget.selectedIndex.value = 3;
                   },
                   child: b.Badge(
                     showBadge: availablePackageCounts.value > 0,
@@ -116,7 +172,8 @@ class MainHomeScreen extends GetView {
                     ),
                     child: Image.asset(
                       availablePackagesIcon,
-                      color: selectedIndex.value == 3 ? null : Colors.grey,
+                      color:
+                          widget.selectedIndex.value == 3 ? null : Colors.grey,
                       height: 24,
                       width: 24,
                     ),
@@ -124,7 +181,7 @@ class MainHomeScreen extends GetView {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 4;
+                    widget.selectedIndex.value = 4;
                   },
                   child: b.Badge(
                     showBadge: overduePackageCounts.value > 0,
@@ -139,7 +196,8 @@ class MainHomeScreen extends GetView {
                     ),
                     child: Image.asset(
                       deliveryIcon,
-                      color: selectedIndex.value == 4 ? null : Colors.grey,
+                      color:
+                          widget.selectedIndex.value == 4 ? null : Colors.grey,
                       height: 24,
                       width: 24,
                     ),
@@ -147,11 +205,12 @@ class MainHomeScreen extends GetView {
                 ),
                 GestureDetector(
                   onTap: () {
-                    selectedIndex.value = 5;
+                    widget.selectedIndex.value = 5;
                   },
                   child: Icon(
                     Icons.more_horiz_rounded,
-                    color: selectedIndex.value == 5 ? primary : Colors.grey,
+                    color:
+                        widget.selectedIndex.value == 5 ? primary : Colors.grey,
                     size: 30,
                   ),
                 ),

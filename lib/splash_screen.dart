@@ -24,9 +24,10 @@ import 'package:my_cart_express/order_tracking_app/constant/default_images.dart'
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
-import 'package:my_cart_express/order_tracking_app/screens/more_screen/add_feedback_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'order_tracking_app/screens/home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -336,13 +337,15 @@ class _SplashScreenState extends State<SplashScreen> {
     if (payloadData != null) {
       log(payloadData.toString());
       if (box.read(StorageKey.isLogedIn) ?? false) {
+        callInitState = false;
         if (payloadData['page_id'] == '1') {
           Get.offAll(
             () => MainHomeScreen(selectedIndex: 2.obs),
           );
         } else if (payloadData['page_id'] == '2') {
           Get.offAll(
-            () => AddFeedbackScreen(
+            () => MainHomeScreen(
+              selectedIndex: 0.obs,
               id: payloadData['ref_id'],
               staffFirstname: payloadData['staff_firstname'],
               staffImage: payloadData['staff_image'],

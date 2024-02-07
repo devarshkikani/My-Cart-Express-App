@@ -8,6 +8,7 @@ import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
+import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -47,6 +48,7 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
       GlobalSingleton.userDetails = response['data'];
       if (response['data']['verify_email'] != '0') {
         box.write(StorageKey.isRegister, true);
+        callInitState = false;
         Get.offAll(
           () => MainHomeScreen(selectedIndex: 0.obs),
         );
