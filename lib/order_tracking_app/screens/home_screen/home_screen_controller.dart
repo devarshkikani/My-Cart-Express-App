@@ -66,7 +66,6 @@ class HomeScreenController extends GetxController {
   RxList<Branches> branchesList = <Branches>[].obs;
   RxInt categorySelectIndex = 0.obs;
   RxInt selectedPickuoBranchIndex = 0.obs;
-  ShowFeedBackPopup feedBackPopup = ShowFeedBackPopup();
   CarouselController carouselController = CarouselController();
   TextEditingController type = TextEditingController();
   TextEditingController declared = TextEditingController();
@@ -164,12 +163,14 @@ class HomeScreenController extends GetxController {
         }
       }
     }
-    await getFeedbackNotAdded(
-      context: context,
-      id: id,
-      staffFirstname: staffFirstname,
-      staffImage: staffImage,
-    );
+    if (!isPopShown.value) {
+      await getFeedbackNotAdded(
+        context: context,
+        id: id,
+        staffFirstname: staffFirstname,
+        staffImage: staffImage,
+      );
+    }
     await getUserDetails(context);
   }
 
@@ -230,6 +231,7 @@ class HomeScreenController extends GetxController {
     String? staffFirstname,
     String? staffImage,
   }) async {
+    ShowFeedBackPopup feedBackPopup = ShowFeedBackPopup();
     if (id != null && staffFirstname != null && staffImage != null) {
       print('FEEDBACK SHOW FROM NOTIFICATION');
       feedBackPopup.saveUserFeedbackPopup(

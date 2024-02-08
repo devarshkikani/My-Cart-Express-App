@@ -49,15 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return GetBuilder<HomeScreenController>(
       builder: (_) {
-        if (!callInitState) {
-          _.getBalance(
-            context: context,
-            id: widget.id,
-            staffFirstname: widget.staffFirstname,
-            staffImage: widget.staffImage,
-          );
-          callInitState = true;
-        }
+        _.getBalance(
+          context: context,
+          id: widget.id,
+          staffFirstname: widget.staffFirstname,
+          staffImage: widget.staffImage,
+        );
         return Scaffold(
           body: Container(
             width: Get.height,

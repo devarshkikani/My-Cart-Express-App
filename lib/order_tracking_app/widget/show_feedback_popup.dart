@@ -62,6 +62,8 @@ class ShowFeedBackPopup {
   }) {
     log('FEEDBACK POP SHOW');
     isPopShown.value = true;
+    emojiStatus.value = '';
+    ratingStatus.value = '';
     showDialog(
       context: context,
       barrierDismissible: false,

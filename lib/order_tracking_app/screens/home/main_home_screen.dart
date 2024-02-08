@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, avoid_print
 
 import 'dart:async';
 
@@ -46,6 +46,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 15), (Timer t) async {
       if (!isPopShown.value) {
+        print('FEEDBACK SHOW FROM TIMER');
         ShowFeedBackPopup feedBackPopup = ShowFeedBackPopup();
         await feedBackPopup.callApi(context: context);
       }
