@@ -456,10 +456,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
               children: [
                 height15,
                 Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Text(
-                    'Leave Feedback',
-                    style: mediumText18,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Leave Feedback',
+                        style: mediumText18,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showAlertDialog(ctx);
+                        },
+                        child: Icon(
+                          Icons.cancel_rounded,
+                          size: 18,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const Divider(),
@@ -501,27 +518,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        emojiStatus = null;
-                        ratingStatus = null;
-                        feedbackController = TextEditingController();
-                        Navigator.of(ctx).pop();
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: whiteColor,
-                        side: const BorderSide(
-                          color: greyColor,
-                        ),
-                      ),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: secondary),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    // emojiStatus = null;
+                    // ratingStatus = null;
+                    // feedbackController = TextEditingController();
+                    // Navigator.of(ctx).pop();
+                    //   },
+                    //   style: TextButton.styleFrom(
+                    //     backgroundColor: whiteColor,
+                    //     side: const BorderSide(
+                    //       color: greyColor,
+                    //     ),
+                    //   ),
+                    //   child: const Text(
+                    //     "Cancel",
+                    //     style: TextStyle(color: secondary),
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   width: 10,
+                    // ),
                     ElevatedButton(
                       onPressed: () {
                         if (emojiStatus == null) {
@@ -572,9 +589,29 @@ class _TransactionScreenState extends State<TransactionScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 height15,
-                Text(
-                  'Thank You for choosing us!',
-                  style: mediumText18,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Thank You for choosing us!',
+                        style: mediumText18,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showAlertDialog(ctx);
+                        },
+                        child: Icon(
+                          Icons.cancel_rounded,
+                          size: 18,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const Divider(),
                 height10,
@@ -603,27 +640,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        emojiStatus = null;
-                        ratingStatus = null;
-                        feedbackController = TextEditingController();
-                        Navigator.of(ctx).pop();
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: whiteColor,
-                        side: const BorderSide(
-                          color: greyColor,
-                        ),
-                      ),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: secondary),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    // emojiStatus = null;
+                    // ratingStatus = null;
+                    // feedbackController = TextEditingController();
+                    // Navigator.of(ctx).pop();
+                    //   },
+                    //   style: TextButton.styleFrom(
+                    //     backgroundColor: whiteColor,
+                    //     side: const BorderSide(
+                    //       color: greyColor,
+                    //     ),
+                    //   ),
+                    //   child: const Text(
+                    //     "Cancel",
+                    //     style: TextStyle(color: secondary),
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   width: 10,
+                    // ),
                     ElevatedButton(
                       onPressed: () {
                         saveFeedBack(transactionList[index]['id'], ctx);
@@ -639,6 +676,36 @@ class _TransactionScreenState extends State<TransactionScreen> {
           );
         }),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext ctx) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext ctttx) {
+        return AlertDialog(
+          title: const Text("Are you sure?"),
+          content: const Text("Are sure you want to exit?"),
+          actions: [
+            OutlinedButton(
+              child: const Text("No"),
+              onPressed: () {
+                Navigator.pop(ctttx);
+              },
+            ),
+            ElevatedButton(
+              child: const Text("Yes"),
+              onPressed: () {
+                Navigator.pop(ctttx);
+                emojiStatus = null;
+                ratingStatus = null;
+                feedbackController = TextEditingController();
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

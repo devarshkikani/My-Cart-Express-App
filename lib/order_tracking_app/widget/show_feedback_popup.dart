@@ -80,10 +80,27 @@ class ShowFeedBackPopup {
               children: [
                 height15,
                 Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Text(
-                    'Leave Feedback',
-                    style: mediumText18,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Leave Feedback',
+                        style: mediumText18,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showAlertDialog(ctx);
+                        },
+                        child: Icon(
+                          Icons.cancel_rounded,
+                          size: 18,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const Divider(),
@@ -160,6 +177,37 @@ class ShowFeedBackPopup {
     );
   }
 
+  void showAlertDialog(BuildContext ctx) {
+    showDialog(
+      context: ctx,
+      builder: (BuildContext ctttx) {
+        return AlertDialog(
+          title: const Text("Are you sure?"),
+          content: const Text("Are sure you want to exit?"),
+          actions: [
+            OutlinedButton(
+              child: const Text("No"),
+              onPressed: () {
+                Navigator.pop(ctttx);
+              },
+            ),
+            ElevatedButton(
+              child: const Text("Yes"),
+              onPressed: () {
+                Navigator.pop(ctttx);
+                isPopShown.value = true;
+                emojiStatus.value = '';
+                ratingStatus.value = '';
+                feedbackController = TextEditingController();
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void thankYouDialogWithPhoto({
     required BuildContext context,
     required String id,
@@ -181,9 +229,29 @@ class ShowFeedBackPopup {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 height15,
-                Text(
-                  'Thank You for choosing us!',
-                  style: mediumText18,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Thank You for choosing us!',
+                        style: mediumText18,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(ctx);
+                        },
+                        child: Icon(
+                          Icons.cancel_rounded,
+                          size: 18,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const Divider(),
                 height10,
