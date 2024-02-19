@@ -456,27 +456,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
               children: [
                 height15,
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
+                  padding: const EdgeInsets.only(
+                    left: 15.0,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Leave Feedback',
-                        style: mediumText18,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          showAlertDialog(ctx);
-                        },
-                        child: Icon(
-                          Icons.cancel_rounded,
-                          size: 18,
-                          color: Colors.grey.shade400,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    'Leave Feedback',
+                    style: mediumText18,
                   ),
                 ),
                 const Divider(),
@@ -589,29 +574,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 height15,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Thank You for choosing us!',
-                        style: mediumText18,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          showAlertDialog(ctx);
-                        },
-                        child: Icon(
-                          Icons.cancel_rounded,
-                          size: 18,
-                          color: Colors.grey.shade400,
-                        ),
-                      ),
-                    ],
-                  ),
+                Text(
+                  'Thank You for choosing us!',
+                  style: mediumText18,
                 ),
                 const Divider(),
                 height10,
@@ -676,36 +641,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           );
         }),
       ),
-    );
-  }
-
-  showAlertDialog(BuildContext ctx) {
-    showDialog(
-      context: ctx,
-      builder: (BuildContext ctttx) {
-        return AlertDialog(
-          title: const Text("Are you sure?"),
-          content: const Text("Are sure you want to exit?"),
-          actions: [
-            OutlinedButton(
-              child: const Text("No"),
-              onPressed: () {
-                Navigator.pop(ctttx);
-              },
-            ),
-            ElevatedButton(
-              child: const Text("Yes"),
-              onPressed: () {
-                Navigator.pop(ctttx);
-                emojiStatus = null;
-                ratingStatus = null;
-                feedbackController = TextEditingController();
-                Navigator.of(ctx).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 
