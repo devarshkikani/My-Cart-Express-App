@@ -233,16 +233,19 @@ class HomeScreenController extends GetxController {
   }) async {
     ShowFeedBackPopup feedBackPopup = ShowFeedBackPopup();
     if (id != null && staffFirstname != null && staffImage != null) {
-      print('FEEDBACK SHOW FROM NOTIFICATION');
-      feedBackPopup.saveUserFeedbackPopup(
-        id: id,
-      );
-      feedBackPopup.feedBackDialoag(
-        context: context,
-        id: id,
-        staffName: staffFirstname,
-        staffImage: staffImage,
-      );
+      GetStorage box = GetStorage();
+      if (box.read('showedPopup') != id) {
+        print('FEEDBACK SHOW FROM NOTIFICATION');
+        feedBackPopup.saveUserFeedbackPopup(
+          id: id,
+        );
+        feedBackPopup.feedBackDialoag(
+          context: context,
+          id: id,
+          staffName: staffFirstname,
+          staffImage: staffImage,
+        );
+      }
     } else {
       print('FEEDBACK SHOW FROM APIS');
       await feedBackPopup.callApi(context: context);

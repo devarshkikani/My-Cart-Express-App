@@ -44,7 +44,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 15), (Timer t) async {
+    _timer = Timer.periodic(const Duration(seconds: 20), (Timer t) async {
       if (!isPopShown.value) {
         print('FEEDBACK SHOW FROM TIMER');
         ShowFeedBackPopup feedBackPopup = ShowFeedBackPopup();

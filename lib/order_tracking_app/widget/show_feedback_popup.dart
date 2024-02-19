@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/e_commerce_app/e_widget/rating_bar/c_rating_bar.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
@@ -27,15 +28,18 @@ class ShowFeedBackPopup {
     );
     if (response != null) {
       if (response['data'].isNotEmpty) {
-        saveUserFeedbackPopup(
-          id: response['data']['ref_id'],
-        );
-        feedBackDialoag(
-          context: context,
-          id: response['data']['ref_id'],
-          staffName: response['data']['staff_firstname'],
-          staffImage: response['data']['staff_image'],
-        );
+        GetStorage box = GetStorage();
+        if (box.read('showedPopup') != response['data']['ref_id']) {
+          saveUserFeedbackPopup(
+            id: response['data']['ref_id'],
+          );
+          feedBackDialoag(
+            context: context,
+            id: response['data']['ref_id'],
+            staffName: response['data']['staff_firstname'],
+            staffImage: response['data']['staff_image'],
+          );
+        }
       }
     }
   }
@@ -72,9 +76,9 @@ class ShowFeedBackPopup {
           return false;
         },
         child: StatefulBuilder(builder: (ctx, set) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Column(
+          return Dialog(
+            insetPadding: const EdgeInsets.all(20),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -92,7 +96,7 @@ class ShowFeedBackPopup {
                       ),
                       InkWell(
                         onTap: () {
-                          showAlertDialog(ctx);
+                          showAlertDialog(ctx, id);
                         },
                         child: Icon(
                           Icons.cancel_rounded,
@@ -127,13 +131,15 @@ class ShowFeedBackPopup {
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Row(
                     children: <Widget>[
-                      SizedBox(
-                        width: 280,
-                        height: 90,
-                        child: TextFormFieldWidget(
-                          maxLines: 3,
-                          controller: feedbackController,
-                          contentPadding: const EdgeInsets.all(10),
+                      Expanded(
+                        child: SizedBox(
+                          // width: 280,
+                          height: 90,
+                          child: TextFormFieldWidget(
+                            maxLines: 3,
+                            controller: feedbackController,
+                            contentPadding: const EdgeInsets.all(10),
+                          ),
                         ),
                       ),
                     ],
@@ -177,7 +183,7 @@ class ShowFeedBackPopup {
     );
   }
 
-  void showAlertDialog(BuildContext ctx) {
+  void showAlertDialog(BuildContext ctx, refId) {
     showDialog(
       context: ctx,
       builder: (BuildContext ctttx) {
@@ -195,6 +201,8 @@ class ShowFeedBackPopup {
               child: const Text("Yes"),
               onPressed: () {
                 Navigator.pop(ctttx);
+                GetStorage box = GetStorage();
+                box.write('showedPopup', refId);
                 isPopShown.value = true;
                 emojiStatus.value = '';
                 ratingStatus.value = '';
@@ -222,27 +230,30 @@ class ShowFeedBackPopup {
           return false;
         },
         child: StatefulBuilder(builder: (context, set) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Column(
+          return Dialog(
+            insetPadding: const EdgeInsets.all(20),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 height15,
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Thank You for choosing us!',
-                        style: mediumText18,
+                      Expanded(
+                        child: Text(
+                          'Thank You for choosing us!',
+                          style: mediumText18,
+                        ),
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pop(ctx);
+                          showAlertDialog(ctx, id);
                         },
                         child: Icon(
                           Icons.cancel_rounded,

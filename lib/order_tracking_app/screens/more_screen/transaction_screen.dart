@@ -448,9 +448,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
           return false;
         },
         child: StatefulBuilder(builder: (ctx, set) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Column(
+          return Dialog(
+            insetPadding: const EdgeInsets.all(20),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -567,9 +567,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
           return false;
         },
         child: StatefulBuilder(builder: (context, set) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Column(
+          return Dialog(
+            insetPadding: const EdgeInsets.all(20),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
