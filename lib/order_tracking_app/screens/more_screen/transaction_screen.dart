@@ -503,27 +503,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // TextButton(
-                    //   onPressed: () {
-                    // emojiStatus = null;
-                    // ratingStatus = null;
-                    // feedbackController = TextEditingController();
-                    // Navigator.of(ctx).pop();
-                    //   },
-                    //   style: TextButton.styleFrom(
-                    //     backgroundColor: whiteColor,
-                    //     side: const BorderSide(
-                    //       color: greyColor,
-                    //     ),
-                    //   ),
-                    //   child: const Text(
-                    //     "Cancel",
-                    //     style: TextStyle(color: secondary),
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   width: 10,
-                    // ),
+                    TextButton(
+                      onPressed: () {
+                        emojiStatus = null;
+                        ratingStatus = null;
+                        feedbackController = TextEditingController();
+                        Navigator.of(ctx).pop();
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: whiteColor,
+                        side: const BorderSide(
+                          color: greyColor,
+                        ),
+                      ),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: secondary),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         if (emojiStatus == null) {
@@ -605,27 +605,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // TextButton(
-                    //   onPressed: () {
-                    // emojiStatus = null;
-                    // ratingStatus = null;
-                    // feedbackController = TextEditingController();
-                    // Navigator.of(ctx).pop();
-                    //   },
-                    //   style: TextButton.styleFrom(
-                    //     backgroundColor: whiteColor,
-                    //     side: const BorderSide(
-                    //       color: greyColor,
-                    //     ),
-                    //   ),
-                    //   child: const Text(
-                    //     "Cancel",
-                    //     style: TextStyle(color: secondary),
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   width: 10,
-                    // ),
+                    TextButton(
+                      onPressed: () {
+                        emojiStatus = null;
+                        ratingStatus = null;
+                        feedbackController = TextEditingController();
+                        Navigator.of(ctx).pop();
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: whiteColor,
+                        side: const BorderSide(
+                          color: greyColor,
+                        ),
+                      ),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: secondary),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         saveFeedBack(transactionList[index]['id'], ctx);
