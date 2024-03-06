@@ -44,7 +44,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   just_audio: ^0.9.34
   in_app_review: ^2.0.6
-  video_player: ^2.8.1
+  video_player: ^2.7.0
   flutter_rating_bar: ^4.0.1
   cached_network_image: ^3.3.0
   firebase_crashlytics: ^3.4.9

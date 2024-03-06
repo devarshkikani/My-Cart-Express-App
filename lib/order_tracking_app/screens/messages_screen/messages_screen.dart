@@ -80,12 +80,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget html(String data) {
     return Html(
       data: data,
-      onAnchorTap: (url, attributes, element) {
+      onAnchorTap: (url, ss,attributes, element) {
         if (url != null) {
           launchUrl(Uri.parse(url));
         }
       },
-      onLinkTap: (url, attributes, element) {
+      onLinkTap: (url,ss, attributes, element) {
         if (url != null) {
           launchUrl(Uri.parse(url));
         }

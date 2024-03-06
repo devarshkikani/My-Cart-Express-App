@@ -33,9 +33,7 @@ void main() async {
   };
   if (Platform.isAndroid) {
     await _disableScreenshotsAndroid();
-  } else if (Platform.isIOS) {
-    await _disableScreenshotsIOS();
-  }
+  } 
   await DynamicRepository.initDynamicLinks();
   PhoneInputFormatter.addAlternativePhoneMasks(
     countryCode: 'US',
@@ -52,17 +50,6 @@ Future<void> _disableScreenshotsAndroid() async {
   } on PlatformException catch (e) {
     if (kDebugMode) {
       print("Error disabling screenshots on Android: ${e.message}");
-    }
-  }
-}
-
-Future<void> _disableScreenshotsIOS() async {
-  MethodChannel platform = const MethodChannel('disable_screenshots');
-  try {
-    await platform.invokeMethod('disable');
-  } on PlatformException catch (e) {
-    if (kDebugMode) {
-      print("Error disabling screenshots on iOS: ${e.message}");
     }
   }
 }

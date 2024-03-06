@@ -9,27 +9,26 @@ import Firebase
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
-    let channel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: controller.binaryMessenger)
-
-    channel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
-      if (call.method == "disable") {
-        UIScreen.main.isCapturedDidChange = { [weak self] in
-          if UIScreen.main.isCaptured {
-            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-          }
-        }
-        result(true)
-      } else {       
-        result(FlutterMethodNotImplemented)
-      }
-    }
     FirebaseApp.configure()
+    self.window.makeSecure()
     GeneratedPluginRegistrant.register(with: self)
       if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
      application.registerForRemoteNotifications()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+}
+
+
+extension UIWindow {
+func makeSecure() {
+    let field = UITextField()
+    field.isSecureTextEntry = true
+    self.addSubview(field)
+    field.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+    field.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+    self.layer.superlayer?.addSublayer(field.layer)
+    field.layer.sublayers?.first?.addSublayer(self.layer)
   }
 }
