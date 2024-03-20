@@ -243,23 +243,23 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
             ),
           ],
         ),
-        height5,
-        Row(
-          children: [
-            Text(
-              ' Processing fee : ',
-              style: regularText14.copyWith(
-                color: primary,
-              ),
-            ),
-            Obx(() => Text(
-                  controller.resultData.isNotEmpty
-                      ? controller.resultData['processing_fee']
-                      : '\$0.0',
-                  style: regularText14,
-                )),
-          ],
-        ),
+        // height5,
+        // Row(
+        //   children: [
+        //     Text(
+        //       ' Processing fee : ',
+        //       style: regularText14.copyWith(
+        //         color: primary,
+        //       ),
+        //     ),
+        //     Obx(() => Text(
+        //           controller.resultData.isNotEmpty
+        //               ? controller.resultData['processing_fee']
+        //               : '\$0.0',
+        //           style: regularText14,
+        //         )),
+        //   ],
+        // ),
         height5,
         Row(
           children: [

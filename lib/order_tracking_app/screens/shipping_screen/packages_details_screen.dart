@@ -422,14 +422,14 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                           overflow: TextOverflow.ellipsis,
                           style: lightText14,
                         ),
-                      if (packageDetailModel?.data.processingFee != '0.00')
-                        height10,
-                      if (packageDetailModel?.data.processingFee != '0.00')
-                        Text(
-                          '''Processing Fee : \$${packageDetailModel?.data.processingFee ?? 0.00}''',
-                          overflow: TextOverflow.ellipsis,
-                          style: lightText14,
-                        ),
+                      // if (packageDetailModel?.data.processingFee != '0.00')
+                      //   height10,
+                      // if (packageDetailModel?.data.processingFee != '0.00')
+                      //   Text(
+                      //     '''Processing Fee : \$${packageDetailModel?.data.processingFee ?? 0.00}''',
+                      //     overflow: TextOverflow.ellipsis,
+                      //     style: lightText14,
+                      //   ),
                       if (packageDetailModel?.data.tax != '0.00') height10,
                       if (packageDetailModel?.data.tax != '0.00')
                         Text(
