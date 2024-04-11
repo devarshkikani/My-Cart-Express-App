@@ -228,7 +228,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
         Row(
           children: [
             Text(
-              ' Inland Charge : ',
+              ' Inbound Charge : ',
               style: regularText14.copyWith(
                 color: primary,
               ),

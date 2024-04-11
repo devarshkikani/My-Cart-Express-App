@@ -410,7 +410,7 @@ class _MyPackagesDetailsScreenState extends State<MyPackagesDetailsScreen> {
                         height10,
                       if (packageDetailModel?.data.inlandCharges != '0.00')
                         Text(
-                          '''Inland Charges : \$${packageDetailModel?.data.inlandCharges ?? 0.00}''',
+                          '''Inbound Charges : \$${packageDetailModel?.data.inlandCharges ?? 0.00}''',
                           overflow: TextOverflow.ellipsis,
                           style: lightText14,
                         ),
