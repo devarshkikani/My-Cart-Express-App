@@ -80,23 +80,23 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-        body: [
-          HomeScreen(
-            id: widget.id,
-            staffFirstname: widget.staffFirstname,
-            staffImage: widget.staffImage,
-          ),
-          const ScannerScreen(),
-          const ShippingScreen(
-            isFromeHome: false,
-          ),
-          const AvailablePackagesScreen(fromHome: true),
-          const OverdueScreen(),
-          const MoreScreen(),
-        ][widget.selectedIndex.value],
-        bottomNavigationBar: Container(
+    return Scaffold(
+      body: [
+        HomeScreen(
+          id: widget.id,
+          staffFirstname: widget.staffFirstname,
+          staffImage: widget.staffImage,
+        ),
+        const ScannerScreen(),
+        const ShippingScreen(
+          isFromeHome: false,
+        ),
+        const AvailablePackagesScreen(fromHome: true),
+        const OverdueScreen(),
+        const MoreScreen(),
+      ][widget.selectedIndex.value],
+      bottomNavigationBar: Obx(
+        () => Container(
           height: 80,
           padding: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
@@ -112,7 +112,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    widget.selectedIndex.value = 0;
+                    setState(() {
+                      widget.selectedIndex.value = 0;
+                    });
                   },
                   child: Image.asset(
                     homeIcon,
@@ -123,7 +125,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.selectedIndex.value = 1;
+                    setState(() {
+                      widget.selectedIndex.value = 1;
+                    });
                   },
                   child: Image.asset(
                     scannerIcon,
@@ -134,7 +138,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.selectedIndex.value = 2;
+                    setState(() {
+                      widget.selectedIndex.value = 2;
+                    });
                   },
                   child: b.Badge(
                     showBadge: packageCounts.value > 0,
@@ -158,7 +164,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.selectedIndex.value = 3;
+                    setState(() {
+                      widget.selectedIndex.value = 3;
+                    });
                   },
                   child: b.Badge(
                     showBadge: availablePackageCounts.value > 0,
@@ -182,7 +190,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.selectedIndex.value = 4;
+                    setState(() {
+                      widget.selectedIndex.value = 4;
+                    });
                   },
                   child: b.Badge(
                     showBadge: overduePackageCounts.value > 0,
@@ -206,7 +216,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.selectedIndex.value = 5;
+                    setState(() {
+                      widget.selectedIndex.value = 5;
+                    });
                   },
                   child: Icon(
                     Icons.more_horiz_rounded,
