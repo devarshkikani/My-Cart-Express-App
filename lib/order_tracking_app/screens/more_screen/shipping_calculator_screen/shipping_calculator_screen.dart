@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
-import 'package:my_cart_express/order_tracking_app/screens/more_screen/shipping_calculator_screen/calculator_controller.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/shipping_calculator_screen/shipping_calculator_view.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/widget/app_bar_widget.dart';
 import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
 import 'package:my_cart_express/order_tracking_app/widget/validator.dart';
+
+import 'shipping_calculator_model.dart';
+import 'shipping_calculator_presenter.dart';
 
 class ShippingCalculatorScreen extends StatefulWidget {
   const ShippingCalculatorScreen({super.key});
@@ -17,23 +19,36 @@ class ShippingCalculatorScreen extends StatefulWidget {
       _ShippingCalculatorScreenState();
 }
 
-class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
-  final ShippingCalculatorController controller =
-      Get.put(ShippingCalculatorController());
+class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen>
+    implements ShippingCalculatorView {
+  late ShippingCalculatorModel _model;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ShippingCalculatorPresenter presenter =
+      BasicShippingCalculatorPresenter();
 
   @override
   void initState() {
-    if (rateGroupList.isEmpty || categoriesList.isEmpty) {
-      controller.getGropDetails(context);
+    presenter.updateView = this;
+    if (_model.rateGroupList.isEmpty || _model.categoriesList.isEmpty) {
+      presenter.getGropDetails(context);
     }
     super.initState();
+  }
+
+  @override
+  void refreshModel(ShippingCalculatorModel loginRegistrationModel) {
+    if (mounted) {
+      setState(() {
+        _model = loginRegistrationModel;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: Get.height,
+        width: MediaQuery.of(context).size.width,
         color: primary,
         child: Column(
           children: [
@@ -59,7 +74,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
 
   Widget bodyView(context) {
     return Form(
-      key: controller.formKey,
+      key: _formKey,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +85,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
             ),
             height15,
             Container(
-              width: Get.width,
+              width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: greyColor.withOpacity(0.5),
@@ -90,7 +105,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                   height10,
                   TextFormFieldWidget(
                     hintText: 'Select Category',
-                    controller: controller.category,
+                    controller: _model.category,
                     readOnly: true,
                     onTap: () {
                       selectCategoryGroup(context: context);
@@ -110,7 +125,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                   height10,
                   TextFormFieldWidget(
                     hintText: 'Total cost at check out',
-                    controller: controller.value,
+                    controller: _model.value,
                     keyboardType: TextInputType.number,
                     validator: (value) =>
                         Validators.validateText(value, 'Value'),
@@ -123,7 +138,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                   height10,
                   TextFormFieldWidget(
                     hintText: 'Est. weight from supplier',
-                    controller: controller.estimated,
+                    controller: _model.estimated,
                     keyboardType: TextInputType.number,
                     validator: (value) => Validators.validateText(
                       value,
@@ -135,10 +150,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          controller.category.clear();
-                          controller.value.clear();
-                          controller.estimated.clear();
-                          controller.resultData.clear();
+                          presenter.resetClick();
                         },
                         child: const Text(
                           'RESET',
@@ -150,8 +162,8 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                           backgroundColor: MaterialStateProperty.all(success),
                         ),
                         onPressed: () {
-                          if (controller.formKey.currentState!.validate()) {
-                            controller.calculateData(context);
+                          if (_formKey.currentState!.validate()) {
+                            presenter.calculateData(context);
                           }
                         },
                         child: const Text(
@@ -192,14 +204,12 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                 ),
               ),
               const Spacer(),
-              Obx(
-                () => Text(
-                  controller.resultData.isNotEmpty
-                      ? controller.resultData['amount']
-                      : '\$0.0',
-                  style: regularText18.copyWith(
-                    color: success,
-                  ),
+              Text(
+                _model.resultData?.isNotEmpty == true
+                    ? (_model.resultData?['amount'] ?? '')
+                    : '\$0.0',
+                style: regularText18.copyWith(
+                  color: success,
                 ),
               ),
             ],
@@ -214,13 +224,11 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Obx(
-              () => Text(
-                controller.resultData.isNotEmpty
-                    ? controller.resultData['freight_cost']
-                    : '\$0.0',
-                style: regularText14,
-              ),
+            Text(
+              _model.resultData?.isNotEmpty == true
+                  ? (_model.resultData?['freight_cost'] ?? '')
+                  : '\$0.0',
+              style: regularText14,
             ),
           ],
         ),
@@ -233,13 +241,11 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Obx(
-              () => Text(
-                controller.resultData.isNotEmpty
-                    ? controller.resultData['clearance_fee_jmd']
-                    : '\$0.0',
-                style: regularText14,
-              ),
+            Text(
+              _model.resultData?.isNotEmpty == true
+                  ? (_model.resultData?['clearance_fee_jmd'] ?? '')
+                  : '\$0.0',
+              style: regularText14,
             ),
           ],
         ),
@@ -269,12 +275,12 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                 color: primary,
               ),
             ),
-            Obx(() => Text(
-                  controller.resultData.isNotEmpty
-                      ? controller.resultData['tax']
-                      : '\$0.0',
-                  style: regularText14,
-                )),
+            Text(
+              _model.resultData?.isNotEmpty == true
+                  ? (_model.resultData?['tax'] ?? '')
+                  : '\$0.0',
+              style: regularText14,
+            ),
           ],
         ),
         height15,
@@ -311,14 +317,14 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                   useMagnifier: true,
                   looping: true,
                   onSelectedItemChanged: (int i) {
-                    controller.categoryIndex.value = i;
+                    presenter.onSelectedItemChanged(i);
                   },
                   children: List.generate(
-                    categoriesList.length,
+                    _model.categoriesList.length,
                     (index) => Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        categoriesList[index]['cat_name'],
+                        _model.categoriesList[index]['cat_name'],
                         style: mediumText18.copyWith(
                           color: primary,
                         ),
@@ -331,7 +337,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    maximumSize: Size(Get.width, 50),
+                    maximumSize: Size(MediaQuery.of(context).size.width, 50),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(5),
@@ -339,12 +345,7 @@ class _ShippingCalculatorScreenState extends State<ShippingCalculatorScreen> {
                     ),
                   ),
                   onPressed: () {
-                    controller.category.text =
-                        categoriesList[controller.categoryIndex.value]
-                            ['cat_name'];
-                    controller.catId.value =
-                        categoriesList[controller.categoryIndex.value]['id'];
-                    Navigator.pop(context);
+                    presenter.selectCategory(context);
                   },
                   child: const Text(
                     'SELECT',
