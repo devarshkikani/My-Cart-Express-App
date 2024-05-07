@@ -142,8 +142,10 @@ class _ScannerScreenState extends State<ScannerScreen> {
       data: data,
     );
     if (response != null) {
-      await player.setUrl(response['scan_success_music']);
-      player.play();
+      if (response['scan_success_music'] != '') {
+        await player.setUrl(response['scan_success_music']);
+        player.play();
+      }
       availablePackages.value = response['list'];
       availablePackagesData.value = {
         "counts": response['counts'],
