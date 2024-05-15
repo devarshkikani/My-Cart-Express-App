@@ -114,6 +114,21 @@ class RegisterScreen extends GetView<RegisterController> {
                   ),
                   height20,
                   TextFormFieldWidget(
+                    labelText: 'How did you find out about us?',
+                    controller: controller.howFindAboutUsId,
+                    readOnly: true,
+                    onTap: () {
+                      findAboutUs(context, controller);
+                    },
+                    suffixIcon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: primary,
+                    ),
+                    validator: (value) =>
+                        Validators.validateText(value, 'How find about us?'),
+                  ),
+                  height20,
+                  TextFormFieldWidget(
                     labelText: 'About Me',
                     controller: controller.aboutme,
                     readOnly: true,
@@ -415,6 +430,80 @@ class RegisterScreen extends GetView<RegisterController> {
                         controller.locationList[controller.locatedIndex.value]
                             ['parish_name'];
 
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'SELECT',
+                    style: TextStyle(
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+              height10,
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void findAboutUs(
+    BuildContext context,
+    RegisterController controller,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 250,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 40,
+                  magnification: 1.33,
+                  squeeze: 1.2,
+                  useMagnifier: true,
+                  looping: true,
+                  onSelectedItemChanged: (int value) {
+                    controller.aboutUSIndex.value = value;
+                    controller.howFindAboutUsId.text =
+                        controller.howFindAboutUsIdList[value]['label_text'];
+                  },
+                  children: List.generate(
+                    controller.howFindAboutUsIdList.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        controller.howFindAboutUsIdList[index]['label_text'],
+                        style: mediumText18.copyWith(
+                          color: primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    maximumSize: Size(Get.width, 50),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    controller.location.text =
+                        controller.locationList[controller.locatedIndex.value]
+                            ['parish_name'];
                     Navigator.pop(context);
                   },
                   child: const Text(

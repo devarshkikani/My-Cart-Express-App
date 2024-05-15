@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -24,6 +23,8 @@ class RegisterController extends GetxController {
   RxInt locatedIndex = 0.obs;
   RxInt branchIndex = 0.obs;
   RxList locationList = [].obs;
+  RxList howFindAboutUsIdList = [].obs;
+  RxInt aboutUSIndex = 0.obs;
   List<String> aboutMeList = <String>[
     "I've Shipped Before",
     "I'm Shipping on behalf of a Company",
@@ -40,6 +41,7 @@ class RegisterController extends GetxController {
   final TextEditingController phoneNumber = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
   final TextEditingController location = TextEditingController();
+  final TextEditingController howFindAboutUsId = TextEditingController();
   final TextEditingController businessName = TextEditingController();
   final TextEditingController businessContact = TextEditingController();
   final TextEditingController positionCompany = TextEditingController();
@@ -76,6 +78,9 @@ class RegisterController extends GetxController {
       for (var i = 0; i < response['data'].length; i++) {
         branchesList.add(Branches.fromJson(response['data'][i]));
       }
+      for (var i = 0; i < response['how_find_about_us_list'].length; i++) {
+        howFindAboutUsIdList.add(response['how_find_about_us_list'][i]);
+      }
     }
     await getLocation(context);
   }
@@ -111,6 +116,8 @@ class RegisterController extends GetxController {
         'password_confirm': password.text.trim(),
         'device': Platform.isAndroid ? 1 : 2,
         'firebase_token': fcmToken.value,
+        'how_find_about_us_id': howFindAboutUsIdList[aboutUSIndex.value]
+            ['how_find_about_us_id'],
         // 'g_id': '1',
         // 'person_dd': '',
         // 'ipaddress': '',
