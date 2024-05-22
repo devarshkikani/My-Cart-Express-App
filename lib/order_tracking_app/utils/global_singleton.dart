@@ -8,5 +8,6 @@ class GlobalSingleton {
   static final GlobalSingleton globalSingleton = GlobalSingleton._internal();
 
   static PackageInfo? packageInfo;
+  static String? inviteUserId;
   static Map userDetails = {};
 }

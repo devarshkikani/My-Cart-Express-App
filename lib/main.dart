@@ -12,7 +12,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/my_cart_express_app.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
-import 'package:my_cart_express/order_tracking_app/utils/dynamic_linking_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
@@ -33,8 +32,7 @@ void main() async {
   };
   if (Platform.isAndroid) {
     await _disableScreenshotsAndroid();
-  } 
-  await DynamicRepository.initDynamicLinks();
+  }
   PhoneInputFormatter.addAlternativePhoneMasks(
     countryCode: 'US',
     alternativeMasks: [

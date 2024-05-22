@@ -1,17 +1,15 @@
-import 'dart:developer';
-
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 
 class DynamicRepository {
-  static GetStorage getStorage = GetStorage();
+  GetStorage getStorage = GetStorage();
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 
   Future<Uri> createDynamicLink(String uid) async {
-    String url = "https://mycartexpress.page.link/Invite=$uid";
-    String uriPrefix = "https://mycartexpress.page.link";
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse(url),
-      uriPrefix: uriPrefix,
+      link: Uri.parse("https://mycartexpress.com/Invite=$uid"),
+      uriPrefix: 'https://mycartexpress.page.link',
       androidParameters: AndroidParameters(
         packageName: "com.app.MyCartExpress",
         minimumVersion: 21,
@@ -27,32 +25,32 @@ class DynamicRepository {
       ),
     );
 
-    final unguessableDynamicLink =
-        await FirebaseDynamicLinks.instance.buildShortLink(
-      dynamicLinkParams,
-      shortLinkType: ShortDynamicLinkType.short,
-    );
-    return unguessableDynamicLink.shortUrl;
+    final dynamicLink = await dynamicLinks.buildShortLink(dynamicLinkParams);
+    return dynamicLink.shortUrl;
   }
 
-  static Future<void> initDynamicLinks() async {
-    PendingDynamicLinkData? dynamicLink =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    log('Dynamic Link ++++ $dynamicLink');
-    if (dynamicLink != null) {
-      await onSuccessLink(dynamicLink);
-    }
-  }
-
-  static Future<void> onSuccessLink(
-    PendingDynamicLinkData? dynamicLink,
-  ) async {
-    if (dynamicLink != null) {
-      String? query = dynamicLink.link.query;
-      if (query.contains('Invite=')) {
-        String invitationToken = query.split('=')[1];
-        getStorage.write('inviteUserId', invitationToken);
+  Future<void> initDynamicLinks() async {
+    dynamicLinks.onLink.listen((PendingDynamicLinkData? dynamicLink) async {
+      final Uri? deepLink = dynamicLink?.link;
+      print('Received dynamic link: $deepLink');
+      if (deepLink != null) {
+        // Handle the deep link here
+        String invitationToken = deepLink.query.split('=')[1];
+        GlobalSingleton.inviteUserId = invitationToken;
       }
+    }, onError: (e) async {
+      print('Error processing dynamic link: ${e.message}');
+    });
+
+    // Handle initial link if app is opened via dynamic link
+    final PendingDynamicLinkData? data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri? deepLink = data?.link;
+    print('Received initial dynamic link: $deepLink');
+    if (deepLink != null) {
+      // Handle the deep link here
+      String invitationToken = deepLink.query.split('=')[1];
+      GlobalSingleton.inviteUserId = invitationToken;
     }
   }
 }

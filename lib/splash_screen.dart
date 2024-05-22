@@ -15,6 +15,7 @@ import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
+import 'package:my_cart_express/order_tracking_app/utils/dynamic_linking_service.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
@@ -61,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> callCommonAPI() async {
+    await DynamicRepository().initDynamicLinks();
     Map<String, dynamic>? commonSettings = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.commonSettings,
     );

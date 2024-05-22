@@ -171,6 +171,22 @@ class RegisterScreen extends GetView<RegisterController> {
                     ),
                     validator: (value) =>
                         Validators.validateText(value, 'Preferred Branch'),
+                    // ),
+                    // if (GlobalSingleton.inviteUserId != null) height20,
+                    // if (GlobalSingleton.inviteUserId != null)
+                    //   TextFormFieldWidget(
+                    //     labelText: 'Reffral Id',
+                    //     // controller: controller.branchName,
+                    //     controller: TextEditingController(
+                    //         text: GlobalSingleton.inviteUserId),
+                    //     readOnly: true,
+                    //     onTap: () {},
+                    //     // suffixIcon: const Icon(
+                    //     //   Icons.keyboard_arrow_down_rounded,
+                    //     //   color: primary,
+                    //     // ),
+                    //     validator: (value) =>
+                    //         Validators.validateText(value, 'Reffral Id'),
                   ),
                   height20,
                   PasswordWidget(
