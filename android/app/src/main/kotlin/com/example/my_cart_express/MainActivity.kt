@@ -1,4 +1,4 @@
-package com.example.my_cart_express
+package com.app.MyCartExpress
 
 import io.flutter.embedding.android.FlutterActivity
 
