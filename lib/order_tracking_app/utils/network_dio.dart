@@ -136,7 +136,7 @@ class NetworkDio {
               title: 'Error',
               errorMessage: response.data == ''
                   ? response.statusMessage.toString()
-                  : response.data['message'].toString());
+                  : 'Some thing went wrong, please try again later.');
         } else {
           showError(
               title: 'Error',
@@ -219,7 +219,7 @@ class NetworkDio {
               title: 'Error',
               errorMessage: response.data == ''
                   ? response.statusMessage.toString()
-                  : response.data['message'].toString());
+                  : 'Some thing went wrong, please try again later.');
         } else {
           showError(
               title: 'Error',
