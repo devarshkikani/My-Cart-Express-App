@@ -13,10 +13,12 @@ class ScanSuccessScreen extends StatefulWidget {
   const ScanSuccessScreen({
     super.key,
     required this.barcode,
+    required this.successMessage,
     required this.availablePackages,
     required this.availablePackagesData,
   });
   final String barcode;
+  final String successMessage;
   final RxList availablePackages;
   final RxMap availablePackagesData;
 
