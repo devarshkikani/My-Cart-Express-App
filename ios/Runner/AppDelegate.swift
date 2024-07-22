@@ -10,7 +10,7 @@ import Firebase
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     FirebaseApp.configure()
-    self.window.makeSecure()
+    // self.window.makeSecure()
     GeneratedPluginRegistrant.register(with: self)
       if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
@@ -21,15 +21,15 @@ import Firebase
 }
 
 
-extension UIWindow {
-    func makeSecure() {
-        let field = UITextField()
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: field.frame.self.width, height: field.frame.self.height))
-        field.isSecureTextEntry = true
-        self.addSubview(field)
-        self.layer.superlayer?.addSublayer(field.layer)
-        field.layer.sublayers?.last!.addSublayer(self.layer)
-        field.leftView = view
-        field.leftViewMode = .always
-    }
-}
+// extension UIWindow {
+//     func makeSecure() {
+//         let field = UITextField()
+//         let view = UIView(frame: CGRect(x: 0, y: 0, width: field.frame.self.width, height: field.frame.self.height))
+//         field.isSecureTextEntry = true
+//         self.addSubview(field)
+//         self.layer.superlayer?.addSublayer(field.layer)
+//         field.layer.sublayers?.last!.addSublayer(self.layer)
+//         field.leftView = view
+//         field.leftViewMode = .always
+//     }
+// }
