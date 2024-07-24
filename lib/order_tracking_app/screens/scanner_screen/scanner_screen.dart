@@ -154,7 +154,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
       Get.to(
         ScanSuccessScreen(
           barcode: barcode,
-          successMessage: response['scan_success_music'],
+          successMessage: response['success_message'],
           availablePackages: availablePackages,
           availablePackagesData: availablePackagesData,
         ),

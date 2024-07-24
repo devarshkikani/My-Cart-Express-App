@@ -219,7 +219,9 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Thank you for making it myCart Express! \nYour packages will be with you shortly.You may take a seat and listen out for your name.',
+            widget.successMessage.isNotEmpty
+                ? widget.successMessage
+                : 'Thank you for making it myCart Express! \nYour packages will be with you shortly.You may take a seat and listen out for your name.',
             textAlign: TextAlign.center,
             style: regularText14.copyWith(letterSpacing: .5),
           ),
