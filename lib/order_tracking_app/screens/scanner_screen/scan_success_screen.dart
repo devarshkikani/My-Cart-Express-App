@@ -221,9 +221,11 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
           child: Text(
             widget.successMessage.isNotEmpty
                 ? widget.successMessage
-                : 'Thank you for making it myCart Express! \nYour packages will be with you shortly.You may take a seat and listen out for your name.',
+                : 'Thank you for making it myCart Express! \nYour packages will be with you shortly. You may take a seat and listen out for your name.',
             textAlign: TextAlign.center,
-            style: regularText14.copyWith(letterSpacing: .5),
+            style: regularText18.copyWith(
+              letterSpacing: .5,
+            ),
           ),
         ),
         height30,
