@@ -30,6 +30,7 @@ class _AddNewPackageToBinScreenState extends State<AddNewPackageToBinScreen> {
     controller.scannedDataStream.listen((scanData) async {
       // if (!Get.isSnackbarOpen) {
       if (scanData.code != null) {
+        controller.pauseCamera();
         Get.back();
         //     if (showLocation.value == '1') {
         //       if (currentPosition != null) {

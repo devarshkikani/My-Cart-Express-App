@@ -30,6 +30,10 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
     controller.scannedDataStream.listen((scanData) async {
       // if (!Get.isSnackbarOpen) {
       if (scanData.code != null) {
+        controller.pauseCamera();
+        Get.to(() => const ReferAllPackagesScreen())?.then((value) {
+          controller.resumeCamera();
+        });
         //     if (showLocation.value == '1') {
         //       if (currentPosition != null) {
         //         if (scanData.code!.contains('BRANCH')) {

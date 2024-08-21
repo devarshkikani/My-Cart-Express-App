@@ -27,7 +27,7 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
     return Scaffold(
       body: GetBuilder<StaffPosController>(
         builder: (ctx) {
-          // _.getBranches(context);
+          _.getBranches(context);
           return Container(
             width: Get.height,
             color: primary,
