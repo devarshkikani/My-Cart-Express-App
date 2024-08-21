@@ -163,7 +163,7 @@ class ShowFeedBackPopup {
                           return;
                         }
                         Navigator.pop(ctx);
-                        thankYouDialogWithPhoto(
+                        thankYouDialogWithPhoto( 
                             context: context,
                             id: id,
                             staffImage: staffImage,

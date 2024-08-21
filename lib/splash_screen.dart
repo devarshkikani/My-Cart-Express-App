@@ -26,6 +26,8 @@ import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
+import 'package:my_cart_express/staff_app/staff_binding/staff_main_home_binding..dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_main_home_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'order_tracking_app/screens/home_screen/home_screen.dart';
@@ -193,7 +195,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      if (response['data']['verify_email'] == '0') {
+      if (GlobalSingleton.userDetails['is_customer'] == "1") {
+        Get.offAll(
+          () => const StaffMainHome(),
+          binding: StaffMainHomeBinding(),
+        );
+      } else if (response['data']['verify_email'] == '0') {
         Get.offAll(
           () => NotVerifyScreen(
             userDetails: response['data'],

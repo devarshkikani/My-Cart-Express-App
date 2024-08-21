@@ -16,6 +16,8 @@ import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/staff_app/staff_binding/staff_main_home_binding..dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_main_home_page.dart';
 
 class LoginController extends GetxController {
   GetStorage box = GetStorage();
@@ -62,18 +64,24 @@ class LoginController extends GetxController {
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
-      await getUserDetails(context);
+      await getUserDetails(context, model.isCustomer);
     }
   }
 
-  Future<void> getUserDetails(BuildContext context) async {
+  Future<void> getUserDetails(BuildContext context, String isCustomer) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
         context: context);
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      if (response['data']['verify_email'] == '0') {
+      if (isCustomer == "1") {
+        box.write(StorageKey.isRegister, true);
+        Get.offAll(
+          () => const StaffMainHome(),
+          binding: StaffMainHomeBinding(),
+        );
+      } else if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
         Get.offAll(() => NotVerifyScreen(
               userDetails: response['data'],
