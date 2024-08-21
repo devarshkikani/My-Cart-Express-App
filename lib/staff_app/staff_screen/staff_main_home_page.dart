@@ -11,28 +11,30 @@ class StaffMainHome extends GetView<StaffMainHomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() => controller.pageList[controller.page.value]),
-      bottomNavigationBar: BottomNavigationBar(
-        key: controller.bottomNavigationKey,
-        currentIndex: controller.page.value,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code),
-            label: 'Pickup Request',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.credit_card),
-            label: 'POS',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_rounded),
-            label: 'Ware house add to bin',
-          ),
-        ],
-        backgroundColor: Theme.of(context).colorScheme.background,
-        onTap: (int index) {
-          controller.navIconTap(index);
-        },
-      ),
+      bottomNavigationBar: Obx(() {
+        return BottomNavigationBar(
+          key: controller.bottomNavigationKey,
+          currentIndex: controller.page.value,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.qr_code),
+              label: 'Warehouse',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.credit_card),
+              label: 'POS',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_rounded),
+              label: 'Pickup Request',
+            ),
+          ],
+          backgroundColor: Theme.of(context).colorScheme.background,
+          onTap: (int index) {
+            controller.navIconTap(index);
+          },
+        );
+      }),
     );
   }
 

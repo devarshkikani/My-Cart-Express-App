@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-class StaffWarehouseAddTobinScreen extends StatefulWidget {
-  const StaffWarehouseAddTobinScreen({super.key});
+class StaffPickupRequestScreen extends StatefulWidget {
+  const StaffPickupRequestScreen({super.key});
 
   @override
-  State<StaffWarehouseAddTobinScreen> createState() => _StaffWarehouseAddTobinScreenState();
+  State<StaffPickupRequestScreen> createState() =>
+      _StaffPickupRequestScreenState();
 }
 
-class _StaffWarehouseAddTobinScreenState extends State<StaffWarehouseAddTobinScreen> {
+class _StaffPickupRequestScreenState extends State<StaffPickupRequestScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold();

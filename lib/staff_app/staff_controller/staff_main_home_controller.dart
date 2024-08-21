@@ -8,9 +8,9 @@ import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse_add_tobin
 class StaffMainHomeController extends GetxController {
   GlobalKey<CurvedNavigationBarState> bottomNavigationKey = GlobalKey();
   List<Widget> pageList = <Widget>[
-    const StaffPickupRequestScreen(),
+    const StaffWarehouseScreen(),
     const StaffPosScreen(),
-    const StaffWarehouseAddTobinScreen(),
+    const StaffPickupRequestScreen(),
   ];
 
   RxInt page = 0.obs;
