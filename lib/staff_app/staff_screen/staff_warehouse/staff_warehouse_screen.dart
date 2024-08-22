@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/refer_all_packages_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -30,6 +31,8 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
     controller.scannedDataStream.listen((scanData) async {
       // if (!Get.isSnackbarOpen) {
       if (scanData.code != null) {
+        NetworkDio.showSuccess(
+            title: 'Success', sucessMessage: 'Qr code scan succefully');
         controller.pauseCamera();
         Get.to(() => const ReferAllPackagesScreen())?.then((value) {
           controller.resumeCamera();
@@ -70,14 +73,6 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
     //   );
     //   showPermissionDialog.value = true;
     // }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.to(() => const ReferAllPackagesScreen());
-    });
   }
 
   @override

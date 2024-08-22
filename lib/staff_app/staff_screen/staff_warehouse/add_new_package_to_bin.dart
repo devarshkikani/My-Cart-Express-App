@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AddNewPackageToBinScreen extends StatefulWidget {
@@ -30,8 +31,10 @@ class _AddNewPackageToBinScreenState extends State<AddNewPackageToBinScreen> {
     controller.scannedDataStream.listen((scanData) async {
       // if (!Get.isSnackbarOpen) {
       if (scanData.code != null) {
+        NetworkDio.showSuccess(
+            title: 'Success', sucessMessage: 'Qr code scan succefully');
         controller.pauseCamera();
-        Get.back();
+        Navigator.pop(context);
         //     if (showLocation.value == '1') {
         //       if (currentPosition != null) {
         //         if (scanData.code!.contains('BRANCH')) {
