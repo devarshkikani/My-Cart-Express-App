@@ -194,24 +194,24 @@ class _SplashScreenState extends State<SplashScreen> {
     );
 
     if (response != null) {
-      GlobalSingleton.userDetails = response['data'];
-      if (GlobalSingleton.userDetails['is_customer'] == "1") {
-        Get.offAll(
-          () => const StaffMainHome(),
-          binding: StaffMainHomeBinding(),
-        );
-      } else if (response['data']['verify_email'] == '0') {
-        Get.offAll(
-          () => NotVerifyScreen(
-            userDetails: response['data'],
-          ),
-        );
-      } else {
-        box.write(StorageKey.isRegister, true);
-        Get.offAll(
-          () => MainHomeScreen(selectedIndex: 0.obs),
-        );
-      }
+      // GlobalSingleton.userDetails = response['data'];
+      // if (GlobalSingleton.userDetails['is_customer'] == "1") {
+      Get.offAll(
+        () => const StaffMainHome(),
+        binding: StaffMainHomeBinding(),
+      );
+      // } else if (response['data']['verify_email'] == '0') {
+      //   Get.offAll(
+      //     () => NotVerifyScreen(
+      //       userDetails: response['data'],
+      //     ),
+      //   );
+      // } else {
+      //   box.write(StorageKey.isRegister, true);
+      //   Get.offAll(
+      //     () => MainHomeScreen(selectedIndex: 0.obs),
+      //   );
+      // }
     }
   }
 
