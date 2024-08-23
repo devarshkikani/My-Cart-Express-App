@@ -2,9 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
+import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
 import 'package:my_cart_express/e_commerce_app/e_widget/e_input_text_field.dart';
 import 'package:my_cart_express/e_commerce_app/e_widget/e_validator.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_pos/customer_available_packages.dart';
@@ -18,6 +22,7 @@ class StaffPosScreen extends StatefulWidget {
 }
 
 class _StaffPosScreenState extends State<StaffPosScreen> {
+  GetStorage box = GetStorage();
   final StaffPosController _ =
       Get.put<StaffPosController>(StaffPosController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -42,7 +47,35 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
                       elevation: 0.0,
                       title: const Text(
                         'Start Draw',
+                        style: TextStyle(color: whiteColor),
                       ),
+                      actions: [
+                        InkWell(
+                          onTap: () {
+                            box.write(EStorageKey.eIsLogedIn, false);
+
+                            Get.offAll(
+                              () => LoginScreen(),
+                            );
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  "Logout",
+                                  style: TextStyle(color: whiteColor),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 18,
+                                  color: whiteColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Expanded(
                       child: Container(

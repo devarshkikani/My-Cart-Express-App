@@ -10,7 +10,9 @@ class StaffMainHome extends GetView<StaffMainHomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() => controller.pageList[controller.page.value]),
+      body: controller.pageList.isEmpty
+          ? Container()
+          : Obx(() => controller.pageList[controller.page.value]),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
           key: controller.bottomNavigationKey,

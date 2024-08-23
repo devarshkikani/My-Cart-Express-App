@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
+import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
@@ -19,7 +23,7 @@ class StaffWarehouseScreen extends StatefulWidget {
 class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR Scanner');
   QRViewController? controller;
-
+  GetStorage box = GetStorage();
   void _onQRViewCreated(QRViewController controller) async {
     setState(() {
       this.controller = controller;
@@ -91,6 +95,30 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
                 title: const Text(
                   'Add To Bin',
                 ),
+                actions: [
+                  InkWell(
+                    onTap: () {
+                      box.write(EStorageKey.eIsLogedIn, false);
+                      Get.offAll(
+                        () => LoginScreen(),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Logout",
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Expanded(
                 child: Container(

@@ -25,5 +25,11 @@ const String trashIcon = 'assets/images/trash_icon.png';
 const String successScan = 'assets/images/success_scan.png';
 const String arrowRight = 'assets/images/arrow_right.png';
 const String arrowLeft = 'assets/images/arrow_left.png';
+const String transitIcon = 'assets/images/e-wallet.jpg';
+const String customerLookup = 'assets/images/rewards.jpg';
+const String pickupRequest = 'assets/images/pick-up.jpg';
+const String kiosk = 'assets/images/orders.jpg';
+const String helpandSupport = 'assets/images/help-supports.jpg';
+const String wareHouse = 'assets/images/local-delivery.jpg';
 
 const String successCheck = 'assets/images/success_check.gif';
