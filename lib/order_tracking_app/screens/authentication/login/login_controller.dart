@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/otp/otp_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
@@ -49,34 +51,46 @@ class LoginController extends GetxController {
     final data = dio.FormData.fromMap({
       'email': email,
       'password': password,
-      'firebase_token': fcmToken.value,
-      'device': Platform.isAndroid ? 1 : 2,
+      // 'firebase_token': fcmToken.value,
+      // 'device': Platform.isAndroid ? 1 : 2,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.signIn,
       data: data,
     );
+    log("Data- ${{
+      'email': email,
+      'password': password,
+      'firebase_token': fcmToken.value,
+      'device': Platform.isAndroid ? 1 : 2,
+    }}");
+
     if (response != null) {
       UserModel model = UserModel.fromJson(response['data']);
+      StaffBottomModule modual =
+          StaffBottomModule.fromJson(response['modules']);
       box.write(StorageKey.apiToken, response['token']);
       box.write(StorageKey.currentUser, model.toJson());
+      box.write(StorageKey.staffBottomModual, modual.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
-      await getUserDetails(context, model.isCustomer);
+      await getUserDetails(context, model.isStaff);
     }
   }
 
-  Future<void> getUserDetails(BuildContext context, String isCustomer) async {
+  Future<void> getUserDetails(BuildContext context, num isStaff) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
         context: context);
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      if (isCustomer == "1") {
+      if (isStaff == 1) {
         box.write(StorageKey.isRegister, true);
+        // Get.to(() => OtpScreen());
+
         Get.offAll(
           () => const StaffMainHome(),
           binding: StaffMainHomeBinding(),

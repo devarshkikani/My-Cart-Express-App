@@ -5,6 +5,7 @@ class ApiEndPoints {
       'jayeyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTYyMDgwMDE2MSwiaWF0IjoxNjIwODAwMTYxfQ.UjYFOwih_3PrtwfJRxu6nwCwmv-e8Nbs3qAXLmdcTeYpeednas';
 
   static String signIn = 'login';
+  static String otpVerification = 'otp_verification';
   static String loginImages = 'login_images';
   static String resendVerificationEmail = 'resend_verification_email';
   static String signUp = 'authentication/registration';
