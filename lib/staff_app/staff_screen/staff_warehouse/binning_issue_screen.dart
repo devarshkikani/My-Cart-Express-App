@@ -13,6 +13,7 @@ class BinningIssueScreen extends StatefulWidget {
 
 class _BinningIssueScreenState extends State<BinningIssueScreen> {
   @override
+  .hashCode
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(

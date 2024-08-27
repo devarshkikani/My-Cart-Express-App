@@ -1,17 +1,21 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/e_commerce_app/e_constant/e_storage_key.dart';
-import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
+import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/staff_app/staff_model/staff_scanned_bin_list_model.dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/bin_list/scanned_bin_list_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/refer_all_packages_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:dio/dio.dart' as dio;
 
 class StaffWarehouseScreen extends StatefulWidget {
   const StaffWarehouseScreen({super.key});
@@ -79,6 +83,26 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
     // }
   }
 
+  Future<void> getScannerPackgeList(context) async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      context: context,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.getScannedBinPackageList,
+      data: dio.FormData.fromMap({
+        'bin_code': "BIN-37851496",
+      }),
+    );
+    GetAllScannedPackagesModel res =
+        GetAllScannedPackagesModel.fromJson(response!);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ScannedBinListScreen(
+                  dataList: res.packageList ?? [],
+                )));
+    // log(response.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,10 +122,11 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
                 actions: [
                   InkWell(
                     onTap: () {
-                      box.write(EStorageKey.eIsLogedIn, false);
-                      Get.offAll(
-                        () => LoginScreen(),
-                      );
+                      getScannerPackgeList(context);
+                      // box.write(EStorageKey.eIsLogedIn, false);
+                      // Get.offAll(
+                      //   () => LoginScreen(),
+                      // );
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(15),

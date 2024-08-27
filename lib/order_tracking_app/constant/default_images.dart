@@ -1,5 +1,10 @@
 const String addIcon = 'assets/images/add_icon.png';
 const String appLogo = 'assets/images/app_logo.png';
+const String letterc = 'assets/images/letter-c.png';
+const String letterd = 'assets/images/letter-d.png';
+const String letterm = 'assets/images/letter-m.png';
+const String doubleTick = 'assets/images/double-tick.png';
+const String flag = 'assets/images/red-flag.png';
 const String appLogoColorfull = 'assets/images/app_logo_colorfull.png';
 const String scannerIcon = 'assets/images/scanner_icon.png';
 const String availablePackagesIcon = 'assets/images/available_packages.png';
