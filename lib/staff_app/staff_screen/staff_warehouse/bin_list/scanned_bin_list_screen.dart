@@ -26,27 +26,22 @@ class _ScannedBinListScreenState extends State<ScannedBinListScreen> {
         actions: [
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const BinIssueListScreen(),
-                ),
-              );
+             
             },
             child: const Padding(
               padding: EdgeInsets.all(8.0),
               child: Icon(Icons.question_mark),
             ),
           ),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.close),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //   },
+          //   child: const Padding(
+          //     padding: EdgeInsets.all(8.0),
+          //     child: Icon(Icons.close),
+          //   ),
+          // ),
         ],
       ),
       body: Padding(

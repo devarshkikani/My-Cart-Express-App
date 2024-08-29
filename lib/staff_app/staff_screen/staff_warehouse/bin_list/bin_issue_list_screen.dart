@@ -9,7 +9,8 @@ import 'package:dio/dio.dart' as dio;
 import 'package:my_cart_express/staff_app/staff_model/staff_bin_issued__list_model.dart';
 
 class BinIssueListScreen extends StatefulWidget {
-  const BinIssueListScreen({super.key});
+  final String binID;
+  const BinIssueListScreen({super.key, required this.binID});
 
   @override
   State<BinIssueListScreen> createState() => _BinIssueListScreenState();
@@ -72,7 +73,7 @@ class _BinIssueListScreenState extends State<BinIssueListScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    "${pkg[index].mceNumber} ${pkg[index].firstname} ${pkg[index].lastname}",
+                                    "${pkg[index].mceNumber}",
                                     style: mediumText16.copyWith(
                                         color: whiteColor),
                                   ),
@@ -84,8 +85,12 @@ class _BinIssueListScreenState extends State<BinIssueListScreen> {
                               ],
                             ),
                             Text(
+                              "(${pkg[index].firstname} ${pkg[index].lastname})",
+                              style: const TextStyle(color: whiteColor),
+                            ),
+                            Text(
                               pkg[index].code.toString(),
-                              style: TextStyle(color: whiteColor),
+                              style: const TextStyle(color: whiteColor),
                             ),
                           ],
                         ),

@@ -86,7 +86,7 @@ class _AddNewPackageToBinScreenState extends State<AddNewPackageToBinScreen> {
                 centerTitle: true,
                 elevation: 0.0,
                 title: const Text(
-                  'Add New Packge to Bin',
+                  'Add New Package to Bin',
                 ),
               ),
               Expanded(

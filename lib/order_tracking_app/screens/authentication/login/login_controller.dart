@@ -67,6 +67,7 @@ class LoginController extends GetxController {
     }}");
 
     if (response != null) {
+      log(response.toString());
       UserModel model = UserModel.fromJson(response['data']);
       if (response["modules"].runtimeType != List) {
         StaffBottomModule modual =
@@ -78,6 +79,9 @@ class LoginController extends GetxController {
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
+
+      GlobalSingleton.userLoginDetails = model;
+
       await getUserDetails(context, model.isStaff);
     }
   }
@@ -89,15 +93,16 @@ class LoginController extends GetxController {
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      if (isStaff == 1) {
-        box.write(StorageKey.isRegister, true);
-        Get.to(() => OtpScreen());
+      // if (isStaff == 1) {
+      //   box.write(StorageKey.isRegister, true);.
+      //   Get.to(() => OtpScreen());
 
-        // Get.offAll(
-        //   () => const StaffMainHome(),
-        //   binding: StaffMainHomeBinding(),
-        // );
-      } else if (response['data']['verify_email'] == '0') {
+      //   // Get.offAll(
+      //   //   () => const StaffMainHome(),
+      //   //   binding: StaffMainHomeBinding(),
+      //   // );
+      // } else
+      if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
         Get.offAll(() => NotVerifyScreen(
               userDetails: response['data'],

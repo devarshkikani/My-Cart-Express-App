@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/staff_app/staff_model/staff_scanned_bin_list_model.dart';
-import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/bin_list/scanned_bin_list_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/refer_all_packages_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:dio/dio.dart' as dio;
@@ -39,38 +37,26 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
     controller.scannedDataStream.listen((scanData) async {
       // if (!Get.isSnackbarOpen) {
       if (scanData.code != null) {
-        NetworkDio.showSuccess(
-            title: 'Success', sucessMessage: 'Qr code scan succefully');
-        controller.pauseCamera();
-        Get.to(() => const ReferAllPackagesScreen())?.then((value) {
-          controller.resumeCamera();
-        });
-        //     if (showLocation.value == '1') {
-        //       if (currentPosition != null) {
-        //         if (scanData.code!.contains('BRANCH')) {
-        //           getAvailablePackages(scanData.code!);
-        //         } else {
-        //           NetworkDio.showError(
-        //             title: 'Failed',
-        //             errorMessage: 'Invalid QR Code',
-        //           );
-        //         }
-        //       } else {
-        //         NetworkDio.showError(
-        //           title: 'Wait',
-        //           errorMessage: 'We fetching your current location',
-        //         );
-        //       }
-        //     } else if (scanData.code!.contains('BRANCH')) {
-        //       getAvailablePackages(scanData.code!);
-        //     } else {
-        //       NetworkDio.showError(
-        //         title: 'Failed',
-        //         errorMessage: 'Invalid QR Code',
-        //       );
-        //     }
+        if (scanData.code!.startsWith('BIN')) {
+          NetworkDio.showSuccess(
+              title: 'BIN QR code successfully', sucessMessage: '');
+          controller.pauseCamera();
+          // print(scanData.code);
+          getScannerPackgeList(context, scanData.code);
+        } else {
+          controller.pauseCamera();
+          NetworkDio.showError(
+            title: 'Invalid Bin QR code',
+            errorMessage: '',
+          );
+          Future.delayed(
+            const Duration(seconds: 3),
+            () {
+              controller.resumeCamera();
+            },
+          );
+        }
       }
-      // }
     });
   }
 
@@ -83,23 +69,23 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
     // }
   }
 
-  Future<void> getScannerPackgeList(context) async {
+  Future<void> getScannerPackgeList(context, binID) async {
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.getScannedBinPackageList,
       data: dio.FormData.fromMap({
-        'bin_code': "BIN-37851496",
+        'bin_code': binID,
       }),
     );
     GetAllScannedPackagesModel res =
         GetAllScannedPackagesModel.fromJson(response!);
+    Get.to(() => ReferAllPackagesScreen(
+          dataList: res.packageList ?? [],
+          binId: binID,
+        ))?.then((value) {
+      controller!.resumeCamera();
+    });
 
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ScannedBinListScreen(
-                  dataList: res.packageList ?? [],
-                )));
     // log(response.toString());
   }
 
@@ -117,16 +103,15 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
                 centerTitle: true,
                 elevation: 0.0,
                 title: const Text(
-                  'Add To Bin',
+                  'Scan Bin QR',
                 ),
                 actions: [
                   InkWell(
                     onTap: () {
-                      getScannerPackgeList(context);
-                      // box.write(EStorageKey.eIsLogedIn, false);
-                      // Get.offAll(
-                      //   () => LoginScreen(),
-                      // );
+                      box.write(EStorageKey.eIsLogedIn, false);
+                      Get.offAll(
+                        () => LoginScreen(),
+                      );
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(15),
@@ -277,19 +262,19 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
         // ),
         // Obx(() => imageList.isNotEmpty ? height10 : const SizedBox()),
         Text(
-          'Scan package',
+          'Scan the QR code of the Bin',
           style: lightText14.copyWith(
             color: primary,
           ),
         ),
-        height5,
-        Text(
-          'Scan the QR code for package add to bin',
-          style: lightText14.copyWith(
-            color: primary,
-          ),
-        ),
-        height10,
+        // height5,
+        // Text(
+        //   'Scan the QR code for package add to bin',
+        //   style: lightText14.copyWith(
+        //     color: primary,
+        //   ),
+        // ),
+        // height10,
         Expanded(
           flex: 5,
           child: QRView(

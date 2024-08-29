@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_cart_express/e_commerce_app/e_theme/e_app_text_theme.dart';
+import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
+import 'package:my_cart_express/staff_app/staff_model/staff_scanned_bin_list_model.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/add_new_package_to_bin.dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/bin_list/bin_issue_list_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/binning_issue_screen.dart';
 
 class ReferAllPackagesScreen extends StatefulWidget {
-  const ReferAllPackagesScreen({super.key});
+  final List<PackageList> dataList;
+  final String binId;
+  const ReferAllPackagesScreen(
+      {super.key, required this.binId, required this.dataList});
 
   @override
   State<ReferAllPackagesScreen> createState() => _ReferAllPackagesScreenState();
@@ -96,16 +103,113 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
+
                 Expanded(
-                  child: ListView(
-                    children: [
-                      _buildPackageRow('PKG740912', 'ISSUE', Colors.red),
-                      const Divider(),
-                      _buildPackageRow('PKG369433', 'AVAILABLE', Colors.green),
-                      const Divider(),
-                    ],
-                  ),
-                ),
+                  child: ListView.builder(
+                      itemCount: widget.dataList.length,
+                      // physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      if (widget.dataList[index].checkOffScan ==
+                                          1)
+                                        Image.asset(
+                                          doubleTick,
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                      Text(
+                                        widget.dataList[index].shippingMcecode
+                                            .toString(),
+                                        style: const TextStyle(
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  _buildStatusIndicator(
+                                      widget.dataList[index].status.toString(),
+                                      widget.dataList[index].status
+                                                  .toString() ==
+                                              "ISSUE"
+                                          ? Colors.red
+                                          : Colors.green),
+                                ],
+                              ),
+                              if (widget.dataList[index].internalNote == 1)
+                                Image.asset(
+                                  letterm,
+                                  height: 20,
+                                  width: 20,
+                                ),
+                              const SizedBox(
+                                height: 6,
+                              ),
+                              _buildTag(
+                                  widget.dataList[index].binnedLocation
+                                      .toString(),
+                                  Colors.purple),
+                              const SizedBox(
+                                height: 6,
+                              ),
+                              Row(
+                                children: [
+                                  if (widget.dataList[index].isFlagged == "1")
+                                    Image.asset(
+                                      flag,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  if (widget.dataList[index].isDetained == "1")
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                  if (widget.dataList[index].isDetained == "1")
+                                    Image.asset(
+                                      letterc,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  if (widget.dataList[index].isDamaged == "1")
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                  if (widget.dataList[index].isDamaged == "1")
+                                    Image.asset(
+                                      letterd,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                ],
+                              ),
+                              const Divider(),
+                            ],
+                          ),
+                        );
+                      }),
+                )
+
+                // Expanded(
+                //   child: ListView(
+                //     children: [
+                //       _buildPackageRow('PKG740912', 'ISSUE', Colors.red),
+                //       const Divider(),
+                //       _buildPackageRow('PKG369433', 'AVAILABLE', Colors.green),
+                //       const Divider(),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -123,12 +227,14 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
             Get.to(() => const AddNewPackageToBinScreen());
           },
           child: const Text(
-            'Add New Packge to Bin',
+            'Add New Package to Bin',
           ),
         ),
         ElevatedButton(
           onPressed: () {
-            Get.to(() => const BinningIssueScreen());
+            Get.to(() => BinningIssueScreen(
+                binID: widget.binId,
+                ));
           },
           child: const Text(
             'Binning Issues',

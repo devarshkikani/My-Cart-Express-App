@@ -15,6 +15,7 @@ class UserModel {
     required this.email,
     required this.roleId,
     required this.firstname,
+    required this.showTrnPopup,
     required this.lastname,
     required this.branchId,
     required this.profileImage,
@@ -23,6 +24,7 @@ class UserModel {
     required this.isAdmin,
     required this.isStaff,
     required this.verifyEmail,
+    required this.trnPopupMessage,
   });
 
   String userId;
@@ -36,8 +38,10 @@ class UserModel {
   String isCustomer;
   String priceGroupId;
   String verifyEmail;
+  String trnPopupMessage;
   num isStaff;
   int isAdmin;
+  num showTrnPopup;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userId: json["user_id"],
@@ -53,6 +57,8 @@ class UserModel {
         priceGroupId: json["price_group_id"],
         isAdmin: json["is_admin"],
         verifyEmail: json["verify_email"],
+        showTrnPopup: json["show_trn_popup"],
+        trnPopupMessage: json["trn_popup_message"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,46 +75,50 @@ class UserModel {
         "price_group_id": priceGroupId,
         "is_admin": isAdmin,
         "verify_email": verifyEmail,
+        "show_trn_popup": showTrnPopup,
+        "trn_popup_message": trnPopupMessage,
       };
 }
 
+StaffBottomModule staffBottomModuleFromJson(String str) =>
+    StaffBottomModule.fromJson(json.decode(str));
 
-StaffBottomModule staffBottomModuleFromJson(String str) => StaffBottomModule.fromJson(json.decode(str));
-
-String staffBottomModuleToJson(StaffBottomModule data) => json.encode(data.toJson());
+String staffBottomModuleToJson(StaffBottomModule data) =>
+    json.encode(data.toJson());
 
 class StaffBottomModule {
-    int? warehouseAddToBin;
-    int? customerPos;
-    int? pickupRequest;
-    int? kiosk;
-    int? customerLookup;
-    int? transitScan;
+  int? warehouseAddToBin;
+  int? customerPos;
+  int? pickupRequest;
+  int? kiosk;
+  int? customerLookup;
+  int? transitScan;
 
-    StaffBottomModule({
-        this.warehouseAddToBin,
-        this.customerPos,
-        this.pickupRequest,
-        this.kiosk,
-        this.customerLookup,
-        this.transitScan,
-    });
+  StaffBottomModule({
+    this.warehouseAddToBin,
+    this.customerPos,
+    this.pickupRequest,
+    this.kiosk,
+    this.customerLookup,
+    this.transitScan,
+  });
 
-    factory StaffBottomModule.fromJson(Map<String, dynamic> json) => StaffBottomModule(
+  factory StaffBottomModule.fromJson(Map<String, dynamic> json) =>
+      StaffBottomModule(
         warehouseAddToBin: json["warehouse_add_to_bin"],
         customerPos: json["customer_pos"],
         pickupRequest: json["pickup_request"],
         kiosk: json["kiosk"],
         customerLookup: json["customer_lookup"],
         transitScan: json["transit_scan"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "warehouse_add_to_bin": warehouseAddToBin,
         "customer_pos": customerPos,
         "pickup_request": pickupRequest,
         "kiosk": kiosk,
         "customer_lookup": customerLookup,
         "transit_scan": transitScan,
-    };
+      };
 }

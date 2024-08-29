@@ -17,6 +17,7 @@ import 'package:my_cart_express/order_tracking_app/screens/more_screen/upload_sc
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
@@ -48,6 +49,7 @@ class MoreScreenState extends State<MoreScreen> {
   static RxMap userDetails = {}.obs;
   final ImagePicker picker = ImagePicker();
   String? profilePicture = '';
+  String? trnnumber;
   final List categoryList = [
     'Shipping Calculator',
     'Transaction',
@@ -131,6 +133,18 @@ class MoreScreenState extends State<MoreScreen> {
         () => const WelcomeScreen(),
       );
     }
+  }
+
+  Future<void> getTrnNumber(BuildContext ctttx) async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.viewCustomerTrnNumber,
+      data: {},
+      context: ctttx,
+    );
+    if (response != null && response['status'] == 200) {
+      trnnumber = response['customer_trn'];
+    }
+    setState(() {});
   }
 
   Future getImageUrl(File file) async {
@@ -468,6 +482,19 @@ class MoreScreenState extends State<MoreScreen> {
             'Phone : ${userDetails.isEmpty ? '' : userDetails['phone'] ?? ''}',
             style: lightText16,
           ),
+          height5,
+          // if (GlobalSingleton.userDetails['show_trn_number'] == 1)
+            InkWell(
+              onTap: () {
+                if (trnnumber == null) {
+                  getTrnNumber(context);
+                }
+              },
+              child: Text(
+                'TRN : ${trnnumber ?? "******"}',
+                style: lightText16,
+              ),
+            ),
           TextButton(
             onPressed: () {
               Get.to(
