@@ -484,17 +484,17 @@ class MoreScreenState extends State<MoreScreen> {
           ),
           height5,
           // if (GlobalSingleton.userDetails['show_trn_number'] == 1)
-            InkWell(
-              onTap: () {
-                if (trnnumber == null) {
-                  getTrnNumber(context);
-                }
-              },
-              child: Text(
-                'TRN : ${trnnumber ?? "******"}',
-                style: lightText16,
-              ),
+          InkWell(
+            onTap: () {
+              if (trnnumber == null) {
+                getTrnNumber(context);
+              }
+            },
+            child: Text(
+              'TRN : ${trnnumber ?? "******"}',
+              style: lightText16,
             ),
+          ),
           TextButton(
             onPressed: () {
               Get.to(

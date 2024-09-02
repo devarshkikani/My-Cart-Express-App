@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:badges/badges.dart' as b;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:my_cart_express/e_commerce_app/e_widget/e_input_text_field.dart';
@@ -350,14 +351,23 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   }
 
   Future<void> saveTrn(BuildContext context) async {
+    final data = dio.FormData.fromMap({
+      'trn_number': trnController.text,
+    });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.trnNumberSave,
-        data: {"trn_number": trnController.text},
+        data: data,
         context: context);
 
-    if (response != null) {
+    if (response != null && response['status'] == 200) {
       box.write(StorageKey.isTrnEnter, "1");
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
+    } else {
+      NetworkDio.showError(
+        title: 'Error',
+        errorMessage: response!['message'],
+      );
     }
   }
 }

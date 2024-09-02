@@ -15,7 +15,7 @@ class UserModel {
     required this.email,
     required this.roleId,
     required this.firstname,
-    required this.showTrnPopup,
+    this.showTrnPopup,
     required this.lastname,
     required this.branchId,
     required this.profileImage,
@@ -24,7 +24,7 @@ class UserModel {
     required this.isAdmin,
     required this.isStaff,
     required this.verifyEmail,
-    required this.trnPopupMessage,
+    this.trnPopupMessage,
   });
 
   String userId;
@@ -38,10 +38,10 @@ class UserModel {
   String isCustomer;
   String priceGroupId;
   String verifyEmail;
-  String trnPopupMessage;
+  String? trnPopupMessage;
   num isStaff;
   int isAdmin;
-  num showTrnPopup;
+  num? showTrnPopup;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userId: json["user_id"],

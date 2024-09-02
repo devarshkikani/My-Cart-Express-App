@@ -112,6 +112,7 @@ class NetworkDio {
             );
             return res;
           } else {
+            print('+++Response: ' + '$response');
             showError(
               title: 'Error',
               errorMessage: responseBody['message'],
@@ -126,6 +127,7 @@ class NetworkDio {
           return null;
         }
       } on DioError catch (e) {
+        print('+++Response: ' + '$e');
         var response = e.response;
         if (kDebugMode) {
           print('DioError +++ $e');

@@ -59,12 +59,7 @@ class LoginController extends GetxController {
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.signIn,
       data: data,
     );
-    log("Data- ${{
-      'email': email,
-      'password': password,
-      'firebase_token': fcmToken.value,
-      'device': Platform.isAndroid ? 1 : 2,
-    }}");
+   
 
     if (response != null) {
       log(response.toString());
@@ -94,7 +89,7 @@ class LoginController extends GetxController {
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
       // if (isStaff == 1) {
-      //   box.write(StorageKey.isRegister, true);.
+      //   box.write(StorageKey.isRegister, true);
       //   Get.to(() => OtpScreen());
 
       //   // Get.offAll(
@@ -102,7 +97,7 @@ class LoginController extends GetxController {
       //   //   binding: StaffMainHomeBinding(),
       //   // );
       // } else
-      if (response['data']['verify_email'] == '0') {
+       if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
         Get.offAll(() => NotVerifyScreen(
               userDetails: response['data'],
