@@ -59,7 +59,6 @@ class LoginController extends GetxController {
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.signIn,
       data: data,
     );
-   
 
     if (response != null) {
       log(response.toString());
@@ -88,16 +87,15 @@ class LoginController extends GetxController {
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      // if (isStaff == 1) {
-      //   box.write(StorageKey.isRegister, true);
-      //   Get.to(() => OtpScreen());
+      if (isStaff == 1) {
+        box.write(StorageKey.isRegister, true);
+        Get.to(() => OtpScreen());
 
-      //   // Get.offAll(
-      //   //   () => const StaffMainHome(),
-      //   //   binding: StaffMainHomeBinding(),
-      //   // );
-      // } else
-       if (response['data']['verify_email'] == '0') {
+        // Get.offAll(
+        //   () => const StaffMainHome(),
+        //   binding: StaffMainHomeBinding(),
+        // );
+      } else if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
         Get.offAll(() => NotVerifyScreen(
               userDetails: response['data'],

@@ -49,33 +49,33 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
                         'Start Draw',
                         style: TextStyle(color: whiteColor),
                       ),
-                      actions: [
-                        InkWell(
-                          onTap: () {
-                            box.write(EStorageKey.eIsLogedIn, false);
+                      // actions: [
+                      //   InkWell(
+                      //     onTap: () {
+                      //       box.write(EStorageKey.eIsLogedIn, false);
 
-                            Get.offAll(
-                              () => LoginScreen(),
-                            );
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  "Logout",
-                                  style: TextStyle(color: whiteColor),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 18,
-                                  color: whiteColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      //       Get.offAll(
+                      //         () => LoginScreen(),
+                      //       );
+                      //     },
+                      //     child: const Padding(
+                      //       padding: EdgeInsets.all(15),
+                      //       child: Row(
+                      //         children: <Widget>[
+                      //           Text(
+                      //             "Logout",
+                      //             style: TextStyle(color: whiteColor),
+                      //           ),
+                      //           Icon(
+                      //             Icons.arrow_forward_ios_rounded,
+                      //             size: 18,
+                      //             color: whiteColor,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ],
                     ),
                     Expanded(
                       child: Container(

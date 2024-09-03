@@ -1,5 +1,5 @@
 class ApiEndPoints {
-  static String apiEndPoint = 'https://app.mycartexpress.com/api/v7/';
+  static String apiEndPoint = 'https://app.mycartexpress.com/api/v8/';
   late String imageEndPoint;
   static String authKey =
       'jayeyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTYyMDgwMDE2MSwiaWF0IjoxNjIwODAwMTYxfQ.UjYFOwih_3PrtwfJRxu6nwCwmv-e8Nbs3qAXLmdcTeYpeednas';
@@ -90,11 +90,15 @@ class ApiEndPoints {
   static String getFeedbackNotAdded = 'transaction/get_feedback_not_added';
   static String saveUserFeedbackPopup = 'transaction/save_user_feedback_popup';
 
-  static String getBinIssue = 'bin/get_binning_issues';
-  static String getScannedBinPackageList = 'bin/get_scanned_bin_package_list';
-  static String getSelectedPackageDetails =
-      'bin/get_selected_binning_issue_details';
-
   static String trnNumberSave = "save_customer_trn";
   static String viewCustomerTrnNumber = "view_customer_trn";
+
+//staff
+  static String getStaffBranches = 'customer_pos/get_staff_branches';
+  static String getBinIssue = 'bin/get_binning_issues';
+  static String getScannedBinPackageList = 'bin/get_scanned_bin_package_list';
+  static String getSelectedPackageIssueDetails =
+      'bin/get_selected_binning_issue_details';
+  static String getSelectedPackageDetails =
+      "bin/get_selected_package_details";
 }

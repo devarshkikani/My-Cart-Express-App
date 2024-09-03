@@ -9,8 +9,11 @@ import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/login/login_screen.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
+import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
+import 'package:my_cart_express/staff_app/staff_binding/staff_main_home_binding..dart';
 import 'package:my_cart_express/staff_app/staff_model/staff_scanned_bin_list_model.dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_main_home_page.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/refer_all_packages_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:dio/dio.dart' as dio;
@@ -74,7 +77,7 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.getScannedBinPackageList,
       data: dio.FormData.fromMap({
-        'bin_code': binID,
+        'bin_code': binID, // "BIN-37851496"
       }),
     );
     GetAllScannedPackagesModel res =
@@ -106,26 +109,13 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
                   'Scan Bin QR',
                 ),
                 actions: [
-                  InkWell(
+                  width5,
+                  GestureDetector(
                     onTap: () {
-                      box.write(EStorageKey.eIsLogedIn, false);
-                      Get.offAll(
-                        () => LoginScreen(),
-                      );
+                      showThreeDotDialog(context);
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "Logout",
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 18,
-                          ),
-                        ],
-                      ),
+                    child: const Icon(
+                      Icons.more_vert_outlined,
                     ),
                   ),
                 ],
@@ -147,6 +137,72 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> logOutOnTap() async {
+    box.write(EStorageKey.eIsLogedIn, false);
+    Get.offAll(
+      () => LoginScreen(),
+    );
+  }
+
+  void showThreeDotDialog(BuildContext context) {
+    showModalBottomSheet<int>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext ctx) {
+        return SafeArea(
+          child: Container(
+            height: 100,
+            margin: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      GlobalSingleton.page = null;
+                      Get.offAll(
+                        () => const StaffMainHome(),
+                        binding: StaffMainHomeBinding(),
+                      );
+                    },
+                    child: Center(
+                      child: Text(
+                        'Dashboard',
+                        style: regularText16.copyWith(color: primary),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      await logOutOnTap();
+                    },
+                    child: Center(
+                      child: Text(
+                        'Logout',
+                        style: regularText16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

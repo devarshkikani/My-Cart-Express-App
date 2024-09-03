@@ -95,13 +95,13 @@ class NetworkDio {
         Map<String, dynamic> responseBody = {};
         if (context != null) processIndicator.hide(context);
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 200 || response.statusCode == 20) {
           try {
             responseBody = json.decode(response.data);
           } catch (e) {
             responseBody = response.data;
           }
-          if (responseBody['status'] == 200) {
+          if (responseBody['status'] == 200 || responseBody['status'] == 20) {
             return responseBody;
           } else if (responseBody['status'] == 409) {
             Map<String, dynamic>? res = await handleErrorRefreshToken(

@@ -32,7 +32,7 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.getBinIssue,
       data: dio.FormData.fromMap({
-        'bin_code':  widget.binID,
+        'bin_code': widget.binID,
       }),
     );
     pkg = BinIssuedDetailsModel.fromJson(response!).packageList ?? [];
@@ -44,7 +44,7 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
       url: ApiEndPoints.apiEndPoint +
-         ApiEndPoints.getSelectedPackageDetails,
+          ApiEndPoints.getSelectedPackageIssueDetails,
       data: dio.FormData.fromMap({
         'package_id': pkgId,
       }),
@@ -102,7 +102,9 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
           decoration: BoxDecoration(
-            color: blackColor.withOpacity(.1),
+            color: pkg[i].colorCode != null
+                ? _getColorFromHex(pkg[i].colorCode.toString())
+                : blackColor.withOpacity(.5),
             borderRadius: BorderRadius.circular(10),
           ),
           child: InkWell(
@@ -117,12 +119,13 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
                     Expanded(
                       child: Text(
                         'Assigned : ${pkg[i].firstname} ${pkg[i].lastname}',
-                        style: regularText16,
+                        style: regularText16.copyWith(color: whiteColor),
                       ),
                     ),
                     // Spacer(),
                     const Icon(
                       Icons.arrow_forward_ios_rounded,
+                      color: whiteColor,
                       size: 20,
                     ),
                     const SizedBox(
@@ -133,12 +136,12 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
                 height5,
                 Text(
                   'PKG# : ${pkg[i].shippingMcecode}',
-                  style: regularText16,
+                  style: regularText16.copyWith(color: whiteColor),
                 ),
                 height5,
                 Text(
                   'Bin :${pkg[i].code}',
-                  style: regularText16,
+                  style: regularText16.copyWith(color: whiteColor),
                 ),
               ],
             ),
@@ -152,15 +155,22 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
     return showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: _getColorFromHex(pkgDet['package_data']['color_code']),
         title: Row(
           children: [
-            const Text('Details'),
+            const Text(
+              'Details',
+              style: TextStyle(color: whiteColor),
+            ),
             const Spacer(),
             InkWell(
               onTap: () {
                 Navigator.pop(_);
               },
-              child: const Icon(Icons.close_rounded),
+              child: const Icon(
+                Icons.close_rounded,
+                color: whiteColor,
+              ),
             ),
           ],
         ),
@@ -169,37 +179,45 @@ class _BinningIssueScreenState extends State<BinningIssueScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Customer Name  : ${{pkgDet['package_data']['customer_name']}}',
-              style: regularText16,
+              'Customer : ${pkgDet['package_data']['customer_name']}',
+              style: regularText16.copyWith(color: whiteColor),
             ),
             height5,
-            const Text(
-              'PKG#  : PKG740912',
-              style: regularText16,
+            Text(
+              'PKG# : ${pkgDet['package_data']['shipping_mcecode']}',
+              style: regularText16.copyWith(color: whiteColor),
             ),
             height5,
-            const Text(
-              'Bin Name  : Hope Road (Hope Business Place)',
-              style: regularText16,
+            Text(
+              'Bin Name : ${pkgDet['package_data']['branch_code']}',
+              style: regularText16.copyWith(color: whiteColor),
             ),
             height5,
-            const Text(
-              'Weight : 3',
-              style: regularText16,
+            Text(
+              'Weight : ${pkgDet['package_data']['weight']}',
+              style: regularText16.copyWith(color: whiteColor),
             ),
             height5,
-            const Text(
-              'Tracking# : dsfgs',
-              style: regularText16,
+            Text(
+              'Tracking# : ${pkgDet['package_data']['tracking']}',
+              style: regularText16.copyWith(color: whiteColor),
             ),
             height5,
-            const Text(
-              'Manifest  : ',
-              style: regularText16,
+            Text(
+              'Manifest : ${pkgDet['package_data']['manifest_code'] ?? ""}',
+              style: regularText16.copyWith(color: whiteColor),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor; // Adding FF for full opacity
+    }
+    return Color(int.parse(hexColor, radix: 16));
   }
 }

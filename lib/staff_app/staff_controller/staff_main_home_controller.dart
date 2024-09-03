@@ -6,6 +6,7 @@ import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
 import 'package:my_cart_express/e_commerce_app/e_widget/bottom_navigation/c_curved_navigation_bar.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_dashboard/staff_dashboard_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/staff_warehouse_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_pos/staff_pos_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_pickup_request/staff_pickup_request_screen.dart';
@@ -14,17 +15,21 @@ class StaffMainHomeController extends GetxController {
   GlobalKey<CurvedNavigationBarState> bottomNavigationKey = GlobalKey();
   GetStorage box = GetStorage();
   List pageList = [];
+  List dashboardist = [];
+  RxInt bottomDashboardValue = 0.obs;
 
   @override
   void onInit() {
     box.read(StorageKey.staffBottomModual).forEach((key, value) {
       pageList.add(allPages[key]);
     });
+    dashboardist.add(StaffDashboardScreen());
     super.onInit();
   }
 
   final Map<String, Widget> allPages = {
-    "pickup_request": const StaffPickupRequestScreen(),
+    "pickup_request":
+        const StaffPickupRequestScreen(), //const StaffDashboardScreen()
     "customer_pos": const StaffPosScreen(),
     "warehouse_add_to_bin": const StaffWarehouseScreen(),
     "transit_scan": Container(),
@@ -32,7 +37,7 @@ class StaffMainHomeController extends GetxController {
     "kiosk": Container(),
   };
 
-  RxInt page = 0.obs;
+  RxInt? page; //= 0.obs;
 
   final moduleIcons = {
     "pickup_request": Image.asset(pickupRequest),
@@ -75,7 +80,13 @@ class StaffMainHomeController extends GetxController {
   }
 
   void navIconTap(int index) {
-    page.value = index;
+    if (page == null) {
+      page = index.obs;
+      update();
+    } else {
+      page!.value = index;
+      update();
+    }
     update();
   }
 }

@@ -249,4 +249,5 @@ class _NotVerifyScreenState extends State<NotVerifyScreen> {
       ),
     );
   }
+
 }

@@ -30,7 +30,7 @@ class _BinIssueListScreenState extends State<BinIssueListScreen> {
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.getBinIssue,
       data: dio.FormData.fromMap({
-        'bin_code': "BIN-37851496",
+        'bin_code': widget. binID,
       }),
     );
     pkg = BinIssuedDetailsModel.fromJson(response!).packageList ?? [];
