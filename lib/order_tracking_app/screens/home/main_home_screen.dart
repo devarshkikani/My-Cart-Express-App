@@ -23,7 +23,8 @@ import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/order_tracking_app/widget/show_feedback_popup.dart';
-
+import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../e_commerce_app/e_constant/e_sizedbox.dart';
 
 RxInt packageCounts = 0.obs;
@@ -65,11 +66,18 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
       }
     });
     if (box.read(StorageKey.isTrnEnter) != "1") {
-      if (GlobalSingleton.userLoginDetails!.showTrnPopup == 1) {
+      if (GlobalSingleton.userDetails['show_trn_popup'] == 1) {
         Future.delayed(Duration.zero, () {
           trnDialog(context);
         });
       }
+    }
+
+    if (GlobalSingleton.userDetails['show_restricted_items_popup '] == 1 &&
+        GlobalSingleton.userDetails["is_restricted_items_accepted"] != 1) {
+      Future.delayed(Duration.zero, () {
+        restrictedDialod(context);
+      });
     }
   }
 
@@ -289,7 +297,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
-                      GlobalSingleton.userLoginDetails!.trnPopupMessage
+                      GlobalSingleton.userDetails['trn_popup_message']
                           .toString(),
                       style: regularText14,
                     ),
@@ -369,5 +377,111 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         errorMessage: response!['message'],
       );
     }
+  }
+
+  Future<void> customerAcceptenceApi(BuildContext context) async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+        url: ApiEndPoints.apiEndPoint + ApiEndPoints.customerAcceptence,
+        data: {},
+        context: context);
+
+    if (response != null && response['status'] == 200) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    } else {
+      NetworkDio.showError(
+        title: 'Error',
+        errorMessage: response!['message'],
+      );
+    }
+  }
+
+  void restrictedDialod(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: StatefulBuilder(builder: (ctx, set) {
+          return Dialog(
+            insetPadding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    height15,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Restricted/Prohibited Items',
+                            style: mediumText16,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Skip',
+                              style: mediumText18.copyWith(color: primary),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    height10,
+                    html(GlobalSingleton
+                        .userDetails['restricted_items_popup_message']
+                        .toString()),
+                    height10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            customerAcceptenceApi(context);
+                          },
+                          child: Text(
+                            GlobalSingleton.userDetails[
+                                'restricted_items_accept_button_text'],
+                          ),
+                        ),
+                      ],
+                    ),
+                    height10,
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget html(String data) {
+    return Html(
+      data: data,
+      onAnchorTap: (url, attributes, element) {
+        if (url != null) {
+          launchUrl(Uri.parse(url));
+        }
+      },
+      onLinkTap: (url, attributes, element) {
+        if (url != null) {
+          launchUrl(Uri.parse(url));
+        }
+      },
+    );
   }
 }

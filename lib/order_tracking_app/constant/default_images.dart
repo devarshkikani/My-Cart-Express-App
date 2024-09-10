@@ -38,3 +38,7 @@ const String helpandSupport = 'assets/images/help-supports.jpg';
 const String wareHouse = 'assets/images/local-delivery.jpg';
 
 const String successCheck = 'assets/images/success_check.gif';
+const String scannerImage = 'assets/images/scanner.png';
+
+
+const String scannerBeep = 'assets/mp3/scanner_beep.mpeg';

@@ -60,3 +60,53 @@ class StaffBranch {
         "color_code": colorCode,
     };
 }
+
+
+class GetDrawerStatusModel {
+  int? status;
+  DrawerDetails? drawerDetails;
+  String? message;
+
+  GetDrawerStatusModel({this.status, this.drawerDetails, this.message});
+
+  GetDrawerStatusModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    drawerDetails = json['drawer_details'] != null
+        ? new DrawerDetails.fromJson(json['drawer_details'])
+        : null;
+    message = json['message'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = status;
+    if (drawerDetails != null) {
+      data['drawer_details'] = drawerDetails!.toJson();
+    }
+    data['message'] = message;
+    return data;
+  }
+}
+
+class DrawerDetails {
+  String? id;
+  String? posBranchName;
+  String? drawerStartDate;
+
+  DrawerDetails({this.id, this.posBranchName, this.drawerStartDate});
+
+  DrawerDetails.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    posBranchName = json['pos_branch_name'];
+    drawerStartDate = json['drawer_start_date'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = id;
+    data['pos_branch_name'] = posBranchName;
+    data['drawer_start_date'] = drawerStartDate;
+    return data;
+  }
+}
+

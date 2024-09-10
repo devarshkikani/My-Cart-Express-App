@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 3.0.30+35
+version: 3.0.31+36
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -62,6 +62,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/mp3/
     - assets/fonts/roboto/
     - assets/fonts/poppins/
 

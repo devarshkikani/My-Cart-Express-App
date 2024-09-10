@@ -202,16 +202,17 @@ class _SplashScreenState extends State<SplashScreen> {
             UserModel.fromJson(box.read(StorageKey.currentUser));
       }
 
-      if (GlobalSingleton.userLoginDetails != null &&
-          GlobalSingleton.userLoginDetails!.isStaff == 1) {
-        box.write(StorageKey.isRegister, true);
-        // Get.to(() => OtpScreen());
+      // if (GlobalSingleton.userLoginDetails != null &&
+      //     GlobalSingleton.userLoginDetails!.isStaff == 1) {
+      //   box.write(StorageKey.isRegister, true);
+      //   // Get.to(() => OtpScreen());
 
-        Get.offAll(
-          () => const StaffMainHome(),
-          binding: StaffMainHomeBinding(),
-        );
-      } else if (response['data']['verify_email'] == '0') {
+      //   Get.offAll(
+      //     () => const StaffMainHome(),
+      //     binding: StaffMainHomeBinding(),
+      //   );
+      // } else
+      if (response['data']['verify_email'] == '0') {
         Get.offAll(
           () => NotVerifyScreen(
             userDetails: response['data'],

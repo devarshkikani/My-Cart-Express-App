@@ -12,12 +12,13 @@ import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:my_cart_express/staff_app/staff_model/get_selected_bin_details_model.dart';
 import 'package:my_cart_express/staff_app/staff_model/staff_scanned_bin_list_model.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/add_new_package_to_bin.dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/bin_list/scanner_dashboard_screen.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_warehouse/binning_issue_screen.dart';
 
 class ReferAllPackagesScreen extends StatefulWidget {
-  final List<PackageList> dataList;
+  List<PackageList> dataList;
   final String binId;
-  const ReferAllPackagesScreen(
+  ReferAllPackagesScreen(
       {super.key, required this.binId, required this.dataList});
 
   @override
@@ -26,6 +27,25 @@ class ReferAllPackagesScreen extends StatefulWidget {
 
 class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
   PackageData? packageData;
+
+  Future<void> getScannerPackgeData(context, binID) async {
+    Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
+      context: context,
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.getScannedBinData,
+      data: dio.FormData.fromMap({
+        'bin_code': binID, // "BIN-37851496"
+      }),
+    );
+    GetAllScannedPackagesModel res =
+        GetAllScannedPackagesModel.fromJson(response!);
+
+    widget.dataList = res.packageList ?? [];
+
+    setState(() {});
+
+    // log(response.toString());
+  }
+
   Future<void> getSelectedPackageDetails(context, pkgId) async {
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
@@ -84,9 +104,9 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Bin Name: P-A1, Portmore',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Text(
+          'BIN Name: ${widget.binId}',
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(
           height: 20,
@@ -131,7 +151,7 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
                 Expanded(
                   child: ListView.builder(
                       itemCount: widget.dataList.length,
-                      // physics: const NeverScrollableScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return InkWell(
@@ -139,95 +159,104 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
                             getSelectedPackageDetails(
                                 context, widget.dataList[index].packageId);
                           },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        if (widget
-                                                .dataList[index].checkOffScan ==
-                                            1)
-                                          Image.asset(
-                                            doubleTick,
-                                            height: 20,
-                                            width: 20,
+                          child: Card(
+                            elevation: 1.5,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          if (widget.dataList[index]
+                                                  .checkOffScan ==
+                                              1)
+                                            Image.asset(
+                                              doubleTick,
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                          Text(
+                                            widget
+                                                .dataList[index].shippingMcecode
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: Colors.blue,
+                                            ),
                                           ),
-                                        Text(
-                                          widget.dataList[index].shippingMcecode
+                                        ],
+                                      ),
+                                      _buildStatusIndicator(
+                                          widget.dataList[index].status
                                               .toString(),
-                                          style: const TextStyle(
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    _buildStatusIndicator(
-                                        widget.dataList[index].status
-                                            .toString(),
-                                        widget.dataList[index].status
-                                                    .toString() ==
-                                                "ISSUE"
-                                            ? Colors.red
-                                            : Colors.green),
-                                  ],
-                                ),
-                                if (widget.dataList[index].internalNote == 1)
-                                  Image.asset(
-                                    letterm,
-                                    height: 20,
-                                    width: 20,
+                                          widget.dataList[index].status
+                                                      .toString() ==
+                                                  "ISSUE"
+                                              ? Colors.red
+                                              : Colors.green),
+                                    ],
                                   ),
-                                const SizedBox(
-                                  height: 6,
-                                ),
-                                _buildTag(
-                                    widget.dataList[index].binnedLocation
-                                        .toString(),
-                                    Colors.purple),
-                                const SizedBox(
-                                  height: 6,
-                                ),
-                                Row(
-                                  children: [
-                                    if (widget.dataList[index].isFlagged == "1")
-                                      Image.asset(
-                                        flag,
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                    if (widget.dataList[index].isDetained ==
-                                        "1")
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                    if (widget.dataList[index].isDetained ==
-                                        "1")
-                                      Image.asset(
-                                        letterc,
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                    if (widget.dataList[index].isDamaged == "1")
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                    if (widget.dataList[index].isDamaged == "1")
-                                      Image.asset(
-                                        letterd,
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                  ],
-                                ),
-                                const Divider(),
-                              ],
+                                  if (widget.dataList[index].internalNote == 1)
+                                    Image.asset(
+                                      letterm,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  const SizedBox(
+                                    height: 6,
+                                  ),
+                                  _buildTag(
+                                      widget.dataList[index].binnedLocation
+                                          .toString(),
+                                      Colors.purple),
+                                  const SizedBox(
+                                    height: 6,
+                                  ),
+                                  Row(
+                                    children: [
+                                      if (widget.dataList[index].isFlagged ==
+                                          "1")
+                                        Image.asset(
+                                          flag,
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                      if (widget.dataList[index].isDetained ==
+                                          "1")
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                      if (widget.dataList[index].isDetained ==
+                                          "1")
+                                        Image.asset(
+                                          letterc,
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                      if (widget.dataList[index].isDamaged ==
+                                          "1")
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                      if (widget.dataList[index].isDamaged ==
+                                          "1")
+                                        Image.asset(
+                                          letterd,
+                                          height: 20,
+                                          width: 20,
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -258,7 +287,15 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
       children: [
         ElevatedButton(
           onPressed: () {
-            Get.to(() => const AddNewPackageToBinScreen());
+            // Get.to(() => const SannerDashboard());
+            Get.to(
+              () => AddNewPackageToBinScreen(
+                binCode: widget.binId,
+              ),
+            )!
+                .then((value) {
+              getScannerPackgeData(context, widget.binId);
+            });
           },
           child: const Text(
             'Add New Package to Bin',
@@ -377,104 +414,137 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
           ],
         ),
         content: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               titleList(
-                  title1: "PKG#",
-                  title2: pkgDet.packageList!['shipping_mcecode']),
-              height10,
-              titleList(
-                title1: "Collection",
-                title2: pkgDet.packageList!['insert_timestamp'],
-              ),
-              height10,
-              titleList(
                   title1: "Tracking#",
+                  isdiderShow: false,
                   title2: pkgDet.packageList!['tracking'],
                   style: regularText14.copyWith(color: Colors.blue)),
               height10,
               titleList(
-                  title1: "Ttype:",
+                  title1: "PKG#",
+                  isdiderShow: false,
+                  title2: pkgDet.packageList!['shipping_mcecode']),
+              height10,
+              titleList(
+                title1: "Collection",
+                isdiderShow: false,
+                title2: pkgDet.packageList!['insert_timestamp'],
+              ),
+
+              height10,
+              titleList(
+                  title1: "Ttype",
                   title2: pkgDet.packageList!["shipping_type"]),
               height10,
               titleList(
-                  title1: "Wegiht:", title2: pkgDet.packageList!["weight"]),
+                  title1: "Wegiht", title2: pkgDet.packageList!["weight"]),
               height10,
               titleList(
-                  title1: "Sender:",
+                  title1: "Sender",
                   title2: pkgDet.packageList!["sender_other_name"]),
               height10,
               titleList(
-                  title1: "Merchant:",
+                  title1: "Merchant",
                   title2: pkgDet.packageList!["vendor_name"]),
               height10,
               titleList(
-                  title1: "Shipping Method:",
+                  title1: "Shipping Method",
                   title2: pkgDet.packageList!["shipping_method"]),
               height10,
               titleList(
-                  title1: "Package Rank:",
+                  title1: "Package Rank",
                   title2: pkgDet.packageList!['package_rank'] ?? "--"),
               height10,
-              titleList(title1: "Package Age:", title2: pkgDet.packageAge),
-              height20,
-              const Text(
-                "Internal Notes",
-                style: boldText16,
+              titleList(title1: "Package Age", title2: pkgDet.packageAge),
+              // height20,
+              // const Text(
+              //   "Internal Notes",
+              //   style: boldText16,
+              // ),
+              height10,
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: greyColor)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Short Description",
+                      style: boldText16,
+                    ),
+                    const Divider(),
+                    titleList(title1: "Received", title2: pkgDet.daysAgo),
+                    const Divider(),
+                    titleList(title1: "Manifest", title2: pkgDet.manifestCode),
+                  ],
+                ),
               ),
-              height20,
-              const Text(
-                "Short Description",
-                style: boldText16,
+              // height10,
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: greyColor)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    titleList(
+                        title1: "Package Value",
+                        isdiderShow: false,
+                        title2: pkgDet.packagePriceDetails!.packageCost,
+                        style: boldText16),
+                    const Divider(),
+                    titleList(title1: "Value Aquistion", title2: "0"),
+                    const Divider(),
+                    titleList(
+                        title1: "Freight Charges",
+                        title2: pkgDet.packagePriceDetails!.freightCharges),
+                    const Divider(),
+                    titleList(
+                        title1: "Inbound Charge",
+                        title2: pkgDet.packagePriceDetails!.inboundCharge),
+                    const Divider(),
+                    titleList(
+                        title1: "Storage Fees",
+                        title2: pkgDet.packagePriceDetails!.storageFees),
+                    const Divider(),
+                    titleList(
+                        title1: "GCT", title2: pkgDet.packagePriceDetails!.gct),
+                    const Divider(),
+                    titleList(
+                        title1: "Duty Tax",
+                        title2: pkgDet.packagePriceDetails!.dutyTax),
+                    const Divider(),
+                    titleList(
+                        title1: "Delivery Cost",
+                        title2: pkgDet.packagePriceDetails!.deliveryCost),
+                    const Divider(),
+                    titleList(
+                        title1: "Third Party Delivery Cost",
+                        title2:
+                            pkgDet.packagePriceDetails!.thirdPartyDeliveryCost),
+                    const Divider(),
+                    titleList(
+                        title1: "Bad Address Fees",
+                        title2: pkgDet.packagePriceDetails!.badAddressFees),
+                    const Divider(),
+                    titleList(
+                        title1: "Estimate Total Due",
+                        isdiderShow: false,
+                        title2: pkgDet.packagePriceDetails!.estimateTotalDue,
+                        style: boldText16),
+                  ],
+                ),
               ),
-              height20,
-              titleList(title1: "Received:", title2: pkgDet.daysAgo),
-              titleList(title1: "Manifest:", title2: pkgDet.manifestCode),
-              height20,
-              titleList(
-                  title1: "Package Value:",
-                  title2: pkgDet.packagePriceDetails!.packageCost,
-                  style: boldText16),
-              height15,
-              titleList(title1: "Value Aquistion:", title2: ""),
-              height10,
-              titleList(
-                  title1: "Freight Charges:",
-                  title2: pkgDet.packagePriceDetails!.freightCharges),
-              height10,
-              titleList(
-                  title1: "Inbound Charge:",
-                  title2: pkgDet.packagePriceDetails!.inboundCharge),
-              height10,
-              titleList(
-                  title1: "Storage Fees:",
-                  title2: pkgDet.packagePriceDetails!.storageFees),
-              height10,
-              titleList(
-                  title1: "GCT:", title2: pkgDet.packagePriceDetails!.gct),
-              height5,
-              titleList(
-                  title1: "Duty Tax:",
-                  title2: pkgDet.packagePriceDetails!.dutyTax),
-              height10,
-              titleList(
-                  title1: "Delivery Cost:",
-                  title2: pkgDet.packagePriceDetails!.deliveryCost),
-              height10,
-              titleList(
-                  title1: "Third Party Delivery Cost:",
-                  title2: pkgDet.packagePriceDetails!.thirdPartyDeliveryCost),
-              height5,
-              titleList(
-                  title1: "Bad Address Fees:",
-                  title2: pkgDet.packagePriceDetails!.badAddressFees),
-              height10,
-              titleList(
-                  title1: "Estimate Total Due:",
-                  title2: pkgDet.packagePriceDetails!.estimateTotalDue,
-                  style: boldText16),
             ],
           ),
         ),
@@ -482,27 +552,30 @@ class _ReferAllPackagesScreenState extends State<ReferAllPackagesScreen> {
     );
   }
 
-  Row titleList({title1, title2, color, style}) {
+  Row titleList({title1, title2, color, style, bool? isdiderShow}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 120,
+        Expanded(
+          // width: 120,
           child: Text(
             title1,
             style: style ??
                 const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
                 ),
           ),
         ),
         width10,
+        if (isdiderShow != false) const Text(":"),
+        width5,
         Expanded(
           child: Text(title2,
+              textAlign: TextAlign.end,
               style: style ??
                   TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: color,
                     fontWeight: FontWeight.w400,
                   )),

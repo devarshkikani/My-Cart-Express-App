@@ -42,7 +42,7 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
       if (scanData.code != null) {
         if (scanData.code!.startsWith('BIN')) {
           NetworkDio.showSuccess(
-              title: 'BIN QR code successfully', sucessMessage: '');
+              title: 'BIN QR Scan Successfully', sucessMessage: '');
           controller.pauseCamera();
           // print(scanData.code);
           getScannerPackgeList(context, scanData.code);
@@ -105,8 +105,13 @@ class _StaffWarehouseScreenState extends State<StaffWarehouseScreen> {
                 leading: const SizedBox(),
                 centerTitle: true,
                 elevation: 0.0,
-                title: const Text(
-                  'Scan Bin QR',
+                title: InkWell(
+                  // onTap: () {
+                  //   getScannerPackgeList(context, 'BIN-37851496');
+                  // },
+                  child: const Text(
+                    'Scan Bin QR',
+                  ),
                 ),
                 actions: [
                   width5,

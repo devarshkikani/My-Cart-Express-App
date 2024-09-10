@@ -25,6 +25,11 @@ class UserModel {
     required this.isStaff,
     required this.verifyEmail,
     this.trnPopupMessage,
+    this.showRestrictedItemsPopup,
+    this.restrictedItemsPopupMessage,
+    this.restrictedItemsAcceptButtonText,
+    this.showRestrictedItemsAcceptedStatus,
+    this.isRestrictedItemsAccepted,
   });
 
   String userId;
@@ -42,6 +47,11 @@ class UserModel {
   num isStaff;
   int isAdmin;
   num? showTrnPopup;
+  num? showRestrictedItemsPopup;
+  String? restrictedItemsPopupMessage;
+  String? restrictedItemsAcceptButtonText;
+  num? showRestrictedItemsAcceptedStatus;
+  num? isRestrictedItemsAccepted;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userId: json["user_id"],
@@ -59,6 +69,13 @@ class UserModel {
         verifyEmail: json["verify_email"],
         showTrnPopup: json["show_trn_popup"],
         trnPopupMessage: json["trn_popup_message"],
+        showRestrictedItemsPopup: json["show_restricted_items_popup "],
+        restrictedItemsPopupMessage: json["restricted_items_popup_message"],
+        restrictedItemsAcceptButtonText:
+            json["restricted_items_accept_button_text"],
+        showRestrictedItemsAcceptedStatus:
+            json["show_restricted_items_accepted_status"],
+        isRestrictedItemsAccepted: json["is_restricted_items_accepted"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -77,6 +94,12 @@ class UserModel {
         "verify_email": verifyEmail,
         "show_trn_popup": showTrnPopup,
         "trn_popup_message": trnPopupMessage,
+        "show_restricted_items_popup ": showRestrictedItemsPopup,
+        "restricted_items_popup_message": restrictedItemsPopupMessage,
+        "restricted_items_accept_button_text": restrictedItemsAcceptButtonText,
+        "show_restricted_items_accepted_status":
+            showRestrictedItemsAcceptedStatus,
+        "is_restricted_items_accepted": isRestrictedItemsAccepted,
       };
 }
 

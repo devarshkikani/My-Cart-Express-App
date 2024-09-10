@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/models/scanned_package_details.dart';
+import 'package:my_cart_express/order_tracking_app/widget/input_text_field.dart';
 
 import '../../../order_tracking_app/theme/colors.dart';
 import '../../../order_tracking_app/theme/text_style.dart';
 
-class CustomerAvailablePackages extends StatelessWidget {
-  const CustomerAvailablePackages({super.key});
+class CustomerAvailablePackages extends StatefulWidget {
+  final ScanPosPackageData data;
+  const CustomerAvailablePackages({super.key, required this.data});
 
+  @override
+  State<CustomerAvailablePackages> createState() =>
+      _CustomerAvailablePackagesState();
+}
+
+class _CustomerAvailablePackagesState extends State<CustomerAvailablePackages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,24 +60,36 @@ class CustomerAvailablePackages extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const ProfileSection(),
+          ProfileSection(
+            profiledata: widget.data,
+          ),
           const SizedBox(
             height: 20,
           ),
-          BoxGridSection(),
+          BoxGridSection(
+            incomeData: widget.data,
+          ),
           const SizedBox(
             height: 20,
           ),
-          const TransactionSection(),
+          TransactionSection(
+            trasnsactioData: widget.data,
+          ),
         ],
       ),
     );
   }
 }
 
-class ProfileSection extends StatelessWidget {
-  const ProfileSection({super.key});
+class ProfileSection extends StatefulWidget {
+  final ScanPosPackageData profiledata;
+  const ProfileSection({super.key, required this.profiledata});
 
+  @override
+  State<ProfileSection> createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -91,13 +112,17 @@ class ProfileSection extends StatelessWidget {
             ),
             height10,
             Text(
-              'MCE80650 appteam s developer',
+              widget.profiledata.customerDetails!.customerName.toString(),
               style: boldText18,
             ),
             height5,
-            const Text('Bronze Member'),
+            Text(
+              widget.profiledata.customerDetails!.priceGroupName.toString(),
+            ),
             height5,
-            const Text('Total Packages: 34'),
+            Text('Total Packages: ${{
+              widget.profiledata.customerDetails!.totalPackages.toString(),
+            }}'),
             const SizedBox(height: 5),
             SizedBox(
               width: 200,
@@ -112,7 +137,8 @@ class ProfileSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '1',
+                      widget.profiledata.customerDetails!.shipmentsReady
+                          .toString(),
                       style: boldText16.copyWith(
                         color: secondary,
                       ),
@@ -127,34 +153,35 @@ class ProfileSection extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Toggle Packages'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {},
+            //   child: const Text('Toggle Packages'),
+            // ),
             height10,
             Text(
-              'Branch: Kingston Hope Road',
+              'Branch: ${widget.profiledata.customerDetails!.branchName.toString()}',
               style: regularText18,
             ),
             height10,
             Text(
-              'Email: mworksforu9@gmail.com',
+              'Email: ${widget.profiledata.customerDetails!.email.toString()}',
               style: regularText18,
             ),
             height10,
             Text(
-              'Phone #: (968) 988-8375',
+              'Phone #: ${widget.profiledata.customerDetails!.phone.toString()}',
               style: regularText18,
             ),
             height10,
             Text(
-              'Birth Date #: ',
+              'Birth Date : ${widget.profiledata.customerDetails!.birthDate ?? ""}',
               style: regularText18,
             ),
             TextButton(
                 onPressed: () {},
                 child: const Text('See Full Customer Details')),
-            const Text('Authorized Pickup'),
+            Text(
+                'Authorized Pickup : ${widget.profiledata.customerDetails!.authorizedPickup ?? ""}'),
           ],
         ),
       ),
@@ -162,120 +189,147 @@ class ProfileSection extends StatelessWidget {
   }
 }
 
-class BoxGridSection extends StatelessWidget {
-  BoxGridSection({super.key});
-  final List<Map<String, String>> data = [
-    {
-      'E-wallet Balance': '\$2501.00',
-    },
-    {
-      'Bucks Balance': '\$0.00',
-    },
-    {
-      'Shipment in Progress': '33',
-    },
-    {
-      'Shipment For Pick Up': '0',
-    },
-    {
-      'Shipment For Delivery': '0',
-    },
-    {
-      'Completed Shipment': '0',
-    },
-    {
-      'Refunded Shipment': '0',
-    },
-    {
-      'Transactions': '0',
-    },
-    {
-      'Orders': '0',
-    },
-    {
-      'Attachments': '31',
-    },
-    {
-      'Uploaded File': '22',
-    },
-    {
-      'Notifications': '210',
-    },
-    {
-      'Emails': '0',
-    },
-    {
-      'Notes': '4',
-    },
-    {
-      'Refunds': '0',
-    },
-    {
-      'Incoming Call Logs': '0',
-    },
-    {
-      'Outgoing Call Logs': '0',
-    },
-    {
-      'Open Missing Package': '0',
-    },
-    {
-      'Pending - Missing Package': '0',
-    },
-    {
-      'Closed - Missing Package': '0',
-    },
-  ];
+class BoxGridSection extends StatefulWidget {
+  final ScanPosPackageData incomeData;
+  const BoxGridSection({super.key, required this.incomeData});
+
+  @override
+  State<BoxGridSection> createState() => _BoxGridSectionState();
+}
+
+class _BoxGridSectionState extends State<BoxGridSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      child: Wrap(
-        runSpacing: 10,
-        spacing: 10,
-        children: List.generate(
-          data.length,
-          (index) {
-            return Container(
-              width: MediaQuery.of(context).size.width * 0.27,
-              height: 88,
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      data[index].values.first,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Payment',
+            style: mediumText16,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  const Text('EWallet Balance'),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: Size(Get.width, 50),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      // if (_formKey.currentState!.validate()) {
+                      //   controller.signInOnTap(
+                      //     email: emailId.text.trim(),
+                      //     password: password.text.trim(),
+                      //     context: context,
+                      //   );
+                      // }
+                    },
+                    child: Text(
+                      "₹ ${widget.incomeData.walletBalance}",
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                        letterSpacing: 1,
+                      ),
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      data[index].keys.first,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+              Column(
+                children: [
+                  const Text('Bucks Balance'),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: Size(Get.width, 50),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      // if (_formKey.currentState!.validate()) {
+                      //   controller.signInOnTap(
+                      //     email: emailId.text.trim(),
+                      //     password: password.text.trim(),
+                      //     context: context,
+                      //   );
+                      // }
+                    },
+                    child: Text(
+                      "₹ ${widget.incomeData.bucksBalance}",
+                      style: const TextStyle(
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
+      // Wrap(
+      //   runSpacing: 10,
+      //   spacing: 10,
+      //   children: List.generate(
+      //     data.length,
+      //     (index) {
+      //       return Container(
+      //         width: MediaQuery.of(context).size.width * 0.27,
+      //         height: 88,
+      //         padding: const EdgeInsets.all(6),
+      //         decoration: BoxDecoration(
+      //           color: whiteColor,
+      //           borderRadius: BorderRadius.circular(16),
+      //         ),
+      //         child: Center(
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.center,
+      //             children: [
+      //               Text(
+      //                 data[index].values.first,
+      //                 style: const TextStyle(
+      //                     fontSize: 16, fontWeight: FontWeight.bold),
+      //               ),
+      //               const SizedBox(height: 5),
+      //               Text(
+      //                 data[index].keys.first,
+      //                 textAlign: TextAlign.center,
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
     );
   }
 }
 
-class TransactionSection extends StatelessWidget {
-  const TransactionSection({super.key});
+class TransactionSection extends StatefulWidget {
+  final ScanPosPackageData trasnsactioData;
+  const TransactionSection({super.key, required this.trasnsactioData});
 
+  @override
+  State<TransactionSection> createState() => _TransactionSectionState();
+}
+
+class _TransactionSectionState extends State<TransactionSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(16),
@@ -285,22 +339,41 @@ class TransactionSection extends StatelessWidget {
         children: [
           const Text('Create a transaction',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+
+          bodyView(),
+
+          // Row(
+          //   children: [
+          //     const Text('Available (1)'),
+          //     const Spacer(),
+          //     ElevatedButton(
+          //       onPressed: () {},
+          //       style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          //       child: const Text('Override'),
+          //     ),
+          //   ],
+          // ),
+
           height10,
-          Row(
-            children: [
-              const Text('Available (1)'),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Override'),
-              ),
-            ],
-          ),
+          PaymentScreen(),
           height10,
-          Container(
+          ElevatedButton(onPressed: () {}, child: const Text('Pay Now')),
+        ],
+      ),
+    );
+  }
+
+  Widget bodyView() {
+    return SizedBox(
+      child: ListView.builder(
+        itemCount: widget.trasnsactioData.transactionList!.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, i) {
+          return Container(
             width: Get.width,
             padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
                 color: greyColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16)),
@@ -308,36 +381,119 @@ class TransactionSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '''PKG# : PKG740907''',
+                  'PKG# : ${widget.trasnsactioData.transactionList![i].shippingMcecode}',
                   style: mediumText16.copyWith(
                     color: blackColor,
                   ),
                 ),
                 height5,
                 Text(
-                  '''Warehouse Binned: Hope Road WH''',
+                  'Description : ${widget.trasnsactioData.transactionList![i].description ?? ""}',
                   style: regularText14.copyWith(
                     color: primary,
                   ),
                 ),
                 height5,
                 Text(
-                  '''Due #: \$2050.00''',
+                  'Weight :${widget.trasnsactioData.transactionList![i].weight}',
                   style: regularText14,
                 ),
                 height5,
                 Text(
-                  '''Transaction: Waiting''',
+                  'Amount :${widget.trasnsactioData.transactionList![i].amount}',
                   overflow: TextOverflow.ellipsis,
                   style: regularText14,
                 ),
               ],
             ),
-          ),
-          height10,
-          ElevatedButton(onPressed: () {}, child: const Text('Pay Now')),
-        ],
+          );
+        },
       ),
+    );
+  }
+}
+
+class PaymentScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Amount Tendered",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        buildPaymentField(context, "Cash (\$)", "Confirm Cash"),
+        buildPaymentField(context, "Card (\$)", "Confirm Card"),
+        buildPaymentField(context, "Ewallet (\$)", "Confirm Ewallet"),
+        buildPaymentField(context, "Bucks", "Confirm Bucks"),
+
+        const SizedBox(height: 16),
+       
+        Row(
+          children: [
+            Expanded(
+              child: textFormField(hintText: 'Invoice #'),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 24),
+        const Text(
+          "Change Due (\$)",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        buildChangeDueField(context, "Cash Change"),
+        const SizedBox(height: 6),
+        buildChangeDueField(context, "Ewallet Change"),
+
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle add to ewallet logic
+            },
+            child: const Text("Add to Ewallet"),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Reusable widget for payment input fields
+  Widget buildPaymentField(
+      BuildContext context, String label, String confirmLabel) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: textFormField(hintText: label),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: textFormField(hintText: confirmLabel),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  // Reusable widget for Change Due section
+  Widget buildChangeDueField(BuildContext context, String label) {
+    return Row(
+      children: [
+        Expanded(
+          child: textFormField(hintText: label),
+        ),
+        const SizedBox(width: 16),
+      ],
     );
   }
 }

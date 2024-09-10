@@ -12,6 +12,7 @@ import 'package:my_cart_express/order_tracking_app/screens/authentication/login/
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/order_tracking_app/theme/text_style.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_pos/customer_available_packages.dart';
+import 'package:my_cart_express/staff_app/staff_screen/staff_pos/staff_customer_pos_scanner.dart';
 import 'package:my_cart_express/staff_app/staff_screen/staff_pos/staff_pos_controller.dart';
 
 class StaffPosScreen extends StatefulWidget {
@@ -28,11 +29,20 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    _.getDrawerStatus(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GetBuilder<StaffPosController>(
+        init: StaffPosController(),
         builder: (ctx) {
-          _.getBranches(context);
+          // _.getDrawerStatus(context);
+          // _.getBranches(context);
+
           return Container(
             width: Get.height,
             color: primary,
@@ -46,7 +56,7 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
                       centerTitle: true,
                       elevation: 0.0,
                       title: const Text(
-                        'Start Draw',
+                        'Customer POS',
                         style: TextStyle(color: whiteColor),
                       ),
                       // actions: [
@@ -88,7 +98,9 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
                             topRight: Radius.circular(20),
                           ),
                         ),
-                        child: bodyView(),
+                        child: _.drawerDetails != null
+                            ? posDetailsView()
+                            : bodyView(),
                       ),
                     ),
                   ],
@@ -98,6 +110,70 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget posDetailsView() {
+    return Column(
+      children: [
+        Card(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Drawer ',
+                      style: mediumText18,
+                    ),
+                    Text(
+                      "#${_.drawerDetails!.value.id}",
+                      style: mediumText18.copyWith(color: primary),
+                    ),
+                  ],
+                ),
+                height5,
+                Text(
+                  "Started ${_.drawerDetails!.value.drawerStartDate}",
+                  style: regularText14.copyWith(fontWeight: FontWeight.w400),
+                ),
+                height5,
+                Text(
+                  _.drawerDetails!.value.posBranchName.toString(),
+                  style: mediumText18,
+                ),
+              ],
+            ),
+          ),
+        ),
+        height10,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size(200, 40),
+            maximumSize: const Size(200, 50),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+          ),
+          onPressed: () async {
+            Get.to(() => const StaffCustomerPosScreen());
+            // getScannerPackgeList(context, widget.binCode, scannedPkgId);
+          },
+          child: const Text(
+            'Scan New Package',
+            style: TextStyle(
+              letterSpacing: 1,
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -113,7 +189,7 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
         height20,
         TextFormFieldWidget(
           hintText: '0.00',
-          // controller: declared,
+          controller: _.initalAmount,
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,
           ),
@@ -145,7 +221,9 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState?.validate() ?? false) {
-                  Get.to(() => const CustomerAvailablePackages());
+                  _.startDrawer(context, _.initalAmount.text,
+                      _.staffBranches[_.branchIndex.value].branchId.toString());
+                  // Get.to(() => const CustomerAvailablePackages());
                 }
               },
               child: const Text('Save'),
@@ -179,14 +257,14 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
                     _.branchIndex.value = value;
                   },
                   children: List.generate(
-                    _.branchesList.length,
+                    _.staffBranches.length,
                     (index) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Column(
                           children: [
                             Text(
-                              '${_.branchesList[index].parishname} - ${_.branchesList[index].code}',
+                              '${_.staffBranches[index].parishname} - ${_.staffBranches[index].branchCode}',
                               style: mediumText14.copyWith(
                                 color: primary,
                               ),
@@ -211,9 +289,9 @@ class _StaffPosScreenState extends State<StaffPosScreen> {
                   ),
                   onPressed: () {
                     _.branchName.text =
-                        '${_.branchesList[_.branchIndex.value].parishname} - ${_.branchesList[_.branchIndex.value].code}';
+                        '${_.staffBranches[_.branchIndex.value].parishname} - ${_.staffBranches[_.branchIndex.value].branchCode}';
                     _.branchId.value =
-                        _.branchesList[_.branchIndex.value].branchId ?? '0';
+                        _.staffBranches[_.branchIndex.value].branchId ?? '0';
                     Navigator.pop(context);
                   },
                   child: const Text(
