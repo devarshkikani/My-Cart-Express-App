@@ -73,7 +73,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
       }
     }
 
-    if (GlobalSingleton.userDetails['show_restricted_items_popup '] == 1 &&
+    if (
+      GlobalSingleton.userDetails['show_restricted_items_popup '] != null &&
+      GlobalSingleton.userDetails['show_restricted_items_popup '] == 1 &&
         GlobalSingleton.userDetails["is_restricted_items_accepted"] != 1) {
       Future.delayed(Duration.zero, () {
         restrictedDialod(context);

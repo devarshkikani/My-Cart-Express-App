@@ -133,15 +133,10 @@ class _StaffCustomerPosScreenState extends State<StaffCustomerPosScreen> {
   Widget bodyView() {
     return Column(
       children: [
-        InkWell(
-          onTap: () {
-            getPackageCustomerDetailsApi(context, "PKG871576");
-          },
-          child: Text(
-            'Scan package',
-            style: lightText14.copyWith(
-              color: primary,
-            ),
+        Text(
+          'Scan package',
+          style: lightText14.copyWith(
+            color: primary,
           ),
         ),
         height10,

@@ -12,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/models/user_info_model.dart';
 import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/otp/otp_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
@@ -80,8 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
           redirectScreen();
         }
       } else {
-        if (GlobalSingleton.packageInfo?.version !=
-            commonSettings['app_version']) {
+        if (GlobalSingleton.packageInfo?.version != commonSettings['app_version']) {
           showUpdateApp(context, commonSettings['force_update'] == "0");
         } else {
           redirectScreen();
@@ -197,10 +197,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      if (box.read(StorageKey.currentUser) != null) {
-        GlobalSingleton.userLoginDetails =
-            UserModel.fromJson(box.read(StorageKey.currentUser));
-      }
+     
+     
 
       // if (GlobalSingleton.userLoginDetails != null &&
       //     GlobalSingleton.userLoginDetails!.isStaff == 1) {

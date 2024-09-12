@@ -12,13 +12,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/otp/otp_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
-import 'package:my_cart_express/staff_app/staff_binding/staff_main_home_binding..dart';
-import 'package:my_cart_express/staff_app/staff_screen/staff_main_home_page.dart';
 
 class LoginController extends GetxController {
   GetStorage box = GetStorage();
@@ -62,41 +59,48 @@ class LoginController extends GetxController {
     if (response != null) {
       log(response.toString());
       UserModel model = UserModel.fromJson(response['data']);
-      if (response["modules"].runtimeType != List) {
-        StaffBottomModule modual =
-            StaffBottomModule.fromJson(response['modules']);
-        box.write(StorageKey.staffBottomModual, modual.toJson());
-      }
+      // if (response["modules"].runtimeType != List) {
+      //   StaffBottomModule modual =
+      //       StaffBottomModule.fromJson(response['modules']);
+      //   box.write(StorageKey.staffBottomModual, modual.toJson());
+      // }
       box.write(StorageKey.apiToken, response['token']);
-      box.write(StorageKey.currentUser, model.toJson());
+      // box.write(StorageKey.currentUser, model.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
 
-      GlobalSingleton.userLoginDetails = model;
-
-      await getUserDetails(context, model.isStaff);
+      await getUserDetails(
+        context,
+        //  model.isStaff
+      );
     }
   }
 
-  Future<void> getUserDetails(BuildContext context, num isStaff) async {
+  Future<void> getUserDetails(
+    BuildContext context,
+  ) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
         context: context);
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
+      // UserInfoModel model = UserInfoModel.fromJson(response['data']);
+      //  box.write(StorageKey.currenUserInfotUser, model.toJson());
+
+      // box.write(StorageKey.currenUserInfotUser, model.toJson());
       // if (isStaff == 1) {
       //   box.write(StorageKey.isRegister, true);
-      //   // Get.to(() => OtpScreen(
-      //   //       mobileNumber: GlobalSingleton.userDetails["email"],
-      //   //     ));
-      //   Get.offAll(
-      //     () => const StaffMainHome(),
-      //     binding: StaffMainHomeBinding(),
-      //   );
+      //   Get.to(() => OtpScreen(
+      //         mobileNumber: GlobalSingleton.userDetails["email"],
+      //       ));
+      //   // Get.offAll(
+      //   //   () => const StaffMainHome(),
+      //   //   binding: StaffMainHomeBinding(),
+      //   // );
       // } else
-       if (response['data']['verify_email'] == '0') {
+      if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
         Get.offAll(() => NotVerifyScreen(
               userDetails: response['data'],
