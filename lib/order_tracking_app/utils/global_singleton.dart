@@ -1,6 +1,3 @@
-import 'package:get/get.dart';
-import 'package:my_cart_express/order_tracking_app/models/user_info_model.dart';
-import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class GlobalSingleton {
@@ -13,5 +10,4 @@ class GlobalSingleton {
   static PackageInfo? packageInfo;
   static String? inviteUserId;
   static Map userDetails = {};
-  static RxInt? page; //= 0.obs;
 }

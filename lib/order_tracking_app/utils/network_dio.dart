@@ -95,13 +95,13 @@ class NetworkDio {
         Map<String, dynamic> responseBody = {};
         if (context != null) processIndicator.hide(context);
 
-        if (response.statusCode == 200 || response.statusCode == 20) {
+        if (response.statusCode == 200) {
           try {
             responseBody = json.decode(response.data);
           } catch (e) {
             responseBody = response.data;
           }
-          if (responseBody['status'] == 200 || responseBody['status'] == 20) {
+          if (responseBody['status'] == 200) {
             return responseBody;
           } else if (responseBody['status'] == 409) {
             Map<String, dynamic>? res = await handleErrorRefreshToken(
@@ -112,7 +112,6 @@ class NetworkDio {
             );
             return res;
           } else {
-            print('+++Response: ' + '$response');
             showError(
               title: 'Error',
               errorMessage: responseBody['message'],
@@ -127,7 +126,6 @@ class NetworkDio {
           return null;
         }
       } on DioError catch (e) {
-        print('+++Response: ' + '$e');
         var response = e.response;
         if (kDebugMode) {
           print('DioError +++ $e');

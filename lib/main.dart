@@ -30,7 +30,9 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  
+  // if (Platform.isAndroid) {
+  //   await _disableScreenshotsAndroid();
+  // }
   PhoneInputFormatter.addAlternativePhoneMasks(
     countryCode: 'US',
     alternativeMasks: [

@@ -5,7 +5,6 @@ class ApiEndPoints {
       'jayeyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTYyMDgwMDE2MSwiaWF0IjoxNjIwODAwMTYxfQ.UjYFOwih_3PrtwfJRxu6nwCwmv-e8Nbs3qAXLmdcTeYpeednas';
 
   static String signIn = 'login';
-  static String otpVerification = 'otp_verification';
   static String loginImages = 'login_images';
   static String resendVerificationEmail = 'resend_verification_email';
   static String signUp = 'authentication/registration';
@@ -25,7 +24,6 @@ class ApiEndPoints {
   static String userEditInfo = 'user/edit_info';
   static String userRewards = 'user/rewards';
   static String updateAppVersion = 'user/edit_user_app_version_info';
-
   static String saveSplashScreenUser = 'user/save_splash_screen_user';
   static String uploadProfilePicture = 'user/upload_profile_picture';
   static String uploadMissingPackage = 'user/upload_missing_package';
@@ -89,23 +87,4 @@ class ApiEndPoints {
 
   static String getFeedbackNotAdded = 'transaction/get_feedback_not_added';
   static String saveUserFeedbackPopup = 'transaction/save_user_feedback_popup';
-
-  static String trnNumberSave = "save_customer_trn";
-  static String viewCustomerTrnNumber = "view_customer_trn";
-  static String customerAcceptence = "save_customer_acceptence";
-
-//staff
-  static String getStaffBranches = 'customer_pos/get_staff_branches';
-  static String getDrawerStatus = 'customer_pos/get_drawer_status';
-  static String scanPosPackage = 'customer_pos/scan_pos_package';
-  static String startDrawer = 'customer_pos/start_drawer';
-  static String getBinIssue = 'bin/get_binning_issues';
-  static String getScannedBinPackageList = 'bin/get_scanned_bin_package_list';
-  static String getSelectedPackageIssueDetails =
-      'bin/get_selected_binning_issue_details';
-  static String getSelectedPackageDetails = "bin/get_selected_package_details";
-  static String addToBin = "bin/add_to_bin";
-  static String getScannedBinData = "bin/get_scanned_bin_data";
-  static String getPackageCustomerDetails =
-      "bin/get_package_and_customer_details";
 }

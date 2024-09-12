@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
@@ -47,59 +47,32 @@ class LoginController extends GetxController {
     final data = dio.FormData.fromMap({
       'email': email,
       'password': password,
-      // 'firebase_token': fcmToken.value,
-      // 'device': Platform.isAndroid ? 1 : 2,
+      'firebase_token': fcmToken.value,
+      'device': Platform.isAndroid ? 1 : 2,
     });
     Map<String, dynamic>? response = await NetworkDio.postDioHttpMethod(
       context: context,
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.signIn,
       data: data,
     );
-
     if (response != null) {
-      log(response.toString());
       UserModel model = UserModel.fromJson(response['data']);
-      // if (response["modules"].runtimeType != List) {
-      //   StaffBottomModule modual =
-      //       StaffBottomModule.fromJson(response['modules']);
-      //   box.write(StorageKey.staffBottomModual, modual.toJson());
-      // }
       box.write(StorageKey.apiToken, response['token']);
-      // box.write(StorageKey.currentUser, model.toJson());
+      box.write(StorageKey.currentUser, model.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
-
-      await getUserDetails(
-        context,
-        //  model.isStaff
-      );
+      await getUserDetails(context);
     }
   }
 
-  Future<void> getUserDetails(
-    BuildContext context,
-  ) async {
+  Future<void> getUserDetails(BuildContext context) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
         context: context);
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-      // UserInfoModel model = UserInfoModel.fromJson(response['data']);
-      //  box.write(StorageKey.currenUserInfotUser, model.toJson());
-
-      // box.write(StorageKey.currenUserInfotUser, model.toJson());
-      // if (isStaff == 1) {
-      //   box.write(StorageKey.isRegister, true);
-      //   Get.to(() => OtpScreen(
-      //         mobileNumber: GlobalSingleton.userDetails["email"],
-      //       ));
-      //   // Get.offAll(
-      //   //   () => const StaffMainHome(),
-      //   //   binding: StaffMainHomeBinding(),
-      //   // );
-      // } else
       if (response['data']['verify_email'] == '0') {
         box.write(StorageKey.isRegister, false);
         Get.offAll(() => NotVerifyScreen(

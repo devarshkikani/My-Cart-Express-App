@@ -100,7 +100,7 @@ class _ScanSuccessScreenState extends State<ScanSuccessScreen> {
                 child: Image.asset(
                   scannerIcon,
                   color: selectedIndex.value == 1 ? null : Colors.grey,
-                  height: 24, 
+                  height: 24,
                   width: 24,
                 ),
               ),

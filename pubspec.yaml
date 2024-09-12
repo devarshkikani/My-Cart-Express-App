@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 3.0.31+36
+version: 3.0.30+35
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -49,7 +49,6 @@ dependencies:
   cached_network_image: ^3.3.0
   firebase_crashlytics: ^3.4.9
   package_info_plus: ^3.1.2
-  pinput: ^5.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -62,7 +61,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/mp3/
     - assets/fonts/roboto/
     - assets/fonts/poppins/
 

@@ -1,10 +1,5 @@
 const String addIcon = 'assets/images/add_icon.png';
 const String appLogo = 'assets/images/app_logo.png';
-const String letterc = 'assets/images/letter-c.png';
-const String letterd = 'assets/images/letter-d.png';
-const String letterm = 'assets/images/letter-m.png';
-const String doubleTick = 'assets/images/double-tick.png';
-const String flag = 'assets/images/red-flag.png';
 const String appLogoColorfull = 'assets/images/app_logo_colorfull.png';
 const String scannerIcon = 'assets/images/scanner_icon.png';
 const String availablePackagesIcon = 'assets/images/available_packages.png';
@@ -30,15 +25,5 @@ const String trashIcon = 'assets/images/trash_icon.png';
 const String successScan = 'assets/images/success_scan.png';
 const String arrowRight = 'assets/images/arrow_right.png';
 const String arrowLeft = 'assets/images/arrow_left.png';
-const String transitIcon = 'assets/images/e-wallet.jpg';
-const String customerLookup = 'assets/images/rewards.jpg';
-const String pickupRequest = 'assets/images/pick-up.jpg';
-const String kiosk = 'assets/images/orders.jpg';
-const String helpandSupport = 'assets/images/help-supports.jpg';
-const String wareHouse = 'assets/images/local-delivery.jpg';
 
 const String successCheck = 'assets/images/success_check.gif';
-const String scannerImage = 'assets/images/scanner.png';
-
-
-const String scannerBeep = 'assets/mp3/scanner_beep.mpeg';

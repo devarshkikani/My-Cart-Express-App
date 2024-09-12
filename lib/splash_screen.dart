@@ -12,9 +12,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
-import 'package:my_cart_express/order_tracking_app/models/user_info_model.dart';
-import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
-import 'package:my_cart_express/order_tracking_app/screens/authentication/otp/otp_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home_screen/home_screen_controller.dart';
 import 'package:my_cart_express/order_tracking_app/theme/colors.dart';
 import 'package:my_cart_express/e_commerce_app/e_routes/e_app_pages.dart';
@@ -29,8 +26,6 @@ import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/authentication/welcome_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/support/support_chat_screen.dart';
-import 'package:my_cart_express/staff_app/staff_binding/staff_main_home_binding..dart';
-import 'package:my_cart_express/staff_app/staff_screen/staff_main_home_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'order_tracking_app/screens/home_screen/home_screen.dart';
@@ -81,7 +76,8 @@ class _SplashScreenState extends State<SplashScreen> {
           redirectScreen();
         }
       } else {
-        if (GlobalSingleton.packageInfo?.version != commonSettings['app_version']) {
+        if (GlobalSingleton.packageInfo?.version !=
+            commonSettings['app_version']) {
           showUpdateApp(context, commonSettings['force_update'] == "0");
         } else {
           redirectScreen();
@@ -197,19 +193,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-     
-     
-
-      // if (GlobalSingleton.userLoginDetails != null &&
-      //     GlobalSingleton.userLoginDetails!.isStaff == 1) {
-      //   box.write(StorageKey.isRegister, true);
-      //   // Get.to(() => OtpScreen());
-
-      //   Get.offAll(
-      //     () => const StaffMainHome(),
-      //     binding: StaffMainHomeBinding(),
-      //   );
-      // } else
       if (response['data']['verify_email'] == '0') {
         Get.offAll(
           () => NotVerifyScreen(
