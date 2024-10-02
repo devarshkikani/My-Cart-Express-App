@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/constant/storage_key.dart';
 import 'package:my_cart_express/order_tracking_app/models/user_model.dart';
+import 'package:my_cart_express/order_tracking_app/screens/authentication/otp/otp_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/home/main_home_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/not_verify/not_verify_screen.dart';
 import 'package:my_cart_express/order_tracking_app/utils/global_singleton.dart';
@@ -59,27 +60,25 @@ class LoginController extends GetxController {
     if (response != null) {
       log(response.toString());
       UserModel model = UserModel.fromJson(response['data']);
-      // if (response["modules"].runtimeType != List) {
-      //   StaffBottomModule modual =
-      //       StaffBottomModule.fromJson(response['modules']);
-      //   box.write(StorageKey.staffBottomModual, modual.toJson());
-      // }
+      if (response["modules"].runtimeType != List) {
+        StaffBottomModule modual =
+            StaffBottomModule.fromJson(response['modules']);
+        box.write(StorageKey.staffBottomModual, modual.toJson());
+      }
       box.write(StorageKey.apiToken, response['token']);
-      // box.write(StorageKey.currentUser, model.toJson());
+      box.write(StorageKey.currentUser, model.toJson());
       box.write(StorageKey.userId, model.userId);
       box.write(StorageKey.isLogedIn, true);
       await NetworkDio.setDynamicHeader();
 
-      await getUserDetails(
-        context,
-        //  model.isStaff
-      );
+      await getUserDetails(context: context, isStaff: model.isStaff
+          //  model.isStaff
+          );
     }
   }
 
   Future<void> getUserDetails(
-    BuildContext context,
-  ) async {
+      {required BuildContext context, num? isStaff}) async {
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
         url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
         context: context);
@@ -87,9 +86,7 @@ class LoginController extends GetxController {
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
       // UserInfoModel model = UserInfoModel.fromJson(response['data']);
-      //  box.write(StorageKey.currenUserInfotUser, model.toJson());
 
-      // box.write(StorageKey.currenUserInfotUser, model.toJson());
       // if (isStaff == 1) {
       //   box.write(StorageKey.isRegister, true);
       //   Get.to(() => OtpScreen(

@@ -17,7 +17,6 @@ class ApiEndPoints {
   static String branches = 'sign_up_branch_listing';
   static String switchBranch = 'switch_branch';
   static String location = 'locations';
-
   static String userInfo = 'user/info';
   static String userUploadFiles = 'user/uploaded_files';
   static String uploadFileAttachment = 'user/upload_file_attachment';
@@ -93,12 +92,20 @@ class ApiEndPoints {
   static String trnNumberSave = "save_customer_trn";
   static String viewCustomerTrnNumber = "view_customer_trn";
   static String customerAcceptence = "save_customer_acceptence";
+  static String getUploadInvoices = "get_not_uploaded_invoices";
 
 //staff
   static String getStaffBranches = 'customer_pos/get_staff_branches';
   static String getDrawerStatus = 'customer_pos/get_drawer_status';
+  static String checkLastDayDrawerStatus =
+      'customer_pos/check_last_day_drawer_status';
+  static String drawerDetails = 'customer_pos/drawer_details';
+  static String drawerEnd = 'customer_pos/drawer_end';
+  static String closedDrawer = 'customer_pos/close_drawer';
   static String scanPosPackage = 'customer_pos/scan_pos_package';
   static String startDrawer = 'customer_pos/start_drawer';
+  static String completeTransction = 'customer_pos/complete_transaction';
+  static String addamounttoWallet = 'customer_pos/add_amount_to_ewallet';
   static String getBinIssue = 'bin/get_binning_issues';
   static String getScannedBinPackageList = 'bin/get_scanned_bin_package_list';
   static String getSelectedPackageIssueDetails =

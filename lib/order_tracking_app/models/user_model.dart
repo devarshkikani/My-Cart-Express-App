@@ -22,7 +22,7 @@ class UserModel {
     required this.isCustomer,
     required this.priceGroupId,
     required this.isAdmin,
-    // required this.isStaff,
+    this.isStaff,
     required this.verifyEmail,
     // this.trnPopupMessage,
     // this.showRestrictedItemsPopup,
@@ -44,7 +44,7 @@ class UserModel {
   String priceGroupId;
   String verifyEmail;
   // String? trnPopupMessage;
-  // num isStaff;
+  num? isStaff;
   int isAdmin;
   // num? showTrnPopup;
   // num? showRestrictedItemsPopup;
@@ -63,7 +63,7 @@ class UserModel {
         branchId: json["branch_id"],
         profileImage: json["profile_image"] ?? '',
         isCustomer: json["is_customer"],
-        // isStaff: json["is_staff"],
+        isStaff: json["is_staff"],
         priceGroupId: json["price_group_id"],
         isAdmin: json["is_admin"],
         verifyEmail: json["verify_email"],
@@ -84,7 +84,7 @@ class UserModel {
         "email": email,
         "role_id": roleId,
         "firstname": firstname,
-        // "is_staff": isStaff,
+        "is_staff": isStaff,
         "lastname": lastname,
         "branch_id": branchId,
         "profile_image": profileImage,

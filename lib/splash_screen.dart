@@ -81,7 +81,8 @@ class _SplashScreenState extends State<SplashScreen> {
           redirectScreen();
         }
       } else {
-        if (GlobalSingleton.packageInfo?.version != commonSettings['app_version']) {
+        if (GlobalSingleton.packageInfo?.version !=
+            commonSettings['app_version']) {
           showUpdateApp(context, commonSettings['force_update'] == "0");
         } else {
           redirectScreen();
@@ -191,26 +192,31 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> getUserDetails() async {
+    num isStaff = 0;
+
     Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
       url: ApiEndPoints.apiEndPoint + ApiEndPoints.userInfo,
     );
 
     if (response != null) {
       GlobalSingleton.userDetails = response['data'];
-     
-     
 
-      // if (GlobalSingleton.userLoginDetails != null &&
-      //     GlobalSingleton.userLoginDetails!.isStaff == 1) {
+      // if (box.read(StorageKey.currentUser) != null) {
+      //   UserModel modual = UserModel.fromJson(box.read(StorageKey.currentUser));
+
+      //   isStaff = modual.isStaff ?? 0;
+      //   setState(() {});
+      // }
+
+      // if (isStaff == 1) {
       //   box.write(StorageKey.isRegister, true);
-      //   // Get.to(() => OtpScreen());
 
       //   Get.offAll(
       //     () => const StaffMainHome(),
       //     binding: StaffMainHomeBinding(),
       //   );
       // } else
-      if (response['data']['verify_email'] == '0') {
+       if (response['data']['verify_email'] == '0') {
         Get.offAll(
           () => NotVerifyScreen(
             userDetails: response['data'],

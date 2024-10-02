@@ -6,6 +6,7 @@ import 'package:my_cart_express/order_tracking_app/constant/app_endpoints.dart';
 import 'package:my_cart_express/order_tracking_app/utils/network_dio.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:my_cart_express/staff_app/staff_model/get_staff_branches_model.dart';
+import 'package:my_cart_express/staff_app/staff_model/last_day_drawer_status_model.dart';
 
 class StaffPosController extends GetxController {
   // RxList<Branches> branchesList = <Branches>[].obs;
@@ -15,6 +16,7 @@ class StaffPosController extends GetxController {
   TextEditingController branchName = TextEditingController();
   List<StaffBranch> staffBranches = <StaffBranch>[].obs;
   Rx<DrawerDetails>? drawerDetails;
+  Rx<LastDayDrawerDetails>? lastDayDrawerDetails;
 
   // @override
   // void onInit() {
@@ -42,6 +44,26 @@ class StaffPosController extends GetxController {
       drawerDetails =
           GetDrawerStatusModel.fromJson(response).drawerDetails!.obs;
     } else {
+      drawerDetails = null;
+      checkLastDayDrawerStatus(context);
+      // getBranches(context);
+    }
+
+    update();
+  }
+
+  Future<void> checkLastDayDrawerStatus(BuildContext context) async {
+    Map<String, dynamic>? response = await NetworkDio.getDioHttpMethod(
+      url: ApiEndPoints.apiEndPoint + ApiEndPoints.checkLastDayDrawerStatus,
+      context: context,
+    );
+    if (response != null &&
+        response['message'] != "Last day drawer is not available") {
+      lastDayDrawerDetails = CheckLastDayDrawerStatusModel.fromJson(response)
+          .lastDayDrawerDetails!
+          .obs;
+    } else {
+      lastDayDrawerDetails = null;
       getBranches(context);
     }
 

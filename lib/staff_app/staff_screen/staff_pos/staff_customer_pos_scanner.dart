@@ -78,13 +78,14 @@ class _StaffCustomerPosScreenState extends State<StaffCustomerPosScreen> {
     if (response != null && response['status'] == 200) {
       ScanPosPackageModel res = ScanPosPackageModel.fromJson(response);
       Get.to(() => CustomerAvailablePackages(
-            data: res.data!,
-          ));
+                data: res.data!,
+              ))!
+          .then((value) async => {await controller!.resumeCamera()});
     } else {
+      await controller!.resumeCamera();
       NetworkDio.showSuccess(
           title: 'Error', sucessMessage: response!['message']);
     }
-    await controller!.resumeCamera();
   }
 
   @override
@@ -133,10 +134,16 @@ class _StaffCustomerPosScreenState extends State<StaffCustomerPosScreen> {
   Widget bodyView() {
     return Column(
       children: [
-        Text(
-          'Scan package',
-          style: lightText14.copyWith(
-            color: primary,
+        InkWell(
+          onTap: () {
+            // PKG871576
+            getPackageCustomerDetailsApi(context, 'PKG871576');
+          },
+          child: Text(
+            'Scan package',
+            style: lightText14.copyWith(
+              color: primary,
+            ),
           ),
         ),
         height10,
@@ -154,13 +161,5 @@ class _StaffCustomerPosScreenState extends State<StaffCustomerPosScreen> {
         ),
       ],
     );
-  }
-
-  Color _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF$hexColor"; // Adding FF for full opacity
-    }
-    return Color(int.parse(hexColor, radix: 16));
   }
 }

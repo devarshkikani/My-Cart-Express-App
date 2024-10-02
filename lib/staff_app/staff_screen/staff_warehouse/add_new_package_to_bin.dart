@@ -102,8 +102,8 @@ class _AddNewPackageToBinScreenState extends State<AddNewPackageToBinScreen> {
         customDialog(pkdDetails);
       }
     } else {
-      NetworkDio.showSuccess(
-          title: 'Error', sucessMessage: response!['message']);
+      NetworkDio.showError(
+          title: 'Error', errorMessage: response!['message']);
     }
     await controller!.resumeCamera();
   }

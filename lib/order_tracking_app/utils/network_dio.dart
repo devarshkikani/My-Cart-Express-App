@@ -101,7 +101,9 @@ class NetworkDio {
           } catch (e) {
             responseBody = response.data;
           }
-          if (responseBody['status'] == 200 || responseBody['status'] == 20) {
+          if (responseBody['status'] == 200 ||
+              responseBody['status'] == 20 ||
+              responseBody['success'] == 200) {
             return responseBody;
           } else if (responseBody['status'] == 409) {
             Map<String, dynamic>? res = await handleErrorRefreshToken(
@@ -186,7 +188,7 @@ class NetworkDio {
           } catch (e) {
             responseBody = response.data;
           }
-          if (responseBody['status'] == 200) {
+          if (responseBody['status'] == 200 || responseBody['success'] == 200) {
             return responseBody;
           } else if (responseBody['status'] == 409) {
             Map<String, dynamic>? res = await handleErrorRefreshToken(

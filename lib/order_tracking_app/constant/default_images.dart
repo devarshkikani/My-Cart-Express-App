@@ -19,6 +19,7 @@ const String myRewardIcon = 'assets/images/my_reward_icon.png';
 const String noAuthorizePickup = 'assets/images/no_authorize_pickup.webp';
 const String noNotification = 'assets/images/no_notification.webp';
 const String noTransactions = 'assets/images/no_transactions.webp';
+const String verified = 'assets/images/verified.png';
 const String offline = 'assets/images/offline.jpeg';
 const String pickupIcon = 'assets/images/pickup_icon.png';
 const String settingLockIcon = 'assets/images/setting_lock_icon.png';

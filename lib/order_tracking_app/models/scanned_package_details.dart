@@ -9,7 +9,7 @@ ScanPosPackageModel scanPosPackageModelFromJson(String str) => ScanPosPackageMod
 String scanPosPackageModelToJson(ScanPosPackageModel data) => json.encode(data.toJson());
 
 class ScanPosPackageModel {
-    int? status;
+    num? status;
     String? message;
     ScanPosPackageData? data;
 
@@ -33,12 +33,12 @@ class ScanPosPackageModel {
 }
 
 class ScanPosPackageData {
-    int? posModuleOpenId;
+    num? posModuleOpenId;
     CustomerDetails? customerDetails;
     List<TransactionList>? transactionList;
     TransactionDetails? transactionDetails;
-    int? walletBalance;
-    int? bucksBalance;
+    num? walletBalance;
+    num? bucksBalance;
     String? priceValue;
     List<BankList>? bankList;
     UsdDetails? usdDetails;
@@ -128,15 +128,15 @@ class CustomerDetails {
     String? profileImage;
     dynamic authorizedPickup;
     dynamic birthDate;
-    int? rateCalculate;
-    int? shipments;
-    int? isToggled;
-    int? shipmentsReady;
+    num? rateCalculate;
+    num? shipments;
+    num? isToggled;
+    num? shipmentsReady;
     String? priceGroupName;
-    int? totalPackages;
+    num? totalPackages;
     String? branchName;
-    int? hideAccountSwitchBranchFlag;
-    int? hideResetDisableAccountFlag;
+    num? hideAccountSwitchBranchFlag;
+    num? hideResetDisableAccountFlag;
 
     CustomerDetails({
         this.customerId,
