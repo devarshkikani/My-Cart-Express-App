@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_cart_express/order_tracking_app/constant/default_images.dart';
 import 'package:my_cart_express/order_tracking_app/constant/sizedbox.dart';
+import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/change_email_address_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/change_name_screen.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/change_number.dart';
 import 'package:my_cart_express/order_tracking_app/screens/more_screen/account_settings/change_password_screen.dart';
@@ -166,6 +167,45 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   width10,
                   const Text(
                     'Change Phone Numer',
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 18,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          height10,
+          GestureDetector(
+            onTap: () {
+              Get.to(() => const ChangeEmailAddressScreen());
+            },
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: greyColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Icon(
+                      Icons.email_rounded,
+                      color: whiteColor,
+                      size: 18,
+                    ),
+                  ),
+                  width10,
+                  const Text(
+                    'Change Email Address',
                   ),
                   const Spacer(),
                   const Icon(

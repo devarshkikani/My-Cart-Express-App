@@ -116,25 +116,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     }
   }
 
-  void showADialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          actions: [
-            TextButton(
-              onPressed: () {
-                isPopShown.value = false;
-                Navigator.pop(ctx);
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -542,6 +523,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                               ),
                             ),
                             onPressed: () {
+                              declared.clear();
+                              type.clear();
+                              fileName.value = '';
                               showModalBottomSheet(
                                   context: context,
                                   isDismissible: true,
@@ -632,10 +616,11 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         context: context);
     if (response != null && response['status'] == 200) {
       Map<String, dynamic>? getinvoiceStatus = response['data'];
-      invoicePackageList = getinvoiceStatus!.values
-          .map((e) => e as Map<String, dynamic>)
-          .toList();
-      if (isShowDialog == true) {
+      invoicePackageList = (getinvoiceStatus?.values
+              .map((e) => e as Map<String, dynamic>)
+              .toList() ??
+          []);
+      if (isShowDialog == true && invoicePackageList.isNotEmpty) {
         uploadInvoiceDialog(context);
       }
     } else {
@@ -751,8 +736,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
       },
     );
   }
-
-  void uploadInvoice(String packageId, context) async {}
 
   Widget uploadFileBodyView(String packageId, BuildContext context) {
     return Form(

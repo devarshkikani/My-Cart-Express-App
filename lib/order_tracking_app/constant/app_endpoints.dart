@@ -12,6 +12,7 @@ class ApiEndPoints {
   static String changePassword = 'user/change_password';
   static String editName = 'user/edit_name';
   static String editPhone = 'user/edit_phone';
+  static String editEmail = 'user/edit_email';
   static String forgotPassword = 'authentication/forgot_password';
   static String resetPassword = 'authentication/reset_password';
   static String branches = 'sign_up_branch_listing';
